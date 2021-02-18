@@ -37,3 +37,9 @@
 *.recipe
 *.ipch
 .vs/MagicVXImGui/v16/.suo
+*.idb
+*.db-wal
+*.db-shm
+*.ilk
+*.ilk
+*.opendb

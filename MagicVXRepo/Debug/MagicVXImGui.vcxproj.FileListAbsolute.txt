@@ -1,0 +1,3 @@
+C:\Users\Alaxe\Software\Repos\MagicVX\MagicVXRepo\Debug\MagicVX ImGui.exe
+C:\Users\Alaxe\Software\Repos\MagicVX\MagicVXRepo\Debug\MagicVX ImGui.pdb
+C:\Users\Alaxe\Software\Repos\MagicVX\Debug\MagicVX ImGui.pdb

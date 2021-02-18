@@ -37,8 +37,8 @@ bool UserSettings::LoadSettings()
 		DisableMovies = true;
 		TextureFiltering = 5;
 		ScreenMode = 1;
-		ScreenX = 1920;
-		ScreenY = 1080;
+		Resolution[0] = 1920;
+		Resolution[1] = 1080;
 		ScreenFOV = 120;
 		MusicVol = 5;
 		SFXVol = 5;
@@ -56,8 +56,8 @@ bool UserSettings::LoadSettings()
 		DisableMovies = StringToBool(ini.GetValue("BasicSettings", "DisableMovies"));
 		TextureFiltering = atoi(ini.GetValue("BasicSettings", "TextureFiltering"));
 		ScreenMode = atoi(ini.GetValue("BasicSettings", "ScreenMode"));
-		ScreenX = atoi(ini.GetValue("BasicSettings", "ScreenX"));
-		ScreenY = atoi(ini.GetValue("BasicSettings", "ScreenY"));
+		Resolution[0] = atoi(ini.GetValue("BasicSettings", "ScreenX"));
+		Resolution[1] = atoi(ini.GetValue("BasicSettings", "ScreenY"));
 		ScreenFOV = atoi(ini.GetValue("BasicSettings", "ScreenFOV"));
 		MusicVol = atoi(ini.GetValue("BasicSettings", "MusicVol"));
 		SFXVol = atoi(ini.GetValue("BasicSettings", "SFXVol"));
@@ -80,8 +80,8 @@ void UserSettings::SaveSettings()
 	ini.SetValue("BasicSettings", "DisableMovies", std::to_string(DisableMovies).c_str());
 	ini.SetValue("BasicSettings", "TextureFiltering", std::to_string(TextureFiltering).c_str());
 	ini.SetValue("BasicSettings", "ScreenMode", std::to_string(ScreenMode).c_str());
-	ini.SetValue("BasicSettings", "ScreenX", std::to_string(ScreenX).c_str());
-	ini.SetValue("BasicSettings", "ScreenY", std::to_string(ScreenY).c_str());
+	ini.SetValue("BasicSettings", "ScreenX", std::to_string(Resolution[0]).c_str());
+	ini.SetValue("BasicSettings", "ScreenY", std::to_string(Resolution[1]).c_str());
 	ini.SetValue("BasicSettings", "ScreenFOV", std::to_string(ScreenFOV).c_str());
 	ini.SetValue("BasicSettings", "MusicVol", std::to_string(MusicVol).c_str());
 	ini.SetValue("BasicSettings", "SFXVol", std::to_string(SFXVol).c_str());

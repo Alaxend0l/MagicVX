@@ -327,6 +327,16 @@ int main(int, char**)
                 ImGui::Combo("Texture Filtering", &mainSettings.TextureFiltering, textureItems, IM_ARRAYSIZE(textureItems));
             }
 
+            if (ImGui::CollapsingHeader("Enhancements"))
+            {
+                const char* screenModeItems[] = { "Fullscreen", "Windowed" };
+                ImGui::Combo("Screen Mode", &mainSettings.ScreenMode, screenModeItems, IM_ARRAYSIZE(screenModeItems));
+                ImGui::InputInt2("Resolution", mainSettings.Resolution);
+                ImGui::SliderInt("Field of View", &mainSettings.ScreenFOV, 60, 179);
+                ImGui::SliderInt("Music Volume", &mainSettings.MusicVol, 0, 100);
+                ImGui::SliderInt("Sound Volume", &mainSettings.SFXVol, 0, 100);
+            }
+
             if (ImGui::Button("Save Settings"))
             {
                 mainSettings.SaveSettings();

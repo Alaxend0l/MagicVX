@@ -23,8 +23,7 @@ public:
 	bool DisableMovies;
 	int TextureFiltering;
 	int ScreenMode;
-	int ScreenX;
-	int ScreenY;
+	int Resolution[2];
 	int ScreenFOV;
 	int MusicVol;
 	int SFXVol;

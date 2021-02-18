@@ -141,8 +141,8 @@ void GameManipulator::Heartbeat()
 	int holdUp = 0; while (holdUp != 1) holdUp = ReadInt(0x0049D7DC);
 
 	//Next, let's load in all the settings the user added in.
-	WriteInt(0x0068DEE0, mainSettings.ScreenX);
-	WriteInt(0x0068DEE4, mainSettings.ScreenY);
+	WriteInt(0x0068DEE0, mainSettings.Resolution[0]);
+	WriteInt(0x0068DEE4, mainSettings.Resolution[1]);
 	WriteInt(0x0068DEF8, mainSettings.AntiAliasing);
 	WriteInt(0x0068DEE8, mainSettings.ColorDepth*16 + 16);
 
