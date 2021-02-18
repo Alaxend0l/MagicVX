@@ -1,0 +1,48 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="source">
+      <UniqueIdentifier>{1189f383-aff6-4632-b3f5-0dc1a666ce21}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include">
+      <UniqueIdentifier>{a3ff6359-05a7-4250-b9ff-7e81991992ab}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="pipe.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="custom.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="hooks.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="routes.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="vxgame.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="vxpipe.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="vxpatch.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="vxcustom.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="vxhooks.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="vxroutes.h">
+      <Filter>include</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

@@ -1,0 +1,156 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="sources">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="imgui">
+      <UniqueIdentifier>{a82cba23-9de0-45c2-b1e3-2eb1666702de}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MagicVX">
+      <UniqueIdentifier>{06d6761b-ad4c-423d-a9d3-a43ce2f6de80}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp">
+      <Filter>sources</Filter>
+    </ClCompile>
+    <ClCompile Include="GameBoard.cpp">
+      <Filter>MagicVX</Filter>
+    </ClCompile>
+    <ClCompile Include="GameManipulator.cpp">
+      <Filter>MagicVX</Filter>
+    </ClCompile>
+    <ClCompile Include="GamePlayer.cpp">
+      <Filter>MagicVX</Filter>
+    </ClCompile>
+    <ClCompile Include="GearHuntManager.cpp">
+      <Filter>MagicVX</Filter>
+    </ClCompile>
+    <ClCompile Include="GearHuntObject.cpp">
+      <Filter>MagicVX</Filter>
+    </ClCompile>
+    <ClCompile Include="Global.cpp">
+      <Filter>MagicVX</Filter>
+    </ClCompile>
+    <ClCompile Include="HelloWorld.cpp">
+      <Filter>MagicVX</Filter>
+    </ClCompile>
+    <ClCompile Include="UserSettings.cpp">
+      <Filter>MagicVX</Filter>
+    </ClCompile>
+    <ClCompile Include="GameThreading.cpp">
+      <Filter>MagicVX</Filter>
+    </ClCompile>
+    <ClCompile Include="PipeFunction.cpp">
+      <Filter>MagicVX</Filter>
+    </ClCompile>
+    <ClCompile Include="FunctionCaller.cpp">
+      <Filter>MagicVX</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui_widgets.cpp">
+      <Filter>imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui.cpp">
+      <Filter>imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui_demo.cpp">
+      <Filter>imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui_draw.cpp">
+      <Filter>imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui_tables.cpp">
+      <Filter>imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui_impl_dx9.cpp">
+      <Filter>sources</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui_impl_win32.cpp">
+      <Filter>sources</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Funcs.h">
+      <Filter>MagicVX</Filter>
+    </ClInclude>
+    <ClInclude Include="FunctionCaller.h">
+      <Filter>MagicVX</Filter>
+    </ClInclude>
+    <ClInclude Include="GameBoard.h">
+      <Filter>MagicVX</Filter>
+    </ClInclude>
+    <ClInclude Include="GameManipulator.h">
+      <Filter>MagicVX</Filter>
+    </ClInclude>
+    <ClInclude Include="GamePlayer.h">
+      <Filter>MagicVX</Filter>
+    </ClInclude>
+    <ClInclude Include="GameThreading.h">
+      <Filter>MagicVX</Filter>
+    </ClInclude>
+    <ClInclude Include="GearHuntManager.h">
+      <Filter>MagicVX</Filter>
+    </ClInclude>
+    <ClInclude Include="GearHuntObject.h">
+      <Filter>MagicVX</Filter>
+    </ClInclude>
+    <ClInclude Include="Global.h">
+      <Filter>MagicVX</Filter>
+    </ClInclude>
+    <ClInclude Include="SimpleIni.h">
+      <Filter>MagicVX</Filter>
+    </ClInclude>
+    <ClInclude Include="UserSettings.h">
+      <Filter>MagicVX</Filter>
+    </ClInclude>
+    <ClInclude Include="XPC_Layout.h">
+      <Filter>MagicVX</Filter>
+    </ClInclude>
+    <ClInclude Include="CLSettings.h">
+      <Filter>MagicVX</Filter>
+    </ClInclude>
+    <ClInclude Include="PipeFunction.h">
+      <Filter>MagicVX</Filter>
+    </ClInclude>
+    <ClInclude Include="imstb_rectpack.h">
+      <Filter>imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="imstb_textedit.h">
+      <Filter>imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="imstb_truetype.h">
+      <Filter>imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="imconfig.h">
+      <Filter>imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui.h">
+      <Filter>imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui_internal.h">
+      <Filter>imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui_impl_dx9.h">
+      <Filter>sources</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui_impl_win32.h">
+      <Filter>sources</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\README.txt" />
+    <None Include="MouseControl.dll">
+      <Filter>MagicVX</Filter>
+    </None>
+    <None Include="VXR.dll">
+      <Filter>MagicVX</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Natvis Include="imgui.natvis">
+      <Filter>sources</Filter>
+    </Natvis>
+  </ItemGroup>
+</Project>

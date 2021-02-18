@@ -30,3 +30,10 @@
 *.exe
 *.out
 *.app
+*.pdb
+*.db
+*.tlog
+*.log
+*.recipe
+*.ipch
+.vs/MagicVXImGui/v16/.suo
