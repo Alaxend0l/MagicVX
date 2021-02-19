@@ -7,10 +7,10 @@ class CLSettings
 {
 public:
 	//Universal Variables that are used in every custom launch.
-	int Mode = 1;
+	int Mode = 0;
 	int Act = 0;
-	int Car = 29;
-	int Weapon = 8;
+	int Car = 0;
+	int Weapon = 0;
 	int Difficulty = 0;
 
 	bool U_SimplePhysics = false;
@@ -30,7 +30,7 @@ public:
 	int DragRace_Time = 300;
 
 	//Below are variables used for battles.
-	int Battle_Opponents = 2;
+	int Battle_Opponents = 3;
 	int Battle_Rounds = 3;
 	int Battle_Gadgets = 1;
 	bool Battle_GadgetRespawn = true;
@@ -60,7 +60,7 @@ public:
 	//Below are variables used for Sandbox.
 	bool Sandbox_Enabled = false;
 	bool Sandbox_PreventCollectablesFromSpawning = false;
-	bool Sandbox_EnableAllCheats = true;
+	bool Sandbox_EnableAllCheats = false;
 	bool Sandbox_SimplifyPhysics = false;
 	bool Sandbox_ZeroGravity = false;
 };

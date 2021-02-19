@@ -282,7 +282,7 @@ int main(int, char**)
             {
                 if (ImGui::BeginMenu("Menu"))
                 {
-                    ImGui::MenuItem("Test", NULL, &show_demo_window);
+                    //ImGui::MenuItem("Test", NULL, &show_demo_window);
                     ImGui::EndMenu();
                 }
                 if (ImGui::BeginMenu("Tools"))
@@ -495,6 +495,9 @@ int main(int, char**)
                     gearHuntLastSelected = -1;
                 }
                 ImGui::ListBox("Gear Hunts", &gearHuntSelected, gearHuntItems, gearHuntAmount, 10);
+                ImGui::Text(GH_Manager.Title.c_str());
+                ImGui::Text(("Made by: " + GH_Manager.Creator).c_str());
+                
                 if (gearHuntLastSelected != gearHuntSelected)
                 {
                     GH_Manager.LoadInfo(GH_Manager.inFolder[gearHuntSelected]);
@@ -532,6 +535,8 @@ int main(int, char**)
                 worldText2 = (worldItems[GH_Manager.World]);
                 worldText += worldText2;
                 ImGui::Text(worldText.c_str());
+                ImGui::TextWrapped(GH_Manager.Description.c_str());
+                
                 break;
             case 7: //Make Gear Hunt
                 ImGui::Combo("Car", &customLaunchSettings.Car, carItems, IM_ARRAYSIZE(carItems));
@@ -561,6 +566,7 @@ int main(int, char**)
                 }
                 gameThreading.LaunchThread(true);
             }
+
             ImGui::End();
         }
 
