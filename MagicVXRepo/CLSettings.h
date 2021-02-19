@@ -24,7 +24,7 @@ public:
 	int DragRace_Opponents = 2;
 	int DragRace_Rounds = 3;
 	int DragRace_Gadgets = 1;
-	int DragRace_ItemReset = 0;
+	bool DragRace_ItemReset = false;
 	int DragRace_Reset = 0;
 	int DragRace_RoundsOrWins = 0;
 	int DragRace_Time = 300;
@@ -33,7 +33,7 @@ public:
 	int Battle_Opponents = 2;
 	int Battle_Rounds = 3;
 	int Battle_Gadgets = 1;
-	int Battle_GadgetRespawn = 1;
+	bool Battle_GadgetRespawn = true;
 	int Battle_Time = 300;
 	int Battle_Kills = 5;
 	int Battle_RoundsOrWins = 0;
@@ -44,7 +44,7 @@ public:
 	int Score_Time = 300;
 	int Score_Rounds = 3;
 	int Score_Gadgets = 1;
-	int Score_GadgetRespawn = 1;
+	bool Score_GadgetRespawn = 1;
 	int Score_PointsPerKill = 3000;
 	int Score_RoundsOrWins = 0;
 

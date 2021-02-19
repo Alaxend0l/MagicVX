@@ -221,7 +221,7 @@ void GameManipulator::CustomLaunch_Disclaimer()
 		{
 		case 0:
 		case 1:
-			WriteByte(0x0065E32C, customLaunchSettings.ArmorRepairGlitch); //Sets whether or not gadgets respawn.
+			WriteByte(0x0065E32C, customLaunchSettings.ArmorRepairGlitch + 1); //Sets whether or not gadgets respawn.
 			break;
 		case 2: //Drag Race
 			WriteInt(0x0065E2A0, customLaunchSettings.Car); //Forces the game to use the proper vehicle.

@@ -362,6 +362,7 @@ int main(int, char**)
                 {
                     ImGui::Combo("Difficulty", &customLaunchSettings.Difficulty, difficultyItems, IM_ARRAYSIZE(difficultyItems));
                     ImGui::MenuItem("Enable All Cheats", NULL, &customLaunchSettings.Sandbox_EnableAllCheats);
+                    ImGui::MenuItem("Armor Repair Glitch", NULL, &customLaunchSettings.ArmorRepairGlitch);
                     ImGui::MenuItem("Simple Physics", NULL, &customLaunchSettings.Sandbox_SimplifyPhysics);
                     ImGui::MenuItem("Zero Gravity", NULL, &customLaunchSettings.Sandbox_ZeroGravity);
                     
@@ -381,6 +382,9 @@ int main(int, char**)
             ImGui::Combo("Car", &customLaunchSettings.Car, carItems, IM_ARRAYSIZE(carItems));
             ImGui::Combo("Weapon", &customLaunchSettings.Weapon, weaponItems, IM_ARRAYSIZE(weaponItems));
 
+
+            const char* winConditionItems[] = { "Rounds", "Wins" };
+            const char* offOnRandom[] = { "Off", "On", "Random" };
             switch (customLaunchSettings.Mode)
             {
             case 0: //Mission
@@ -391,15 +395,39 @@ int main(int, char**)
                 break;
             case 2: //Drag Race
                 ImGui::Combo("Race", &customLaunchSettings.Act, raceItems, IM_ARRAYSIZE(raceItems));
+                ImGui::Text("");
+                ImGui::InputInt("Time In Seconds", &customLaunchSettings.DragRace_Time);
+                ImGui::SliderInt("Opponents", &customLaunchSettings.DragRace_Opponents, 1, 3);
+                ImGui::Combo("Win Condition", &customLaunchSettings.DragRace_RoundsOrWins, winConditionItems, IM_ARRAYSIZE(winConditionItems));
+                ImGui::SliderInt(winConditionItems[customLaunchSettings.DragRace_RoundsOrWins], &customLaunchSettings.DragRace_Rounds, 1, 9);
+                ImGui::Combo("Gadgets", &customLaunchSettings.DragRace_Gadgets, offOnRandom, IM_ARRAYSIZE(offOnRandom));
+                ImGui::Checkbox("Item Reset", &customLaunchSettings.DragRace_ItemReset);
                 break;
             case 3: //Battle
                 ImGui::Combo("Arena", &customLaunchSettings.Act, battleItems, IM_ARRAYSIZE(battleItems));
+                ImGui::Text("");
+                ImGui::InputInt("Time In Seconds", &customLaunchSettings.Battle_Time);
+                ImGui::SliderInt("Opponents", &customLaunchSettings.Battle_Opponents, 1, 3);
+                ImGui::Combo("Win Condition", &customLaunchSettings.Battle_RoundsOrWins, winConditionItems, IM_ARRAYSIZE(winConditionItems));
+                ImGui::SliderInt(winConditionItems[customLaunchSettings.Battle_RoundsOrWins], &customLaunchSettings.Battle_Rounds, 1, 9);
+                ImGui::Combo("Gadgets", &customLaunchSettings.Battle_Gadgets, offOnRandom, IM_ARRAYSIZE(offOnRandom));
+                ImGui::Checkbox("Gadget Respawn", &customLaunchSettings.Battle_GadgetRespawn);
+                ImGui::SliderInt("Kills To Win", &customLaunchSettings.Battle_Kills, 1, 30);
                 break;
             case 4: //Joyride
                 ImGui::Combo("World", &customLaunchSettings.Act, worldItems, IM_ARRAYSIZE(worldItems));
                 break;
             case 5: //Score War
                 ImGui::Combo("Arena", &customLaunchSettings.Act, battleItems, IM_ARRAYSIZE(battleItems));
+                ImGui::Text("");
+                ImGui::InputInt("Time In Seconds", &customLaunchSettings.Score_Time);
+                ImGui::SliderInt("Opponents", &customLaunchSettings.Score_Opponents, 1, 3);
+                ImGui::Combo("Win Condition", &customLaunchSettings.Score_RoundsOrWins, winConditionItems, IM_ARRAYSIZE(winConditionItems));
+                ImGui::SliderInt(winConditionItems[customLaunchSettings.Score_RoundsOrWins], &customLaunchSettings.Score_Rounds, 1, 9);
+                ImGui::Combo("Gadgets", &customLaunchSettings.Score_Gadgets, offOnRandom, IM_ARRAYSIZE(offOnRandom));
+                ImGui::Checkbox("Gadget Respawn", &customLaunchSettings.Score_GadgetRespawn);
+                ImGui::InputInt("Target Score", &customLaunchSettings.Score_Target);
+                ImGui::InputInt("Points Per Kill", &customLaunchSettings.Score_PointsPerKill);
                 break;
             case 6: //Play Gear Hunt
                 ImGui::Combo("World", &customLaunchSettings.Act, worldItems, IM_ARRAYSIZE(worldItems));
