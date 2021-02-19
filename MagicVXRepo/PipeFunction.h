@@ -21,5 +21,8 @@ public:
     bool Add(double, bool);
     bool Add(double);
 
+    void SetArgSizeAndReturnSize(int, int);
+
     PipeFunction();
+    PipeFunction(int);
 };

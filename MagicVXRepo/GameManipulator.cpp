@@ -91,6 +91,13 @@ void GameManipulator::ResetValues()
     CL_GamePlayStart = false;
 
     SL_Disclaimer = false;
+
+	GearHuntLaunch = false;
+	MakeGearHuntLaunch = false;
+	gearHuntMakeWorking = false;
+	Sandbox = false;
+
+	GH_Manager.objects.clear();
 }
 void GameManipulator::GameLaunch()
 {
@@ -271,13 +278,17 @@ void GameManipulator::CustomLaunch_Disclaimer()
 			break;
 		case 7: //Make Gear Hunt
 			MakeGearHuntLaunch = true;
+			gearHuntMakeWorking = true;
+			break;
+		case 8: //Developer Sandbox
+			Sandbox = true;
 			break;
 		}
 
 		WriteShort(0x00499228, (short)(mainSettings.MusicVol * 327));
 		WriteShort(0x00497150, (short)(mainSettings.SFXVol * 327));
 
-		PatchFOV(); //Don't forget about this!
+		if (mainSettings.PatchFOV) PatchFOV(); //Don't forget about this!
 
 		WriteFloat(0x005E7678, {}, 1); //Set the disclaimer timer to 1, so it finishes nearly instantly.
 		CL_Disclaimer = true;
@@ -364,23 +375,6 @@ void GameManipulator::CustomLaunch_GamePlayHeartbeat()
 		//The player has not restarted, all clear!
 		UpdatePlayers();
 
-		if (GB.GetIfKeyState(GB_1, GBS_Pressed))
-		{
-            printf("Pressed the 1 button!");
-            FC.CU_EnableCheats();
-			//playerCount = FC.FC_PlayerManager_PlayerCount();
-			MakeGearHunt_UpdateCount = false;
-		}
-
-        if (GB.GetIfKeyState(GB_2, GBS_Pressed))
-        {
-            //startsFalse = FC.TestInject();
-            //
-            
-            
-            MakeGearHunt_UpdateCount = false;
-        }
-
 		if (gearHuntMakeWorking) //Making Gear Hunt
 		{
 			WriteInt(0x0047A934, {}, 1); //Prevent other collectables from spawning
@@ -410,6 +404,8 @@ void GameManipulator::CustomLaunch_GamePlayHeartbeat()
 					newObject.ObjectTypeIndex = 21;
 
 					newObject.Address = FC.CU_SpawnGear(newObject.PositionX, newObject.PositionY, newObject.PositionZ, ReadInt(0x00496D6C, { 0x4, 0x4, 0x8, 0x1C }));
+
+					AddToLog("New Gear Address: " + std::to_string(newObject.Address));
 
 					GH_Manager.objects.push_back(newObject);
 
@@ -510,7 +506,7 @@ void GameManipulator::StandardLaunch_Disclaimer()
 		WriteShort(0x00499228, (short)(mainSettings.MusicVol * 327));
 		WriteShort(0x00497150, (short)(mainSettings.SFXVol * 327));
 
-		PatchFOV(); //Don't forget about this!
+		if (mainSettings.PatchFOV) PatchFOV(); //Don't forget about this!
 
 		SL_Disclaimer = true;
 		if (DevMode) AddToLog("Found Disclaimer!");
@@ -895,7 +891,8 @@ void GameManipulator::AddToLog(std::string textToAdd)
 	* std::cout << textToAdd;
 	std::cout << "\n";
 	*/
-	
+	textToAdd += "\n";
+	printf(textToAdd.c_str());
 }
 
 void GameManipulator::CreateBackgroundThread()

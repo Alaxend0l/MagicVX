@@ -13,7 +13,7 @@ void GearHuntManager::SaveInfo(std::string name)
 	ini.SetValue("Base", "Title", Title.c_str());
 	ini.SetValue("Base", "Creator", Creator.c_str());
 	ini.SetValue("Base", "Description", Description.c_str());
-	ini.SetValue("Base", "Version", "0.9.9");
+	ini.SetValue("Base", "Version", "1.0");
 
 	ini.SetValue("Base", "World", std::to_string(World).c_str());
 	ini.SetValue("Base", "ForceCar", std::to_string(ForceCar).c_str());
@@ -40,7 +40,7 @@ void GearHuntManager::SaveInfo(std::string name)
 		ini.SetValue(sectionName.data(), "PosZ", std::to_string(objects[i].PositionZ).c_str());
 	}
 
-	std::string pathname = getpath() + "\\MagicVX\\GearHunts\\" + name + ".ini";
+	std::string pathname = GetExeDirectory() + "\\GearHunts\\" + name + ".ini";
 	ini.SaveFile(pathname.data());
 }
 
@@ -48,7 +48,7 @@ void GearHuntManager::LoadInfo(std::string name)
 {
 	CSimpleIniA ini;
 	ini.SetUnicode();
-	std::string pathToGearHunt = getpath() + "\\MagicVX\\GearHunts\\" + name + ".ini";
+	std::string pathToGearHunt = GetExeDirectory() + "\\GearHunts\\" + name + ".ini";
 	SI_Error rc = ini.LoadFile(pathToGearHunt.data());
 	
 	if (rc < 0)
@@ -136,6 +136,47 @@ void GearHuntManager::LoadInfo(std::string name)
 	}
 }
 
+std::vector<std::string> GearHuntManager::CollectGearHunts(std::string path)
+{
+	std::vector<std::string> files;
+
+	size_t lastindex;
+
+	// check directory exists
+	char fullpath[MAX_PATH];
+	GetFullPathName(path.c_str(), MAX_PATH, fullpath, 0);
+	std::string fp(fullpath);
+	if (GetFileAttributes(fp.c_str()) != FILE_ATTRIBUTE_DIRECTORY)
+		return files;
+
+	// get file names
+	WIN32_FIND_DATA findfiledata;
+	HANDLE hFind = FindFirstFile((LPCSTR)(fp + "\\*").c_str(), &findfiledata);
+	if (hFind != INVALID_HANDLE_VALUE)
+	{
+		do
+		{
+			files.push_back(findfiledata.cFileName);
+		} while (FindNextFile(hFind, &findfiledata));
+		FindClose(hFind);
+	}
+
+	// delete current and parent directories
+	files.erase(std::find(files.begin(), files.end(), "."));
+	files.erase(std::find(files.begin(), files.end(), ".."));
+
+	// sort in alphabetical order
+	std::sort(files.begin(), files.end());
+
+	for (int i = 0; i < files.size(); i++)
+	{
+		lastindex = files[i].find_last_of(".");
+		files[i] = files[i].substr(0, lastindex);
+	}
+
+	return files;
+}
+
 bool GearHuntManager::StringToBool(const char* value)
 {
 	int test = atoi(value);
@@ -157,4 +198,13 @@ std::string GearHuntManager::getpath()
 	}
 	// handle error somehow
 	return "";
+}
+
+std::string GearHuntManager::GetExeDirectory()
+{
+	char buffer[MAX_PATH];
+	GetModuleFileNameA(NULL, buffer, MAX_PATH);
+	std::string::size_type pos = std::string(buffer).find_last_of("\\/");
+
+	return std::string(buffer).substr(0, pos);
 }

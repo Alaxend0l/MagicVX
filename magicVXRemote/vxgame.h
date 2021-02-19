@@ -175,8 +175,13 @@ public:
 	{
 		return ((_Item_Init)(0x44D0B0))(item, index);
 	}
+	static void Item_Release(int address)
+	{
+		((_Item_Release)(0x438770))(address);
+	}
 private:
 	typedef char(__cdecl* _Item_Init)(Item*, DWORD*);
+	typedef void(__cdecl* _Item_Release)(int);
 };
 
 class State {

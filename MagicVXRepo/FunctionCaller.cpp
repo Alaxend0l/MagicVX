@@ -38,9 +38,12 @@ void FunctionCaller::InitPipe()
 
 int FunctionCaller::CallPipeInt(PipeFunction pipeFunction)
 {
-    
+    char buf[1024];
     DWORD tempWord;
-    int bytes;
+    DWORD dataRead;
+    int bytes = 0;
+
+    pipeFunction.SetArgSizeAndReturnSize(pipeFunction.offset - 12, sizeof(bytes));
 
     if (Pipe != INVALID_HANDLE_VALUE)
     {
@@ -50,13 +53,10 @@ int FunctionCaller::CallPipeInt(PipeFunction pipeFunction)
             &tempWord,
             NULL);
 
-
-        LPDWORD lpdWordthing;
         DWORD tempWord2;
 
-        while (ReadFile(Pipe, &bytes, sizeof(int), lpdWordthing, NULL) == FALSE) {}
-
-        CloseHandle(Pipe);
+        while (ReadFile(Pipe, &buf, sizeof(buf), &dataRead, NULL) == FALSE) {}
+        memcpy(&bytes, buf, sizeof(int));
     }
 
     return bytes;
@@ -64,9 +64,12 @@ int FunctionCaller::CallPipeInt(PipeFunction pipeFunction)
 
 bool FunctionCaller::CallPipeBool(PipeFunction pipeFunction)
 {
-    
+    char buf[1024];
     DWORD tempWord;
-    bool bytes;
+    DWORD dataRead;
+    bool bytes = false;
+
+    pipeFunction.SetArgSizeAndReturnSize(pipeFunction.offset - 12, sizeof(bytes));
 
     if (Pipe != INVALID_HANDLE_VALUE)
     {
@@ -76,11 +79,10 @@ bool FunctionCaller::CallPipeBool(PipeFunction pipeFunction)
             &tempWord,
             NULL);
 
-
-        LPDWORD lpdWordthing;
         DWORD tempWord2;
 
-        while (ReadFile(Pipe, &bytes, sizeof(bool), lpdWordthing, NULL) == FALSE) {}
+        while (ReadFile(Pipe, &buf, sizeof(buf), &dataRead, NULL) == FALSE) {}
+        memcpy(&bytes, buf, sizeof(bool));
     }
 
     return bytes;
@@ -88,9 +90,12 @@ bool FunctionCaller::CallPipeBool(PipeFunction pipeFunction)
 
 float FunctionCaller::CallPipeFloat(PipeFunction pipeFunction)
 {
-    
+    char buf[1024];
     DWORD tempWord;
-    float bytes;
+    DWORD dataRead;
+    float bytes = 0;
+
+    pipeFunction.SetArgSizeAndReturnSize(pipeFunction.offset - 12, sizeof(bytes));
 
     if (Pipe != INVALID_HANDLE_VALUE)
     {
@@ -100,11 +105,10 @@ float FunctionCaller::CallPipeFloat(PipeFunction pipeFunction)
             &tempWord,
             NULL);
 
-
-        LPDWORD lpdWordthing;
         DWORD tempWord2;
 
-        while (ReadFile(Pipe, &bytes, sizeof(float), lpdWordthing, NULL) == FALSE) {}
+        while (ReadFile(Pipe, &buf, sizeof(buf), &dataRead, NULL) == FALSE) {}
+        memcpy(&bytes, buf, sizeof(float));
     }
 
     return bytes;
@@ -112,9 +116,12 @@ float FunctionCaller::CallPipeFloat(PipeFunction pipeFunction)
 
 char FunctionCaller::CallPipeChar(PipeFunction pipeFunction)
 {
-    
+    char buf[1024];
     DWORD tempWord;
-    char bytes;
+    DWORD dataRead;
+    char bytes = '0';
+
+    pipeFunction.SetArgSizeAndReturnSize(pipeFunction.offset - 12, sizeof(bytes));
 
     if (Pipe != INVALID_HANDLE_VALUE)
     {
@@ -124,11 +131,10 @@ char FunctionCaller::CallPipeChar(PipeFunction pipeFunction)
             &tempWord,
             NULL);
 
-
-        LPDWORD lpdWordthing;
         DWORD tempWord2;
 
-        while (ReadFile(Pipe, &bytes, sizeof(char), lpdWordthing, NULL) == FALSE) {}
+        while (ReadFile(Pipe, &buf, sizeof(buf), &dataRead, NULL) == FALSE) {}
+        memcpy(&bytes, buf, sizeof(char));
     }
 
     return bytes;
@@ -139,6 +145,8 @@ void  FunctionCaller::CallPipeVoid(PipeFunction pipeFunction)
 {
     
     DWORD tempWord;
+
+    pipeFunction.SetArgSizeAndReturnSize(pipeFunction.offset - 12, 0);
 
     if (Pipe != INVALID_HANDLE_VALUE)
     {
@@ -167,6 +175,7 @@ int   FunctionCaller::CU_SpawnGear(float x, float y, float z, int address)
     void* memoryAllocated;
     memoryAllocated = AllocateMemory(60);
     int memoryAddress = static_cast<int>(reinterpret_cast<std::uintptr_t>(memoryAllocated));
+    printf(std::to_string(memoryAddress).c_str());
 
     //Then input all the data necessary.
     int CDCDCDCD = 0xCDCDCDCD;
@@ -292,16 +301,14 @@ void  FunctionCaller::CU_TeleportCorrection(int address)
 
 void  FunctionCaller::PatchMouse()
 {
-    PipeFunction FunctionCall = PipeFunction();
-    FunctionCall.Add(MagicVX_PatchMouse);
+    PipeFunction FunctionCall = PipeFunction(MagicVX_PatchMouse);
     return CallPipeVoid(FunctionCall);
 }
 
 
 int   FunctionCaller::FC_DataPack_GetScript(int datapack, int index)
 {
-    PipeFunction FunctionCall = PipeFunction();
-    FunctionCall.Add(DataPack_GetScript);
+    PipeFunction FunctionCall = PipeFunction(DataPack_GetScript);
     FunctionCall.Add(datapack);
     FunctionCall.Add(index);
 
@@ -310,8 +317,7 @@ int   FunctionCaller::FC_DataPack_GetScript(int datapack, int index)
 
 int   FunctionCaller::FC_FileStreaming_LoadDataPack(int filename, int type, int index, char variant)
 {
-    PipeFunction FunctionCall = PipeFunction();
-    FunctionCall.Add(FileStreaming_LoadDataPack);
+    PipeFunction FunctionCall = PipeFunction(FileStreaming_LoadDataPack);
     FunctionCall.Add(filename);
     FunctionCall.Add(type);
     FunctionCall.Add(index);
@@ -322,8 +328,7 @@ int   FunctionCaller::FC_FileStreaming_LoadDataPack(int filename, int type, int 
 
 int   FunctionCaller::FC_FileStreaming_InitializeDataPack(int datapackstream, int type, char notsure)
 {
-    PipeFunction FunctionCall = PipeFunction();
-    FunctionCall.Add(FileStreaming_InitializeDataPack);
+    PipeFunction FunctionCall = PipeFunction(FileStreaming_InitializeDataPack);
     FunctionCall.Add(datapackstream);
     FunctionCall.Add(type);
     FunctionCall.Add(notsure);
@@ -332,8 +337,7 @@ int   FunctionCaller::FC_FileStreaming_InitializeDataPack(int datapackstream, in
 }
 void  FunctionCaller::FC_GameSettings_SetCodeVariable(int variable, int offset, int value)
 {
-    PipeFunction FunctionCall = PipeFunction();
-    FunctionCall.Add(GameSettings_SetCodeVariable);
+    PipeFunction FunctionCall = PipeFunction(GameSettings_SetCodeVariable);
     FunctionCall.Add(variable);
     FunctionCall.Add(offset);
     FunctionCall.Add(value);
@@ -342,8 +346,7 @@ void  FunctionCaller::FC_GameSettings_SetCodeVariable(int variable, int offset, 
 }
 int   FunctionCaller::FC_GameSettings_GetCodeVariable(int variable, int offset)
 {
-    PipeFunction FunctionCall = PipeFunction();
-    FunctionCall.Add(GameSettings_GetCodeVariable);
+    PipeFunction FunctionCall = PipeFunction(GameSettings_GetCodeVariable);
     FunctionCall.Add(variable);
     FunctionCall.Add(offset);
 
@@ -351,55 +354,48 @@ int   FunctionCaller::FC_GameSettings_GetCodeVariable(int variable, int offset)
 }
 int   FunctionCaller::FC_GameSettings_IsCheatEnabled(int index)
 {
-    PipeFunction FunctionCall = PipeFunction();
-    FunctionCall.Add(GameSettings_IsCheatEnabled);
+    PipeFunction FunctionCall = PipeFunction(GameSettings_IsCheatEnabled);
     FunctionCall.Add(index);
 
     return CallPipeInt(FunctionCall);
 }
 void  FunctionCaller::FC_Item_Release(int address)
 {
-    PipeFunction FunctionCall = PipeFunction();
-    FunctionCall.Add(Item_Release);
+    PipeFunction FunctionCall = PipeFunction(Item_Release);
     FunctionCall.Add(address);
 
     return CallPipeVoid(FunctionCall);
 }
 bool  FunctionCaller::FC_Player_IsHuman(int address)
 {
-    PipeFunction FunctionCall = PipeFunction();
-    FunctionCall.Add(Player_IsHuman);
+    PipeFunction FunctionCall = PipeFunction(Player_IsHuman);
     FunctionCall.Add(address);
 
     return CallPipeBool(FunctionCall);
 }
 char  FunctionCaller::FC_PlayerManager_PlayerCount()
 {
-    PipeFunction FunctionCall = PipeFunction();
-    FunctionCall.Add(PlayerManager_PlayerCount);
+    PipeFunction FunctionCall = PipeFunction(PlayerManager_PlayerCount);
 
     return CallPipeChar(FunctionCall);
 }
 int   FunctionCaller::FC_PlayerManager_GetPlayerByIndex(char index)
 {
-    PipeFunction FunctionCall = PipeFunction();
-    FunctionCall.Add(PlayerManager_GetPlayerByIndex);
+    PipeFunction FunctionCall = PipeFunction(PlayerManager_GetPlayerByIndex);
     FunctionCall.Add(index);
 
     return CallPipeInt(FunctionCall);
 }
 int   FunctionCaller::FC_PlayerManager_GetHumanPlayerByIndex(char index)
 {
-    PipeFunction FunctionCall = PipeFunction();
-    FunctionCall.Add(PlayerManager_GetHumanPlayerByIndex);
+    PipeFunction FunctionCall = PipeFunction(PlayerManager_GetHumanPlayerByIndex);
     FunctionCall.Add(index);
 
     return CallPipeInt(FunctionCall);
 }
 void  FunctionCaller::FC_StateManager_GotoState(int index)
 {
-    PipeFunction FunctionCall = PipeFunction();
-    FunctionCall.Add(StateManager_GotoState);
+    PipeFunction FunctionCall = PipeFunction(StateManager_GotoState);
     FunctionCall.Add(index);
 
     return CallPipeVoid(FunctionCall);
@@ -408,16 +404,14 @@ void  FunctionCaller::FC_StateManager_GotoState(int index)
 
 int   FunctionCaller::FC_ActionVehicleTeleport(int address)
 {
-    PipeFunction FunctionCall = PipeFunction();
-    FunctionCall.Add(ActionVehicleTeleport);
+    PipeFunction FunctionCall = PipeFunction(ActionVehicleTeleport);
     FunctionCall.Add(address);
 
     return CallPipeInt(FunctionCall);
 }
 int   FunctionCaller::FC_ThingManager_DARYL_CreateThing(int type, int address)
 {
-    PipeFunction FunctionCall = PipeFunction();
-    FunctionCall.Add(ThingManager_DARYL_CreateThing);
+    PipeFunction FunctionCall = PipeFunction(ThingManager_DARYL_CreateThing);
     FunctionCall.Add(type);
     FunctionCall.Add(address);
 
@@ -425,30 +419,26 @@ int   FunctionCaller::FC_ThingManager_DARYL_CreateThing(int type, int address)
 }
 void  FunctionCaller::FC_ViewManager_SetFourPlayer()
 {
-    PipeFunction FunctionCall = PipeFunction();
-    FunctionCall.Add(ViewManager_SetFourPlayer);
+    PipeFunction FunctionCall = PipeFunction(ViewManager_SetFourPlayer);
 
     return CallPipeVoid(FunctionCall);
 }
 int   FunctionCaller::FC_GetTotalTiles_Car()
 {
-    PipeFunction FunctionCall = PipeFunction();
-    FunctionCall.Add(GetTotalTiles_Car);
+    PipeFunction FunctionCall = PipeFunction(GetTotalTiles_Car);
 
     return CallPipeInt(FunctionCall);
 }
 int   FunctionCaller::FC_GetTileCar(int index)
 {
-    PipeFunction FunctionCall = PipeFunction();
-    FunctionCall.Add(GetTileCar);
+    PipeFunction FunctionCall = PipeFunction(GetTileCar);
     FunctionCall.Add(index);
 
     return CallPipeInt(FunctionCall);
 }
 void  FunctionCaller::FC_SubMatrixToQuaternion(int add1, int add2)
 {
-    PipeFunction FunctionCall = PipeFunction();
-    FunctionCall.Add(SubMatrixToQuaternion);
+    PipeFunction FunctionCall = PipeFunction(SubMatrixToQuaternion);
     FunctionCall.Add(add1);
     FunctionCall.Add(add2);
 
@@ -456,8 +446,7 @@ void  FunctionCaller::FC_SubMatrixToQuaternion(int add1, int add2)
 }
 void  FunctionCaller::FC_SetSFXVol(int volume)
 {
-    PipeFunction FunctionCall = PipeFunction();
-    FunctionCall.Add(SetSFXVol);
+    PipeFunction FunctionCall = PipeFunction(SetSFXVol);
     FunctionCall.Add(volume);
 
     return CallPipeVoid(FunctionCall);

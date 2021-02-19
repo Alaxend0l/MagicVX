@@ -14,6 +14,7 @@ void pipe_handler() {
 
 	HANDLE pipe;
 	char buf[1024];
+	
 	DWORD bytesRead;
 	DWORD bytesWritten;
 
@@ -46,11 +47,39 @@ void pipe_handler() {
 }
 
 // Routes messages to functions
-// TODO: Change entirely
 void handle_message(const char* msg, char* returnData, DWORD* bytesWritten) {
-	int route = *(int*)(msg);
 
-	printf("[magicVX] Received remote call of function: Enum %d\n", route);
+	unsigned int route = *(unsigned int*)(msg);
+	unsigned int argSize = *(unsigned int*)(msg + 4);
+	unsigned int retSize = *(unsigned int*)(msg + 8);
 
-	Routes::GetRouteFromEnum(route)(msg, returnData, bytesWritten);
+	if (route == 0xFFFF0001)
+	{
+		MagicVX::EnableMouse();
+		*bytesWritten = 0;
+	}
+	else
+	{
+		long double arg0 = 0;
+		long double arg1 = 0;
+		long double arg2 = 0;
+		long double arg3 = 0;
+
+		int returnValue = 0;
+
+		printf("[magicVX] Received remote call of function: Enum %d\n", route);
+
+		memcpy(&arg0, msg + 12, 12);
+		memcpy(&arg1, msg + 24, 12);
+		memcpy(&arg2, msg + 36, 12);
+		memcpy(&arg3, msg + 48, 12);
+
+		returnValue = ((_CallFunction)(route))(arg0, arg1, arg2, arg3);
+
+		printf("[magicVX] Function Called - Return Value: %d\n", returnValue);
+		memcpy(returnData, &returnValue, retSize);
+		*bytesWritten = retSize;
+	}
+
+	
 }

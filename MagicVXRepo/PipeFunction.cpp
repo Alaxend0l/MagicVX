@@ -6,6 +6,21 @@ PipeFunction::PipeFunction()
     offset = 0;
 }
 
+PipeFunction::PipeFunction(int function)
+{
+    offset = 0;
+    Add(function);
+    offset += 8;
+}
+
+void PipeFunction::SetArgSizeAndReturnSize(int argSize, int returnSize)
+{
+    offset = 4;
+    Add(argSize);
+    Add(returnSize);
+    offset = argSize + 12;
+}
+
 bool PipeFunction::Add(int value, bool reverse)
 {
     unsigned char byteArray[sizeof(value)];

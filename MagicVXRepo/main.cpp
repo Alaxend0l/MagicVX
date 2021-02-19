@@ -216,10 +216,39 @@ int main(int, char**)
         "Very Hard"
     };
 
+    const char* deadWeightItems[]{
+        "No Deadweight",
+        "Money Bag",
+        "Uranium",
+        "Time Bomb",
+        "Data Disk",
+        "Temporal Transmission",
+        "Volcanic Gas Collector"
+    };
+
+    const char* gearHuntItems[256];
+
+    char GHC_Title[128];
+    char GHC_Filename[128];
+    char GHC_Author[128];
+    char GHC_Description[5192];
+
     bool mvx_window_main = true;
     bool mvx_window_settings = false;
     bool mvx_window_customLaunch = false;
     bool mvx_window_globalWatch = false;
+    bool mvx_window_gearHuntSave = false;
+
+    int gearHuntSelected = 0;
+    int gearHuntLastSelected = 0;
+    int gearHuntAmount = 0;
+    
+    std::string carText;
+    std::string carText2;
+    std::string weaponText;
+    std::string weaponText2;
+    std::string worldText;
+    std::string worldText2;
 
     mainSettings.LoadSettings();
 
@@ -332,7 +361,11 @@ int main(int, char**)
                 const char* screenModeItems[] = { "Fullscreen", "Windowed" };
                 ImGui::Combo("Screen Mode", &mainSettings.ScreenMode, screenModeItems, IM_ARRAYSIZE(screenModeItems));
                 ImGui::InputInt2("Resolution", mainSettings.Resolution);
-                ImGui::SliderInt("Field of View", &mainSettings.ScreenFOV, 60, 179);
+                ImGui::Checkbox("Change Field of View", &mainSettings.PatchFOV);
+                if (mainSettings.PatchFOV)
+                {
+                    ImGui::SliderInt("FOV", &mainSettings.ScreenFOV, 60, 179);
+                }
                 ImGui::SliderInt("Music Volume", &mainSettings.MusicVol, 0, 100);
                 ImGui::SliderInt("Sound Volume", &mainSettings.SFXVol, 0, 100);
             }
@@ -379,8 +412,7 @@ int main(int, char**)
             }
 
             ImGui::Combo("Game Mode", &customLaunchSettings.Mode, modeItems, IM_ARRAYSIZE(modeItems));
-            ImGui::Combo("Car", &customLaunchSettings.Car, carItems, IM_ARRAYSIZE(carItems));
-            ImGui::Combo("Weapon", &customLaunchSettings.Weapon, weaponItems, IM_ARRAYSIZE(weaponItems));
+            
 
 
             const char* winConditionItems[] = { "Rounds", "Wins" };
@@ -391,9 +423,13 @@ int main(int, char**)
                 ImGui::Combo("Mission", &customLaunchSettings.Act, missionItems, IM_ARRAYSIZE(missionItems));
                 break;
             case 1: //Challenge
+                ImGui::Combo("Car", &customLaunchSettings.Car, carItems, IM_ARRAYSIZE(carItems));
+                ImGui::Combo("Weapon", &customLaunchSettings.Weapon, weaponItems, IM_ARRAYSIZE(weaponItems));
                 ImGui::Combo("Challenge", &customLaunchSettings.Act, challengeItems, IM_ARRAYSIZE(challengeItems));
                 break;
             case 2: //Drag Race
+                ImGui::Combo("Car", &customLaunchSettings.Car, carItems, IM_ARRAYSIZE(carItems));
+                ImGui::Combo("Weapon", &customLaunchSettings.Weapon, weaponItems, IM_ARRAYSIZE(weaponItems));
                 ImGui::Combo("Race", &customLaunchSettings.Act, raceItems, IM_ARRAYSIZE(raceItems));
                 ImGui::Text("");
                 ImGui::InputInt("Time In Seconds", &customLaunchSettings.DragRace_Time);
@@ -404,6 +440,8 @@ int main(int, char**)
                 ImGui::Checkbox("Item Reset", &customLaunchSettings.DragRace_ItemReset);
                 break;
             case 3: //Battle
+                ImGui::Combo("Car", &customLaunchSettings.Car, carItems, IM_ARRAYSIZE(carItems));
+                ImGui::Combo("Weapon", &customLaunchSettings.Weapon, weaponItems, IM_ARRAYSIZE(weaponItems));
                 ImGui::Combo("Arena", &customLaunchSettings.Act, battleItems, IM_ARRAYSIZE(battleItems));
                 ImGui::Text("");
                 ImGui::InputInt("Time In Seconds", &customLaunchSettings.Battle_Time);
@@ -415,9 +453,13 @@ int main(int, char**)
                 ImGui::SliderInt("Kills To Win", &customLaunchSettings.Battle_Kills, 1, 30);
                 break;
             case 4: //Joyride
+                ImGui::Combo("Car", &customLaunchSettings.Car, carItems, IM_ARRAYSIZE(carItems));
+                ImGui::Combo("Weapon", &customLaunchSettings.Weapon, weaponItems, IM_ARRAYSIZE(weaponItems));
                 ImGui::Combo("World", &customLaunchSettings.Act, worldItems, IM_ARRAYSIZE(worldItems));
                 break;
             case 5: //Score War
+                ImGui::Combo("Car", &customLaunchSettings.Car, carItems, IM_ARRAYSIZE(carItems));
+                ImGui::Combo("Weapon", &customLaunchSettings.Weapon, weaponItems, IM_ARRAYSIZE(weaponItems));
                 ImGui::Combo("Arena", &customLaunchSettings.Act, battleItems, IM_ARRAYSIZE(battleItems));
                 ImGui::Text("");
                 ImGui::InputInt("Time In Seconds", &customLaunchSettings.Score_Time);
@@ -430,12 +472,75 @@ int main(int, char**)
                 ImGui::InputInt("Points Per Kill", &customLaunchSettings.Score_PointsPerKill);
                 break;
             case 6: //Play Gear Hunt
-                ImGui::Combo("World", &customLaunchSettings.Act, worldItems, IM_ARRAYSIZE(worldItems));
+                //ImGui::Combo("World", &customLaunchSettings.Act, worldItems, IM_ARRAYSIZE(worldItems));
+                
+                ImGui::Text("");
+                if (ImGui::Button("Refresh List"))
+                {
+                    GH_Manager.inFolder = GH_Manager.CollectGearHunts(GH_Manager.GetExeDirectory() + "\\GearHunts\\");
+                    for (int i = 0; i < 256; i++)
+                    {
+                        if (GH_Manager.inFolder.size() > i)
+                        {
+                            gearHuntItems[i] = GH_Manager.inFolder[i].c_str();
+                        }
+                        else
+                        {
+                            gearHuntItems[i] = "";
+                            gearHuntAmount = i;
+                            break;
+                        }
+                    }
+
+                    gearHuntLastSelected = -1;
+                }
+                ImGui::ListBox("Gear Hunts", &gearHuntSelected, gearHuntItems, gearHuntAmount, 10);
+                if (gearHuntLastSelected != gearHuntSelected)
+                {
+                    GH_Manager.LoadInfo(GH_Manager.inFolder[gearHuntSelected]);
+
+                    if (GH_Manager.ForceCar) customLaunchSettings.Car = GH_Manager.CarChoice;
+                    if (GH_Manager.ForceWeapon) customLaunchSettings.Weapon = GH_Manager.WeaponChoice;
+                    customLaunchSettings.Act = GH_Manager.World;
+
+                    customLaunchSettings.GearHunt_File = GH_Manager.inFolder[gearHuntSelected];
+                    gearHuntLastSelected = gearHuntSelected;
+                }
+                if (GH_Manager.ForceCar)
+                {
+                    carText = "Forced Car: ";
+                    carText2 = (carItems[GH_Manager.CarChoice]);
+                    carText += carText2;
+                    ImGui::Text(carText.c_str());
+                }
+                else
+                {
+                    ImGui::Combo("Car", &customLaunchSettings.Car, carItems, IM_ARRAYSIZE(carItems));
+                }
+                if (GH_Manager.ForceWeapon)
+                {
+                    weaponText = "Forced Weapon: ";
+                    weaponText2 = (weaponItems[GH_Manager.WeaponChoice]);
+                    weaponText += weaponText2;
+                    ImGui::Text(weaponText.c_str());
+                }
+                else
+                {
+                    ImGui::Combo("Weapon", &customLaunchSettings.Weapon, weaponItems, IM_ARRAYSIZE(weaponItems));
+                }
+                worldText = "World: ";
+                worldText2 = (worldItems[GH_Manager.World]);
+                worldText += worldText2;
+                ImGui::Text(worldText.c_str());
                 break;
             case 7: //Make Gear Hunt
+                ImGui::Combo("Car", &customLaunchSettings.Car, carItems, IM_ARRAYSIZE(carItems));
+                ImGui::Combo("Weapon", &customLaunchSettings.Weapon, weaponItems, IM_ARRAYSIZE(weaponItems));
                 ImGui::Combo("World", &customLaunchSettings.Act, worldItems, IM_ARRAYSIZE(worldItems));
                 break;
             case 8: //Sandbox
+                ImGui::Combo("Car", &customLaunchSettings.Car, carItems, IM_ARRAYSIZE(carItems));
+                ImGui::Combo("Weapon", &customLaunchSettings.Weapon, weaponItems, IM_ARRAYSIZE(weaponItems));
                 ImGui::Combo("World", &customLaunchSettings.Act, worldItems, IM_ARRAYSIZE(worldItems));
                 break;
             default:
@@ -443,6 +548,17 @@ int main(int, char**)
             }
             if (ImGui::Button("Start"))
             {
+                if (customLaunchSettings.Mode == 7)
+                {
+                    //Set up stuff for making gear hunts.
+                    mvx_window_gearHuntSave = true;
+
+                    GH_Manager.CarChoice = customLaunchSettings.Car;
+                    GH_Manager.WeaponChoice = customLaunchSettings.Weapon;
+                    GH_Manager.World = customLaunchSettings.Act;
+                    GH_Manager.SimplePhysics = customLaunchSettings.Sandbox_SimplifyPhysics;
+                    GH_Manager.ZeroGravity = customLaunchSettings.Sandbox_ZeroGravity;
+                }
                 gameThreading.LaunchThread(true);
             }
             ImGui::End();
@@ -450,10 +566,39 @@ int main(int, char**)
 
         if (mvx_window_globalWatch)
         {
-            ImGui::Begin("Global Watch", &mvx_window_settings);
+            ImGui::Begin("Global Watch", &mvx_window_globalWatch);
 
             ImGui::Checkbox("Pipe Connected: ", &pipeConnect);
              
+            ImGui::End();
+        }
+
+        if (mvx_window_gearHuntSave)
+        {
+            ImGui::Begin("Global Watch", &mvx_window_gearHuntSave);
+
+            ImGui::InputText("Title", GHC_Title, 256);
+            ImGui::InputText("Filename", GHC_Filename, 256);
+            ImGui::InputText("Author", GHC_Author, 256);
+            ImGui::InputTextMultiline("Description", GHC_Description, 5192);
+
+            ImGui::Checkbox("Force Car", &GH_Manager.ForceCar);
+            ImGui::Checkbox("Force Weapon", &GH_Manager.ForceWeapon);
+            ImGui::Checkbox("Force Deadweight", &GH_Manager.ForceDeadWeight);
+            if (GH_Manager.ForceDeadWeight)
+            {
+                ImGui::Combo("Deadweight", &GH_Manager.DeadWeightChoice, deadWeightItems, IM_ARRAYSIZE(deadWeightItems));
+            }
+
+            if (ImGui::Button("Save"))
+            {
+                GH_Manager.Title = GHC_Title;
+                GH_Manager.Creator = GHC_Author;
+                GH_Manager.Description = GHC_Description;
+                GH_Manager.FileName = GHC_Filename;
+                gearHuntSave = true;
+            }
+            
             ImGui::End();
         }
 

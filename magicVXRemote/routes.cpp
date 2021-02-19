@@ -23,6 +23,7 @@ _route Routes::GetRouteFromEnum(int id) {
 	case METHOD_STATEMANAGER_GOTOSTATE: return (_route)Routes::StateManager_GotoState; break;
 	case METHOD_CARA_INIT: return (_route)Routes::CarA_Init; break;
 	case METHOD_ITEM_INIT: return (_route)Routes::Item_Init; break;
+	case METHOD_ITEM_RELEASE: return (_route)Routes::Item_Release; break;
 	case METHOD_INTERFACEMANAGER_SETOBJECTTEXT: return (_route)Routes::InterfaceManager_SetObjectText; break;
 	case METHOD_THINGMANAGER_DARYL_CREATETHING: return (_route)Routes::ThingManager_DARYL_CreateThing; break;
 	}
@@ -155,6 +156,13 @@ ROUTE_FUNC_IMPL(Routes::Item_Init) {
 	*bytesWritten = 8;
 }
 
+ROUTE_FUNC_IMPL(Routes::Item_Release) {
+	int address;
+	memcpy(&address, msg + 4, 4);
+	Item::Item_Release(address);
+	*bytesWritten = 0;
+}
+
 ROUTE_FUNC_IMPL(Routes::InterfaceManager_SetObjectText)
 {
 	int address;
@@ -172,5 +180,6 @@ ROUTE_FUNC_IMPL(Routes::ThingManager_DARYL_CreateThing)
 	memcpy(&type, msg + 4, 4);
 	memcpy(&base, msg + 8, 4);
 	int returnInt = ThingManager::ThingManager_DARYL_CreateThing(type, base);
+	memcpy(returnData, &returnInt, 4);
 	*bytesWritten = 8;
 }

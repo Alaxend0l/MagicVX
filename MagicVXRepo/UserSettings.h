@@ -25,6 +25,7 @@ public:
 	int ScreenMode;
 	int Resolution[2];
 	int ScreenFOV;
+	bool PatchFOV;
 	int MusicVol;
 	int SFXVol;
 

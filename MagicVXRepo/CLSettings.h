@@ -18,7 +18,7 @@ public:
 
 	//Below are variables used for missions and challenges.
 
-	int ArmorRepairGlitch = 1;
+	bool ArmorRepairGlitch = false;
 
 	//Below are variables used for drag races.
 	int DragRace_Opponents = 2;
@@ -49,7 +49,7 @@ public:
 	int Score_RoundsOrWins = 0;
 
 	//Below are variables used for Gear Hunt.
-	std::string GearHunt_File = "testhunt";
+	std::string GearHunt_File = "MagnussFrenzy";
 	int GearHunt_Gears = 0;
 	int GearHunt_Keys = 0;
 	int GearHunt_Objects = 0;

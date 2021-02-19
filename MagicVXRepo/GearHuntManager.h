@@ -9,7 +9,7 @@
 #include <ShlObj_core.h>
 #include <direct.h>
 #include <vector>
-
+#include <atlstr.h>
 
 class GearHuntManager
 {
@@ -17,6 +17,7 @@ private:
 	bool StringToBool(const char* value);
 public:
 	std::vector<GearHuntObject> objects;
+	std::vector<std::string> inFolder;
 
 	std::string Title;
 	std::string Creator;
@@ -42,10 +43,13 @@ public:
 	bool ZeroGravity = false;
 	bool SimplePhysics = false;
 
+	std::vector<std::string>  CollectGearHunts(std::string);
+
 	void LoadInfo(std::string);
 	void SaveInfo(std::string);
 
 	std::string getpath();
+	std::string GetExeDirectory();
 	
 	GearHuntManager();
 };

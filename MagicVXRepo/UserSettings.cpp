@@ -19,7 +19,7 @@ bool UserSettings::LoadSettings()
 {
 	CSimpleIniA ini;
 	ini.SetUnicode();
-	std::string path = getpath() + "\\MagicVX";
+	std::string path = GetExeDirectory() + "";
 	std::string path_gearhunts = path + "\\GearHunts";
 	_mkdir(path.data());
 	_mkdir(path_gearhunts.data());
@@ -40,6 +40,7 @@ bool UserSettings::LoadSettings()
 		Resolution[0] = 1920;
 		Resolution[1] = 1080;
 		ScreenFOV = 120;
+		PatchFOV = true;
 		MusicVol = 5;
 		SFXVol = 5;
 		return false;
@@ -59,6 +60,7 @@ bool UserSettings::LoadSettings()
 		Resolution[0] = atoi(ini.GetValue("BasicSettings", "ScreenX"));
 		Resolution[1] = atoi(ini.GetValue("BasicSettings", "ScreenY"));
 		ScreenFOV = atoi(ini.GetValue("BasicSettings", "ScreenFOV"));
+		PatchFOV = StringToBool(ini.GetValue("BasicSettings", "PatchFOV"));
 		MusicVol = atoi(ini.GetValue("BasicSettings", "MusicVol"));
 		SFXVol = atoi(ini.GetValue("BasicSettings", "SFXVol"));
 		return true;
@@ -83,9 +85,10 @@ void UserSettings::SaveSettings()
 	ini.SetValue("BasicSettings", "ScreenX", std::to_string(Resolution[0]).c_str());
 	ini.SetValue("BasicSettings", "ScreenY", std::to_string(Resolution[1]).c_str());
 	ini.SetValue("BasicSettings", "ScreenFOV", std::to_string(ScreenFOV).c_str());
+	ini.SetValue("BasicSettings", "PatchFOV", std::to_string(PatchFOV).c_str());
 	ini.SetValue("BasicSettings", "MusicVol", std::to_string(MusicVol).c_str());
 	ini.SetValue("BasicSettings", "SFXVol", std::to_string(SFXVol).c_str());
-	std::string pathname = getpath() + "\\MagicVX\\config.ini";
+	std::string pathname = GetExeDirectory() + "\\config.ini";
 	ini.SaveFile(pathname.data());
 }
 
