@@ -1,19 +1,15 @@
 #pragma once
 
-#include "GamePlayer.h"
-#include "GearHuntObject.h"
-#include "FunctionCaller.h"
-#include "Funcs.h"
 #include "Global.h"
+#include "GearHuntObject.h"
+#include "Funcs.h"
+
 #include <windows.h>
 #include <vector>
 
 
 class GameManipulator
 {
-private:
-    FunctionCaller FC;
-    
 public:
 	GameManipulator();
 
@@ -56,25 +52,9 @@ public:
 	void UpdatePlayers();
     void EnableCheats();
 
-	void WriteByte(UINT_PTR address, std::vector<unsigned int> offsets, byte value);
-	void WriteFloat(UINT_PTR address, std::vector<unsigned int> offsets, float value);
-	void WriteInt(UINT_PTR address, std::vector<unsigned int> offsets, int value);
-	void WriteShort(UINT_PTR address, std::vector<unsigned int> offsets, short value);
-	void WriteString(UINT_PTR address, std::vector<unsigned int> offsets, std::string value);
+	
 
-	byte ReadByte(UINT_PTR address, std::vector<unsigned int> offsets);
-	int ReadInt(UINT_PTR address, std::vector<unsigned int> offsets);
-	float ReadFloat(UINT_PTR address, std::vector<unsigned int> offsets);
-
-	void WriteByte(UINT_PTR address, byte value);
-	void WriteFloat(UINT_PTR address, float value);
-	void WriteInt(UINT_PTR address, int value);
-	void WriteShort(UINT_PTR address, short value);
-	void WriteString(UINT_PTR address, std::string value);
-
-	byte ReadByte(UINT_PTR address);
-	int ReadInt(UINT_PTR address);
-	float ReadFloat(UINT_PTR address);
+	std::string IntToHexString(int);
 
 	std::string getPathName(const std::string&);
 

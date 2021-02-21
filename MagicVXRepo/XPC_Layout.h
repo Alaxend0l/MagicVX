@@ -9,13 +9,6 @@
 
 using Bytes = std::vector<byte>;
 
-//Written by Alaxend0l, therefore contains mistakes
-struct XpcStore
-{
-	Bytes buffer;
-	int length;
-};
-
 // General container documents
 struct XpcHeader {
 	char unknown1[8]; // I think these are resource id tags

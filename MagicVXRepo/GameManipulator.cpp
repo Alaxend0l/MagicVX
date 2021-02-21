@@ -39,7 +39,7 @@ float JustWarpedFloatX = 0;
 float JustWarpedFloatY = 0;
 float JustWarpedFloatZ = 0;
 float JustWarpedFloatW = 0;
-GamePlayer player[8];
+
 
 
 std::vector<int> GH_ObjectTypes;
@@ -145,22 +145,22 @@ void GameManipulator::Heartbeat()
 
 
 	//The below code stops Heartbeat until all variables are loaded in.
-	int holdUp = 0; while (holdUp != 1) holdUp = ReadInt(0x0049D7DC);
+	int holdUp = 0; while (holdUp != 1) holdUp = FC.ReadInt(0x0049D7DC);
 
 	//Next, let's load in all the settings the user added in.
-	WriteInt(0x0068DEE0, mainSettings.Resolution[0]);
-	WriteInt(0x0068DEE4, mainSettings.Resolution[1]);
-	WriteInt(0x0068DEF8, mainSettings.AntiAliasing);
-	WriteInt(0x0068DEE8, mainSettings.ColorDepth*16 + 16);
+	FC.WriteInt(0x0068DEE0, mainSettings.Resolution[0]);
+	FC.WriteInt(0x0068DEE4, mainSettings.Resolution[1]);
+	FC.WriteInt(0x0068DEF8, mainSettings.AntiAliasing);
+	FC.WriteInt(0x0068DEE8, mainSettings.ColorDepth*16 + 16);
 
-	WriteByte(0x0068DEFC, mainSettings.TextureFiltering);
-	WriteByte(0x0068DF04, (!mainSettings.ScreenMode));
-	WriteByte(0x0068DF05, (!mainSettings.VehicleParticles));
-	WriteByte(0x0068DEF4, (!mainSettings.WorldParticles));
-	WriteByte(0x0068DF00, (!mainSettings.DrawDistance));
-	WriteByte(0x0068DEEC, (!mainSettings.GeometryDetail));
-	WriteByte(0x0068DF06, (mainSettings.DisableMovies));
-	WriteByte(0x0068DF04, (!mainSettings.ScreenMode));
+	FC.WriteByte(0x0068DEFC, mainSettings.TextureFiltering);
+	FC.WriteByte(0x0068DF04, (!mainSettings.ScreenMode));
+	FC.WriteByte(0x0068DF05, (!mainSettings.VehicleParticles));
+	FC.WriteByte(0x0068DEF4, (!mainSettings.WorldParticles));
+	FC.WriteByte(0x0068DF00, (!mainSettings.DrawDistance));
+	FC.WriteByte(0x0068DEEC, (!mainSettings.GeometryDetail));
+	FC.WriteByte(0x0068DF06, (mainSettings.DisableMovies));
+	FC.WriteByte(0x0068DF04, (!mainSettings.ScreenMode));
 
 	for (;;)
 	{
@@ -198,80 +198,80 @@ void GameManipulator::PatchMouse()
 void GameManipulator::CustomLaunch_Disclaimer()
 {
 	//A lot of the game's base values are loaded at this point, so they can be modified.
-	if (ReadFloat(0x005E7678, {}) != 0)
+	if (FC.ReadFloat(0x005E7678, {}) != 0)
 	{
         FC.InitPipe();
         if (Mouse) FC.PatchMouse();
         if (customLaunchSettings.Sandbox_EnableAllCheats) EnableCheats();
 
-		WriteByte(0x0065E332, {}, 0x1); //Set game to demo mode.
+		FC.WriteByte(0x0065E332, {}, 0x1); //Set game to demo mode.
 
 		if (DevMode) AddToLog("Mode: " + std::to_string(customLaunchSettings.Mode));
 		switch (customLaunchSettings.Mode) //Change the Prog Script to load the appropriate game mode.
 		{
-		case 0: WriteInt(0x0048D7C0, { 0x24, 0x8 }, ReadInt(0x0048D7C0, { 0x38, 0x0 })); break; //Changes Demo Prog Script to Mission
-		case 1: WriteInt(0x0048D7C0, { 0x24, 0x8 }, ReadInt(0x0048D7C0, { 0x38, 0x4 })); break; //Changes Demo Prog Script to Challenge
-		case 2: WriteInt(0x0048D7C0, { 0x24, 0x8 }, ReadInt(0x0048D7C0, { 0x38, 0x8 })); break; //Changes Demo Prog Script to Drag Race
-		case 3: WriteInt(0x0048D7C0, { 0x24, 0x8 }, ReadInt(0x0048D7C0, { 0x38, 0xC })); break; //Changes Demo Prog Script to Battle
-		case 4: WriteInt(0x0048D7C0, { 0x24, 0x8 }, ReadInt(0x0048D7C0, { 0x38, 0x10 })); break; //Changes Demo Prog Script to Joyride
-		case 5: WriteInt(0x0048D7C0, { 0x24, 0x8 }, ReadInt(0x0048D7C0, { 0x38, 0xC })); break; //Changes Demo Prog Script to Battle
-		case 6: WriteInt(0x0048D7C0, { 0x24, 0x8 }, ReadInt(0x0048D7C0, { 0x38, 0x10 })); break; //Changes Demo Prog Script to Joyride
-		case 7: WriteInt(0x0048D7C0, { 0x24, 0x8 }, ReadInt(0x0048D7C0, { 0x38, 0x10 })); break; //Changes Demo Prog Script to Joyride
+		case 0: FC.WriteInt(0x0048D7C0, { 0x24, 0x8 }, FC.ReadInt(0x0048D7C0, { 0x38, 0x0 })); break; //Changes Demo Prog Script to Mission
+		case 1: FC.WriteInt(0x0048D7C0, { 0x24, 0x8 }, FC.ReadInt(0x0048D7C0, { 0x38, 0x4 })); break; //Changes Demo Prog Script to Challenge
+		case 2: FC.WriteInt(0x0048D7C0, { 0x24, 0x8 }, FC.ReadInt(0x0048D7C0, { 0x38, 0x8 })); break; //Changes Demo Prog Script to Drag Race
+		case 3: FC.WriteInt(0x0048D7C0, { 0x24, 0x8 }, FC.ReadInt(0x0048D7C0, { 0x38, 0xC })); break; //Changes Demo Prog Script to Battle
+		case 4: FC.WriteInt(0x0048D7C0, { 0x24, 0x8 }, FC.ReadInt(0x0048D7C0, { 0x38, 0x10 })); break; //Changes Demo Prog Script to Joyride
+		case 5: FC.WriteInt(0x0048D7C0, { 0x24, 0x8 }, FC.ReadInt(0x0048D7C0, { 0x38, 0xC })); break; //Changes Demo Prog Script to Battle
+		case 6: FC.WriteInt(0x0048D7C0, { 0x24, 0x8 }, FC.ReadInt(0x0048D7C0, { 0x38, 0x10 })); break; //Changes Demo Prog Script to Joyride
+		case 7: FC.WriteInt(0x0048D7C0, { 0x24, 0x8 }, FC.ReadInt(0x0048D7C0, { 0x38, 0x10 })); break; //Changes Demo Prog Script to Joyride
 		}
-		WriteInt(0x0048D920, customLaunchSettings.Act);
-		WriteInt(0x0064D3EC, customLaunchSettings.Car);
-		WriteInt(0x0065E2B0, customLaunchSettings.Weapon);
-		WriteInt(0x0064D160, customLaunchSettings.Difficulty);
+		FC.WriteInt(0x0048D920, customLaunchSettings.Act);
+		FC.WriteInt(0x0064D3EC, customLaunchSettings.Car);
+		FC.WriteInt(0x0065E2B0, customLaunchSettings.Weapon);
+		FC.WriteInt(0x0064D160, customLaunchSettings.Difficulty);
 
 		//Below is more specific setup for each game mode.
 		switch (customLaunchSettings.Mode)
 		{
 		case 0:
 		case 1:
-			WriteByte(0x0065E32C, customLaunchSettings.ArmorRepairGlitch + 1); //Sets whether or not gadgets respawn.
+			FC.WriteByte(0x0065E32C, customLaunchSettings.ArmorRepairGlitch + 1); //Sets whether or not gadgets respawn.
 			break;
 		case 2: //Drag Race
-			WriteInt(0x0065E2A0, customLaunchSettings.Car); //Forces the game to use the proper vehicle.
-			WriteInt(0x0065E310, 3); //Makes the game believe it's in drag race.
-			WriteInt(0x0065E314, customLaunchSettings.DragRace_Time * 1000); //Sets the time limit.
-			WriteInt(0x0065E320, customLaunchSettings.DragRace_Rounds); //Sets the amount of rounds to play.
-			WriteInt(0x0065E324, customLaunchSettings.DragRace_RoundsOrWins); //Sets the game to either wins or rounds.
-			WriteInt(0x0065E328, customLaunchSettings.DragRace_Opponents); //Sets the number of players.
-			WriteInt(0x0065E32C, customLaunchSettings.DragRace_Gadgets); //Sets gadget mode.
-			WriteByte(0x0065E338, customLaunchSettings.DragRace_ItemReset); //Sets whether or not items reset
+			FC.WriteInt(0x0065E2A0, customLaunchSettings.Car); //Forces the game to use the proper vehicle.
+			FC.WriteInt(0x0065E310, 3); //Makes the game believe it's in drag race.
+			FC.WriteInt(0x0065E314, customLaunchSettings.DragRace_Time * 1000); //Sets the time limit.
+			FC.WriteInt(0x0065E320, customLaunchSettings.DragRace_Rounds); //Sets the amount of rounds to play.
+			FC.WriteInt(0x0065E324, customLaunchSettings.DragRace_RoundsOrWins); //Sets the game to either wins or rounds.
+			FC.WriteInt(0x0065E328, customLaunchSettings.DragRace_Opponents); //Sets the number of players.
+			FC.WriteInt(0x0065E32C, customLaunchSettings.DragRace_Gadgets); //Sets gadget mode.
+			FC.WriteByte(0x0065E338, customLaunchSettings.DragRace_ItemReset); //Sets whether or not items reset
 
 			break;
 		case 3: //Battle
-			WriteInt(0x0065E2A0, customLaunchSettings.Car); //Forces the game to use the proper vehicle.
-			WriteInt(0x0065E310, 2); //Makes the game believe it's in battle mode.
-			WriteInt(0x0065E314, customLaunchSettings.Battle_Time * 1000); //Sets the time limit.
-			WriteInt(0x0065E318, customLaunchSettings.Battle_Kills); //Sets the kill target.
-			WriteInt(0x0065E320, customLaunchSettings.Battle_Rounds); //Sets the amount of rounds to play.
-			WriteInt(0x0065E324, customLaunchSettings.Battle_RoundsOrWins); //Sets the game to either wins or rounds.
-			WriteInt(0x0065E328, customLaunchSettings.Battle_Opponents); //Sets the number of players.
-			WriteInt(0x0065E32C, customLaunchSettings.Battle_Gadgets); //Sets gadget mode.
-			WriteByte(0x0065E330, customLaunchSettings.Battle_GadgetRespawn); //Sets whether or not gadgets respawn.
+			FC.WriteInt(0x0065E2A0, customLaunchSettings.Car); //Forces the game to use the proper vehicle.
+			FC.WriteInt(0x0065E310, 2); //Makes the game believe it's in battle mode.
+			FC.WriteInt(0x0065E314, customLaunchSettings.Battle_Time * 1000); //Sets the time limit.
+			FC.WriteInt(0x0065E318, customLaunchSettings.Battle_Kills); //Sets the kill target.
+			FC.WriteInt(0x0065E320, customLaunchSettings.Battle_Rounds); //Sets the amount of rounds to play.
+			FC.WriteInt(0x0065E324, customLaunchSettings.Battle_RoundsOrWins); //Sets the game to either wins or rounds.
+			FC.WriteInt(0x0065E328, customLaunchSettings.Battle_Opponents); //Sets the number of players.
+			FC.WriteInt(0x0065E32C, customLaunchSettings.Battle_Gadgets); //Sets gadget mode.
+			FC.WriteByte(0x0065E330, customLaunchSettings.Battle_GadgetRespawn); //Sets whether or not gadgets respawn.
 			break;
 		case 5: //Score War
-			WriteInt(0x0065E2A0, customLaunchSettings.Car); //Forces the game to use the proper vehicle.
-			WriteInt(0x0065E310, 1); //Makes the game believe it's in score attack.
-			WriteInt(0x0065E314, customLaunchSettings.Score_Time * 1000); //Sets the time limit.
-			WriteInt(0x0065E31C, customLaunchSettings.Score_Target); //Sets the target score for Score War.
-			WriteInt(0x0065E320, customLaunchSettings.Score_Rounds); //Sets the amount of rounds to play.
-			WriteInt(0x0065E324, customLaunchSettings.Score_RoundsOrWins); //Sets the game to either wins or rounds.
-			WriteInt(0x0065E328, customLaunchSettings.Score_Opponents); //Sets the number of players.
-			WriteInt(0x0065E32C, customLaunchSettings.Score_Gadgets); //Sets gadget mode.
-			WriteByte(0x0065E330, customLaunchSettings.Score_GadgetRespawn); //Sets whether or not gadgets respawn.
+			FC.WriteInt(0x0065E2A0, customLaunchSettings.Car); //Forces the game to use the proper vehicle.
+			FC.WriteInt(0x0065E310, 1); //Makes the game believe it's in score attack.
+			FC.WriteInt(0x0065E314, customLaunchSettings.Score_Time * 1000); //Sets the time limit.
+			FC.WriteInt(0x0065E31C, customLaunchSettings.Score_Target); //Sets the target score for Score War.
+			FC.WriteInt(0x0065E320, customLaunchSettings.Score_Rounds); //Sets the amount of rounds to play.
+			FC.WriteInt(0x0065E324, customLaunchSettings.Score_RoundsOrWins); //Sets the game to either wins or rounds.
+			FC.WriteInt(0x0065E328, customLaunchSettings.Score_Opponents); //Sets the number of players.
+			FC.WriteInt(0x0065E32C, customLaunchSettings.Score_Gadgets); //Sets gadget mode.
+			FC.WriteByte(0x0065E330, customLaunchSettings.Score_GadgetRespawn); //Sets whether or not gadgets respawn.
 
 			//The below bytes patch the code to allow enemies to get points from point capsules.
-			WriteByte(0x00412507, 0x90);
-			WriteByte(0x00412508, 0x90);
-			WriteByte(0x00412509, 0x90);
-			WriteByte(0x0041250A, 0x90);
-			WriteByte(0x0041250B, 0x90);
-			WriteByte(0x0041250C, 0x90);
-			WriteByte(0x0041250D, 0x90);
-			WriteByte(0x0041250E, 0x90);
+			FC.WriteByte(0x00412507, 0x90);
+			FC.WriteByte(0x00412508, 0x90);
+			FC.WriteByte(0x00412509, 0x90);
+			FC.WriteByte(0x0041250A, 0x90);
+			FC.WriteByte(0x0041250B, 0x90);
+			FC.WriteByte(0x0041250C, 0x90);
+			FC.WriteByte(0x0041250D, 0x90);
+			FC.WriteByte(0x0041250E, 0x90);
 			break;
 		case 6: //Play Gear Hunt
 			GearHuntLaunch = true;
@@ -285,12 +285,12 @@ void GameManipulator::CustomLaunch_Disclaimer()
 			break;
 		}
 
-		WriteShort(0x00499228, (short)(mainSettings.MusicVol * 327));
-		WriteShort(0x00497150, (short)(mainSettings.SFXVol * 327));
+		FC.WriteShort(0x00499228, (short)(mainSettings.MusicVol * 327));
+		FC.WriteShort(0x00497150, (short)(mainSettings.SFXVol * 327));
 
 		if (mainSettings.PatchFOV) PatchFOV(); //Don't forget about this!
 
-		WriteFloat(0x005E7678, {}, 1); //Set the disclaimer timer to 1, so it finishes nearly instantly.
+		FC.WriteFloat(0x005E7678, {}, 1); //Set the disclaimer timer to 1, so it finishes nearly instantly.
 		CL_Disclaimer = true;
 		if (DevMode) AddToLog("Found Disclaimer!");
 		
@@ -298,9 +298,9 @@ void GameManipulator::CustomLaunch_Disclaimer()
 }
 void GameManipulator::CustomLaunch_LoadStart() 
 {
-	if (ReadInt(0x0048D970, { 0xD0 }) != 12)
+	if (FC.ReadInt(0x0048D970, { 0xD0 }) != 12)
 	{
-		WriteByte(0x0065E332, {}, 0x0);
+		FC.WriteByte(0x0065E332, {}, 0x0);
 		ClearPlayers();
 		CL_LoadStart = true;
 		if (DevMode) AddToLog("Found Start of Load!");
@@ -309,7 +309,7 @@ void GameManipulator::CustomLaunch_LoadStart()
 }
 void GameManipulator::CustomLaunch_LoadWorldData()
 {
-	if (ReadInt(0x0049DBA0, {}) != 0)
+	if (FC.ReadInt(0x0049DBA0, {}) != 0)
 	{
 		CL_LoadWorldData = true;
 		if (DevMode) AddToLog("Found World Load Data!");
@@ -317,7 +317,7 @@ void GameManipulator::CustomLaunch_LoadWorldData()
 }
 void GameManipulator::CustomLaunch_LoadObjectData()
 {
-	if (ReadInt(0x0048D92C, {}) == 5 && ReadInt(0x0048D900, {}) > 1)
+	if (FC.ReadInt(0x0048D92C, {}) == 5 && FC.ReadInt(0x0048D900, {}) > 1)
 	{
 		CL_LoadObjectData = true;
 		if (gearHuntMakeWorking) MakeGearHunt_PrepareObjectTypes();
@@ -327,13 +327,13 @@ void GameManipulator::CustomLaunch_LoadObjectData()
 }
 void GameManipulator::CustomLaunch_GamePlayStart()
 {
-	if (ReadInt(0x0048D970, { 0xD0 }) == 5)
+	if (FC.ReadInt(0x0048D970, { 0xD0 }) == 5)
 	{
 		GetAllPlayers();
 		switch (customLaunchSettings.Mode)
 		{
 		case 5:
-			WriteString(0x005F2300, { 0x480 }, " " + std::to_string(customLaunchSettings.Score_Target));
+			FC.WriteString(0x005F2300, { 0x480 }, " " + std::to_string(customLaunchSettings.Score_Target));
 			break;
 		}
 		CL_GamePlayStart = true;
@@ -341,8 +341,8 @@ void GameManipulator::CustomLaunch_GamePlayStart()
 		if (customLaunchSettings.Sandbox_SimplifyPhysics) FC.DisableFunction(CarA_ComputeSuspensionForces_Aux1);
 		if (customLaunchSettings.Sandbox_ZeroGravity)
 		{
-			WriteFloat(0x0053BB04, { 0xA0, 0x20 }, 50);
-			WriteFloat(0x0053BB04, { 0xA0, 0x24 }, -0.001);
+			FC.WriteFloat(0x0053BB04, { 0xA0, 0x20 }, 50);
+			FC.WriteFloat(0x0053BB04, { 0xA0, 0x24 }, -0.001);
 		}
 		if (GearHuntLaunch)
 		{
@@ -351,7 +351,7 @@ void GameManipulator::CustomLaunch_GamePlayStart()
 		}
 		if (gearHuntMakeWorking)
 		{
-			WriteFloat(0x00496D80, { 0x0,0x4,0xC }, 99); //Set gear target to 99, AKA impossible to get to.
+			FC.WriteFloat(0x00496D80, { 0x0,0x4,0xC }, 99); //Set gear target to 99, AKA impossible to get to.
 			
 			GH_Manager.ZeroGravity = customLaunchSettings.U_ZeroGravity;
 			GH_Manager.SimplePhysics = customLaunchSettings.U_SimplePhysics;
@@ -361,7 +361,7 @@ void GameManipulator::CustomLaunch_GamePlayStart()
 void GameManipulator::CustomLaunch_GamePlayHeartbeat()
 {
 	//Watch to see if the game restarts!
-	if (ReadInt(0x0048D970, { 0xD0 }) != 5)
+	if (FC.ReadInt(0x0048D970, { 0xD0 }) != 5)
 	{
 		//If the code gets here, the player has restarted.
 		CL_LoadStart = false;
@@ -377,19 +377,19 @@ void GameManipulator::CustomLaunch_GamePlayHeartbeat()
 
 		if (gearHuntMakeWorking) //Making Gear Hunt
 		{
-			WriteInt(0x0047A934, {}, 1); //Prevent other collectables from spawning
+			FC.WriteInt(0x0047A934, {}, 1); //Prevent other collectables from spawning
 
 			int amountOfCollectables = GH_Manager.objects.size(); //Get the amount of gears spawned.
 
 			if (MakeGearHunt_UpdateCount)
 			{
-				WriteFloat(0x0049DBA0, { 0x4C, 0x0, 0x4 }, (float)(amountOfCollectables)); //Set gears collected.
+				FC.WriteFloat(0x0049DBA0, { 0x4C, 0x0, 0x4 }, (float)(amountOfCollectables)); //Set gears collected.
 				MakeGearHunt_UpdateCount = false;
 			}
 
 			for (int i = 0; i < amountOfCollectables; i++) //Prevent gear hunt collectables from being collectable.
 			{
-				WriteShort(GH_Manager.objects[i].Address + 0xCC, 5000);
+				FC.WriteShort(GH_Manager.objects[i].Address + 0xCC, 5000);
 			}
 
 			if (GB.GetIfKeyState(GB_1, GBS_Pressed))
@@ -397,13 +397,13 @@ void GameManipulator::CustomLaunch_GamePlayHeartbeat()
 				if (amountOfCollectables < 95)
 				{
 					GearHuntObject newObject;
-					newObject.PositionX = ReadFloat(0x0053BAF4, { 0x40 });
-					newObject.PositionY = ReadFloat(0x0053BAF4, { 0x44 }) + 5;
-					newObject.PositionZ = ReadFloat(0x0053BAF4, { 0x48 });
+					newObject.PositionX = FC.ReadFloat(0x0053BAF4, { 0x40 });
+					newObject.PositionY = FC.ReadFloat(0x0053BAF4, { 0x44 }) + 5;
+					newObject.PositionZ = FC.ReadFloat(0x0053BAF4, { 0x48 });
 					newObject.ObjectType = 0;
 					newObject.ObjectTypeIndex = 21;
 
-					newObject.Address = FC.CU_SpawnGear(newObject.PositionX, newObject.PositionY, newObject.PositionZ, ReadInt(0x00496D6C, { 0x4, 0x4, 0x8, 0x1C }));
+					newObject.Address = FC.CU_SpawnGear(newObject.PositionX, newObject.PositionY, newObject.PositionZ, FC.ReadInt(0x00496D6C, { 0x4, 0x4, 0x8, 0x1C }));
 
 					AddToLog("New Gear Address: " + std::to_string(newObject.Address));
 
@@ -429,20 +429,20 @@ void GameManipulator::CustomLaunch_GamePlayHeartbeat()
 			{
 				if (amountOfCollectables > 0 && amountOfCollectables > gearHuntMakeWarp)
 				{
-					WriteFloat(0x0053BAF4, { 0x00 }, 0);
-					WriteFloat(0x0053BAF4, { 0x04 }, 0);
-					WriteFloat(0x0053BAF4, { 0x08 }, 0);
-					WriteFloat(0x0053BAF4, { 0x40 }, GH_Manager.objects[gearHuntMakeWarp].PositionX);
-					WriteFloat(0x0053BAF4, { 0x44 }, GH_Manager.objects[gearHuntMakeWarp].PositionY + 8);
-					WriteFloat(0x0053BAF4, { 0x48 }, GH_Manager.objects[gearHuntMakeWarp].PositionZ);
-					WriteFloat(0x0053BAF4, { 0x50 }, 0);
-					FC.CU_TeleportCorrection(ReadInt(0x0053BAF4));
+					FC.WriteFloat(0x0053BAF4, { 0x00 }, 0);
+					FC.WriteFloat(0x0053BAF4, { 0x04 }, 0);
+					FC.WriteFloat(0x0053BAF4, { 0x08 }, 0);
+					FC.WriteFloat(0x0053BAF4, { 0x40 }, GH_Manager.objects[gearHuntMakeWarp].PositionX);
+					FC.WriteFloat(0x0053BAF4, { 0x44 }, GH_Manager.objects[gearHuntMakeWarp].PositionY + 8);
+					FC.WriteFloat(0x0053BAF4, { 0x48 }, GH_Manager.objects[gearHuntMakeWarp].PositionZ);
+					FC.WriteFloat(0x0053BAF4, { 0x50 }, 0);
+					FC.CU_TeleportCorrection(FC.ReadInt(0x0053BAF4));
 					JustWarped = true;
-					JustWarpedCounter = ReadInt(0x0048D978);
-					JustWarpedFloatX = ReadInt(0x0053BAF4, { 0x50 });
-					JustWarpedFloatY = ReadInt(0x0053BAF4, { 0x54 });
-					JustWarpedFloatZ = ReadInt(0x0053BAF4, { 0x58 });
-					JustWarpedFloatW = ReadInt(0x0053BAF4, { 0x5C });
+					JustWarpedCounter = FC.ReadInt(0x0048D978);
+					JustWarpedFloatX = FC.ReadInt(0x0053BAF4, { 0x50 });
+					JustWarpedFloatY = FC.ReadInt(0x0053BAF4, { 0x54 });
+					JustWarpedFloatZ = FC.ReadInt(0x0053BAF4, { 0x58 });
+					JustWarpedFloatW = FC.ReadInt(0x0053BAF4, { 0x5C });
 				}
 				gearHuntMakeWarp = -1;
 			}
@@ -451,12 +451,12 @@ void GameManipulator::CustomLaunch_GamePlayHeartbeat()
 		}
 		else if (GearHuntLaunch) //Playing Gear Hunt
 		{
-			WriteInt(0x0047A934, {}, 1); //Prevent other collectables from spawning
+			FC.WriteInt(0x0047A934, {}, 1); //Prevent other collectables from spawning
 			int totalObjects = GH_Manager.objects.size();
 			float totalCollected = 0;
 			for (int i = 0; i < totalObjects; i++)
 			{
-				if (ReadByte(GH_Manager.objects[i].Address + 0x75, {}) != 0)
+				if (FC.ReadByte(GH_Manager.objects[i].Address + 0x75, {}) != 0)
 				{
 					switch (GH_Manager.objects[i].ObjectTypeIndex)
 					{
@@ -473,9 +473,9 @@ void GameManipulator::CustomLaunch_GamePlayHeartbeat()
 			if (int(totalCollected) != GH_LastCount)
 			{
 				Sleep(50);
-				WriteFloat(0x0049DBA0, { 0x4C, 0x0, 0x4 }, totalCollected); //Set gears collected.
-				WriteString(0x00496D6C, { 0x4, 0x4, 0x18, 0x1C, 0x560 }, "Gears Collected: " + std::to_string(int(totalCollected)) + "/" + std::to_string(GH_TotalGears));
-				WriteInt(0x005EF2CC, ReadInt(0x00496D6C, { 0x4, 0x4, 0x18, 0x1C }) + 0x560);
+				FC.WriteFloat(0x0049DBA0, { 0x4C, 0x0, 0x4 }, totalCollected); //Set gears collected.
+				FC.WriteString(0x00496D6C, { 0x4, 0x4, 0x18, 0x1C, 0x560 }, "Gears Collected: " + std::to_string(int(totalCollected)) + "/" + std::to_string(GH_TotalGears));
+				FC.WriteInt(0x005EF2CC, FC.ReadInt(0x00496D6C, { 0x4, 0x4, 0x18, 0x1C }) + 0x560);
 				GH_LastCount = int(totalCollected);
 			}
 			if (GH_Manager.TimeLimit != 0) GearHuntLaunch_Timer();
@@ -484,15 +484,15 @@ void GameManipulator::CustomLaunch_GamePlayHeartbeat()
 		if (Sandbox) Sandbox_Heartbeat();
 		if (JustWarped)
 		{
-			if (ReadInt(0x48D978) != JustWarpedCounter)
+			if (FC.ReadInt(0x48D978) != JustWarpedCounter)
 			{
-				WriteFloat(0x0053BAF4, { 0x35C }, 0);
-				WriteFloat(0x0053BAF4, { 0x360 }, 0);
-				WriteFloat(0x0053BAF4, { 0x364 }, 0);
-				WriteFloat(0x0053BAF4, { 0x50 }, 0);
-				WriteFloat(0x0053BAF4, { 0x54 }, 0);
-				WriteFloat(0x0053BAF4, { 0x58 }, 0);
-				WriteFloat(0x0053BAF4, { 0x5C }, 1);
+				FC.WriteFloat(0x0053BAF4, { 0x35C }, 0);
+				FC.WriteFloat(0x0053BAF4, { 0x360 }, 0);
+				FC.WriteFloat(0x0053BAF4, { 0x364 }, 0);
+				FC.WriteFloat(0x0053BAF4, { 0x50 }, 0);
+				FC.WriteFloat(0x0053BAF4, { 0x54 }, 0);
+				FC.WriteFloat(0x0053BAF4, { 0x58 }, 0);
+				FC.WriteFloat(0x0053BAF4, { 0x5C }, 1);
 				JustWarped = false;
 			}
 		}
@@ -501,10 +501,10 @@ void GameManipulator::CustomLaunch_GamePlayHeartbeat()
 
 void GameManipulator::StandardLaunch_Disclaimer()
 {
-	if (ReadFloat(0x005E7678, {}) != 0)
+	if (FC.ReadFloat(0x005E7678, {}) != 0)
 	{
-		WriteShort(0x00499228, (short)(mainSettings.MusicVol * 327));
-		WriteShort(0x00497150, (short)(mainSettings.SFXVol * 327));
+		FC.WriteShort(0x00499228, (short)(mainSettings.MusicVol * 327));
+		FC.WriteShort(0x00497150, (short)(mainSettings.SFXVol * 327));
 
 		if (mainSettings.PatchFOV) PatchFOV(); //Don't forget about this!
 
@@ -515,7 +515,7 @@ void GameManipulator::StandardLaunch_Disclaimer()
 
 void GameManipulator::MakeGearHunt_PrepareObjectTypes()
 {
-	WriteInt(0x00496D6C, { 0x4,0x4,0x8,0x30 }, C_WhiteGear);
+	FC.WriteInt(0x00496D6C, { 0x4,0x4,0x8,0x30 }, C_WhiteGear);
 }
 void GameManipulator::MakeGearHunt_Save()
 {
@@ -561,19 +561,19 @@ void GameManipulator::GearHuntLaunch_PrepareObjectTypes()
 	}
 	switch (GH_Manager.DeadWeightChoice) //Set the key to a deadweight
 	{
-	case 1: WriteInt(0x00496D6C, { 0x0,0x4,0x4,0x30 }, C_MoneyBag); break;
-	case 2: WriteInt(0x00496D6C, { 0x0,0x4,0x4,0x30 }, C_Uranium); break;
-	case 3: WriteInt(0x00496D6C, { 0x0,0x4,0x4,0x30 }, C_TimeBomb); break;
-	case 4: WriteInt(0x00496D6C, { 0x0,0x4,0x4,0x30 }, C_DataDisk); break;
-	case 5: WriteInt(0x00496D6C, { 0x0,0x4,0x4,0x30 }, C_TemporalTransmission); break;
-	case 6: WriteInt(0x00496D6C, { 0x0,0x4,0x4,0x30 }, C_VolcanicGasCollector); break;
+	case 1: FC.WriteInt(0x00496D6C, { 0x0,0x4,0x4,0x30 }, C_MoneyBag); break;
+	case 2: FC.WriteInt(0x00496D6C, { 0x0,0x4,0x4,0x30 }, C_Uranium); break;
+	case 3: FC.WriteInt(0x00496D6C, { 0x0,0x4,0x4,0x30 }, C_TimeBomb); break;
+	case 4: FC.WriteInt(0x00496D6C, { 0x0,0x4,0x4,0x30 }, C_DataDisk); break;
+	case 5: FC.WriteInt(0x00496D6C, { 0x0,0x4,0x4,0x30 }, C_TemporalTransmission); break;
+	case 6: FC.WriteInt(0x00496D6C, { 0x0,0x4,0x4,0x30 }, C_VolcanicGasCollector); break;
 	}
 	if (types.size() < 11)
 	{
 		for (int i = 0; i < types.size(); i++)
 		{
 			byte offset = (4 + (i * 4));
-			WriteInt(0x00496D6C, { 0x4,0x4,offset,0x30 }, types[i]);
+			FC.WriteInt(0x00496D6C, { 0x4,0x4,offset,0x30 }, types[i]);
 		}
 	}
 }
@@ -595,16 +595,16 @@ void GameManipulator::GearHuntLaunch_SpawnGears()
 	{
 		switch (GH_ObjectTypes[i])
 		{
-		case 0: FC.CU_SpawnGear(GH_Manager.objects[i].PositionX, GH_Manager.objects[i].PositionY, GH_Manager.objects[i].PositionZ, ReadInt(0x00496D6C, { 0x4, 0x4, 0x4, 0x1C })); break;
-		case 1: FC.CU_SpawnGear(GH_Manager.objects[i].PositionX, GH_Manager.objects[i].PositionY, GH_Manager.objects[i].PositionZ, ReadInt(0x00496D6C, { 0x4, 0x4, 0x8, 0x1C })); break;
-		case 2: FC.CU_SpawnGear(GH_Manager.objects[i].PositionX, GH_Manager.objects[i].PositionY, GH_Manager.objects[i].PositionZ, ReadInt(0x00496D6C, { 0x4, 0x4, 0xC, 0x1C })); break;
-		case 3: FC.CU_SpawnGear(GH_Manager.objects[i].PositionX, GH_Manager.objects[i].PositionY, GH_Manager.objects[i].PositionZ, ReadInt(0x00496D6C, { 0x4, 0x4, 0x10, 0x1C })); break;
-		case 4: FC.CU_SpawnGear(GH_Manager.objects[i].PositionX, GH_Manager.objects[i].PositionY, GH_Manager.objects[i].PositionZ, ReadInt(0x00496D6C, { 0x4, 0x4, 0x14, 0x1C })); break;
-		case 5: FC.CU_SpawnGear(GH_Manager.objects[i].PositionX, GH_Manager.objects[i].PositionY, GH_Manager.objects[i].PositionZ, ReadInt(0x00496D6C, { 0x4, 0x4, 0x18, 0x1C })); break;
-		case 6: FC.CU_SpawnGear(GH_Manager.objects[i].PositionX, GH_Manager.objects[i].PositionY, GH_Manager.objects[i].PositionZ, ReadInt(0x00496D6C, { 0x4, 0x4, 0x1C, 0x1C })); break;
-		case 7: FC.CU_SpawnGear(GH_Manager.objects[i].PositionX, GH_Manager.objects[i].PositionY, GH_Manager.objects[i].PositionZ, ReadInt(0x00496D6C, { 0x4, 0x4, 0x20, 0x1C })); break;
-		case 8: FC.CU_SpawnGear(GH_Manager.objects[i].PositionX, GH_Manager.objects[i].PositionY, GH_Manager.objects[i].PositionZ, ReadInt(0x00496D6C, { 0x4, 0x4, 0x24, 0x1C })); break;
-		case 9: FC.CU_SpawnGear(GH_Manager.objects[i].PositionX, GH_Manager.objects[i].PositionY, GH_Manager.objects[i].PositionZ, ReadInt(0x00496D6C, { 0x4, 0x4, 0x28, 0x1C })); break;
+		case 0: FC.CU_SpawnGear(GH_Manager.objects[i].PositionX, GH_Manager.objects[i].PositionY, GH_Manager.objects[i].PositionZ, FC.ReadInt(0x00496D6C, { 0x4, 0x4, 0x4, 0x1C })); break;
+		case 1: FC.CU_SpawnGear(GH_Manager.objects[i].PositionX, GH_Manager.objects[i].PositionY, GH_Manager.objects[i].PositionZ, FC.ReadInt(0x00496D6C, { 0x4, 0x4, 0x8, 0x1C })); break;
+		case 2: FC.CU_SpawnGear(GH_Manager.objects[i].PositionX, GH_Manager.objects[i].PositionY, GH_Manager.objects[i].PositionZ, FC.ReadInt(0x00496D6C, { 0x4, 0x4, 0xC, 0x1C })); break;
+		case 3: FC.CU_SpawnGear(GH_Manager.objects[i].PositionX, GH_Manager.objects[i].PositionY, GH_Manager.objects[i].PositionZ, FC.ReadInt(0x00496D6C, { 0x4, 0x4, 0x10, 0x1C })); break;
+		case 4: FC.CU_SpawnGear(GH_Manager.objects[i].PositionX, GH_Manager.objects[i].PositionY, GH_Manager.objects[i].PositionZ, FC.ReadInt(0x00496D6C, { 0x4, 0x4, 0x14, 0x1C })); break;
+		case 5: FC.CU_SpawnGear(GH_Manager.objects[i].PositionX, GH_Manager.objects[i].PositionY, GH_Manager.objects[i].PositionZ, FC.ReadInt(0x00496D6C, { 0x4, 0x4, 0x18, 0x1C })); break;
+		case 6: FC.CU_SpawnGear(GH_Manager.objects[i].PositionX, GH_Manager.objects[i].PositionY, GH_Manager.objects[i].PositionZ, FC.ReadInt(0x00496D6C, { 0x4, 0x4, 0x1C, 0x1C })); break;
+		case 7: FC.CU_SpawnGear(GH_Manager.objects[i].PositionX, GH_Manager.objects[i].PositionY, GH_Manager.objects[i].PositionZ, FC.ReadInt(0x00496D6C, { 0x4, 0x4, 0x20, 0x1C })); break;
+		case 8: FC.CU_SpawnGear(GH_Manager.objects[i].PositionX, GH_Manager.objects[i].PositionY, GH_Manager.objects[i].PositionZ, FC.ReadInt(0x00496D6C, { 0x4, 0x4, 0x24, 0x1C })); break;
+		case 9: FC.CU_SpawnGear(GH_Manager.objects[i].PositionX, GH_Manager.objects[i].PositionY, GH_Manager.objects[i].PositionZ, FC.ReadInt(0x00496D6C, { 0x4, 0x4, 0x28, 0x1C })); break;
 		}
 		GH_Manager.objects[i].Address = 0x4F9530 - (i * 0xF0);
 		if (GH_Manager.objects[i].ObjectTypeIndex == C_BlueGear || GH_Manager.objects[i].ObjectTypeIndex == C_WhiteGear || GH_Manager.objects[i].ObjectTypeIndex == C_RedGear || GH_Manager.objects[i].ObjectTypeIndex == C_GreenGear || GH_Manager.objects[i].ObjectTypeIndex == C_YellowGear)
@@ -613,8 +613,8 @@ void GameManipulator::GearHuntLaunch_SpawnGears()
 			totalGears++;
 		}
 	}
-	if (GH_Manager.ForceDeadWeight) FC.CU_SpawnGear(ReadFloat(0x0053BAF4, { 0x40 }), ReadFloat(0x0053BAF4, { 0x44 }) + 5, ReadFloat(0x0053BAF4, { 0x48 }), ReadInt(0x00496D6C, { 0x0, 0x4, 0x4, 0x1C }));
-	WriteFloat(0x00496D80, { 0x0,0x4,0xC }, totalGears); //Set gear target
+	if (GH_Manager.ForceDeadWeight) FC.CU_SpawnGear(FC.ReadFloat(0x0053BAF4, { 0x40 }), FC.ReadFloat(0x0053BAF4, { 0x44 }) + 5, FC.ReadFloat(0x0053BAF4, { 0x48 }), FC.ReadInt(0x00496D6C, { 0x0, 0x4, 0x4, 0x1C }));
+	FC.WriteFloat(0x00496D80, { 0x0,0x4,0xC }, totalGears); //Set gear target
 	GH_TotalGears = (int)totalGears;
 }
 void GameManipulator::GearHuntLaunch_Timer()
@@ -622,7 +622,7 @@ void GameManipulator::GearHuntLaunch_Timer()
 	if (GH_Timer_Started)
 	{
 		std::string timerString = "";
-		int timePassed = ReadInt(0x0049DBA4) - GH_StartingTimeValue;
+		int timePassed = FC.ReadInt(0x0049DBA4) - GH_StartingTimeValue;
 		int timePassedCorrected = (int)((double)timePassed * (double)0.666667);
 		int timeLeft = GH_TotalTimeMs - timePassedCorrected;
 		int seconds = timeLeft / 1000;
@@ -633,14 +633,14 @@ void GameManipulator::GearHuntLaunch_Timer()
 		timerString += ":";
 		if (remainingSeconds < 10) timerString += "0";
 		timerString += std::to_string(remainingSeconds);
-		WriteString(0x005EDE04, { 0x0 }, timerString);
+		FC.WriteString(0x005EDE04, { 0x0 }, timerString);
 	}
 	else
 	{
-		if (ReadInt(0x005E7794) == 9 && ReadInt(0x0049DBA4) > 1000) // If true, player has control of their vehicle.
+		if (FC.ReadInt(0x005E7794) == 9 && FC.ReadInt(0x0049DBA4) > 1000) // If true, player has control of their vehicle.
 		{
 			GH_Timer_Started = true;
-			GH_StartingTimeValue = ReadInt(0x0049DBA4);
+			GH_StartingTimeValue = FC.ReadInt(0x0049DBA4);
 			GH_TotalTimeMs = GH_Manager.TimeLimit * 1000;
 		}
 	}
@@ -653,8 +653,8 @@ void GameManipulator::Sandbox_Init()
 	if (customLaunchSettings.Sandbox_SimplifyPhysics) FC.DisableFunction(CarA_ComputeSuspensionForces_Aux1);
 	if (customLaunchSettings.Sandbox_ZeroGravity)
 	{
-		WriteFloat(0x0053BB04, { 0xA0, 0x20 }, 50);
-		WriteFloat(0x0053BB04, { 0xA0, 0x24 }, -0.001);
+		FC.WriteFloat(0x0053BB04, { 0xA0, 0x20 }, 50);
+		FC.WriteFloat(0x0053BB04, { 0xA0, 0x24 }, -0.001);
 	}
 	
 	//FC.FunctionReturnZero(ThingManager_DARYL_CreateThing);
@@ -691,51 +691,59 @@ void GameManipulator::Sandbox_Init()
 }
 void GameManipulator::Sandbox_Heartbeat()
 {
-	if (customLaunchSettings.Sandbox_PreventCollectablesFromSpawning) WriteInt(0x0047A934, {}, 1);
+	if (customLaunchSettings.Sandbox_PreventCollectablesFromSpawning) FC.WriteInt(0x0047A934, {}, 1);
 }
 
 void GameManipulator::PatchFOV()
 {
-	WriteFloat(0x006D40F0, (float)mainSettings.ScreenFOV); //Set the FOV to the desired value.
+	FC.WriteFloat(0x006D40F0, (float)mainSettings.ScreenFOV); //Set the FOV to the desired value.
 
 	//Patch the game's code so it can't be changed anymore.
-	WriteByte(0x00460B82, 0x90);
-	WriteByte(0x00460B83, 0x90);
-	WriteByte(0x00460B84, 0x90);
-	WriteByte(0x00460B85, 0x90);
-	WriteByte(0x00460B86, 0x90);
-	WriteByte(0x00460B87, 0x90);
+	FC.WriteByte(0x00460B82, 0x90);
+	FC.WriteByte(0x00460B83, 0x90);
+	FC.WriteByte(0x00460B84, 0x90);
+	FC.WriteByte(0x00460B85, 0x90);
+	FC.WriteByte(0x00460B86, 0x90);
+	FC.WriteByte(0x00460B87, 0x90);
 	
 }
 
 void GameManipulator::EnableCheats()
 {
-    WriteByte(0x0065E350, 0x01);
-    WriteByte(0x0065E351, 0x01);
-    WriteByte(0x0065E352, 0x01);
-    WriteByte(0x0065E353, 0x01);
-    WriteByte(0x0065E354, 0x01);
-    WriteByte(0x0065E355, 0x01);
-    WriteByte(0x0065E356, 0x01);
-    WriteByte(0x0065E357, 0x02);
-    WriteByte(0x0065E358, 0x01);
+    FC.WriteByte(0x0065E350, 0x01);
+    FC.WriteByte(0x0065E351, 0x01);
+    FC.WriteByte(0x0065E352, 0x01);
+    FC.WriteByte(0x0065E353, 0x01);
+    FC.WriteByte(0x0065E354, 0x01);
+    FC.WriteByte(0x0065E355, 0x01);
+    FC.WriteByte(0x0065E356, 0x01);
+    FC.WriteByte(0x0065E357, 0x02);
+    FC.WriteByte(0x0065E358, 0x01);
 }
 
 void GameManipulator::ClearPlayers()
 {
 	for (int i = 0; i < 8; i++)
 	{
-		player[i] = GamePlayer();
+		player[i] = HWVX_Player();
 	}
 }
 void GameManipulator::GetAllPlayers()
 {
-	int Players = ReadInt(0x0065E328, {}) + 1;
+	int Players = FC.ReadInt(0x0065E328, {}) + 1;
 	for (int i = 0; i < Players; i++)
 	{
-		if (i == 0) player[i] = GamePlayer(0x0053BAC8);
-		else player[i] = GamePlayer(ReadInt(0x005423A8) + (i - 1) * 0x654);
-		if (DevMode) AddToLog("Added Player " + std::to_string(i));
+		if (i == 0)
+		{
+			player[i] = HWVX_Player(0x0053BAC8);
+			player[i].playerVehicle = HWVX_Vehicle(FC.ReadInt(player[i].GetBaseAddress() + 0x2C));
+		}
+		else
+		{
+			player[i] = HWVX_Player(FC.ReadInt(0x005423A8) + (i - 1) * 0x654);
+			player[i].playerVehicle = HWVX_Vehicle(FC.ReadInt(player[i].GetBaseAddress() + 0x2C));
+		}
+		if (DevMode) AddToLog("Added Player " + std::to_string(i) + " at " + IntToHexString(player[i].GetBaseAddress()));
 	}
 }
 void GameManipulator::UpdatePlayers()
@@ -751,8 +759,8 @@ void GameManipulator::UpdatePlayers()
 			{
 			case 5:
 				int CurrentKills = player[i].Kills;
-				player[i].Kills = ReadInt(player[i].Address + 0x78);
-				player[i].StuntPoints = ReadInt(player[i].Address + 0x7C);
+				player[i].Kills = FC.ReadInt(player[i].GetBaseAddress() + 0x78);
+				player[i].StuntPoints = FC.ReadInt(player[i].GetBaseAddress() + 0x7C);
 				if (CurrentKills < player[i].Kills)
 				{
 					if (i == 0)
@@ -762,7 +770,7 @@ void GameManipulator::UpdatePlayers()
 					else
 					{
 						player[i].StuntPoints += customLaunchSettings.Score_PointsPerKill * (player[i].Kills - CurrentKills);
-						WriteInt(player[i].Address + 0x7C, player[i].StuntPoints);
+						FC.WriteInt(player[i].GetBaseAddress() + 0x7C, player[i].StuntPoints);
 					}
 				}
 				break;
@@ -778,9 +786,9 @@ void GameManipulator::UpdatePlayers()
 			{
 				int countFraction = IDEA_ScoreCountUp / 5 + 1;
 				player[i].StuntPoints += countFraction;
-				WriteInt(player[i].Address + 0x7C, player[i].StuntPoints);
-				WriteString(0x005EE118, std::to_string(player[i].StuntPoints));
-				WriteString(0x005FE068, std::to_string(player[i].StuntPoints));
+				FC.WriteInt(player[i].GetBaseAddress() + 0x7C, player[i].StuntPoints);
+				FC.WriteString(0x005EE118, std::to_string(player[i].StuntPoints));
+				FC.WriteString(0x005FE068, std::to_string(player[i].StuntPoints));
 				IDEA_ScoreCountUp -= countFraction;
 
 				//Debugging something and seeing if it works!
@@ -791,98 +799,12 @@ void GameManipulator::UpdatePlayers()
 	}
 }
 
-void GameManipulator::WriteByte(UINT_PTR address, std::vector<unsigned int> offsets, byte value)
+std::string GameManipulator::IntToHexString(int value)
 {
-	UINT_PTR addr = address;
-	for (unsigned int i = 0; i < offsets.size(); ++i)
-	{
-		ReadProcessMemory(ProcessHandle, (BYTE*)addr, &addr, 4, 0);
-		addr += offsets[i];
-	}
-	WriteProcessMemory(ProcessHandle, (void*)addr, &value, sizeof(byte), NULL);
-}
-void GameManipulator::WriteInt(UINT_PTR address, std::vector<unsigned int> offsets, int value)
-{
-	UINT_PTR addr = address;
-	for (unsigned int i = 0; i < offsets.size(); ++i)
-	{
-		ReadProcessMemory(ProcessHandle, (LPCVOID)(addr), &addr, 4, 0);
-		addr += offsets[i];
-	}
-	WriteProcessMemory(ProcessHandle, (void*)addr, &value, sizeof(int), NULL);
-}
-void GameManipulator::WriteFloat(UINT_PTR address, std::vector<unsigned int> offsets, float value)
-{
-	UINT_PTR addr = address;
-	for (unsigned int i = 0; i < offsets.size(); ++i)
-	{
-		ReadProcessMemory(ProcessHandle, (BYTE*)addr, &addr, 4, 0);
-		addr += offsets[i];
-	}
-	WriteProcessMemory(ProcessHandle, (void*)addr, &value, sizeof(float), NULL);
-}
-void GameManipulator::WriteShort(UINT_PTR address, std::vector<unsigned int> offsets, short value)
-{
-	UINT_PTR addr = address;
-	for (unsigned int i = 0; i < offsets.size(); ++i)
-	{
-		ReadProcessMemory(ProcessHandle, (BYTE*)addr, &addr, 4, 0);
-		addr += offsets[i];
-	}
-	WriteProcessMemory(ProcessHandle, (void*)addr, &value, sizeof(short), NULL);
-}
-void GameManipulator::WriteString(UINT_PTR address, std::vector<unsigned int> offsets, std::string value)
-{
-	UINT_PTR addr = address;
-	for (unsigned int i = 0; i < offsets.size(); ++i)
-	{
-		ReadProcessMemory(ProcessHandle, (BYTE*)addr, &addr, 4, 0);
-		addr += offsets[i];
-	}
-	for (int i = 0; i < value.length(); i++)
-	{
-		char character = value.at(i);
-		WriteProcessMemory(ProcessHandle, (void*)(addr + i), &character, 1, NULL);
-	}
-	WriteByte((addr + value.length()), {}, 0x0);
-	
-}
-
-byte GameManipulator::ReadByte(UINT_PTR address, std::vector<unsigned int> offsets)
-{
-	byte toReturn = 0x0;
-	UINT_PTR addr = address;
-	for (unsigned int i = 0; i < offsets.size(); ++i)
-	{
-		ReadProcessMemory(ProcessHandle, (BYTE*)addr, &addr, 4, 0);
-		addr += offsets[i];
-	}
-	ReadProcessMemory(ProcessHandle, reinterpret_cast<void*>(addr), &toReturn, sizeof(byte), nullptr);
-	return toReturn;
-}
-int GameManipulator::ReadInt(UINT_PTR address, std::vector<unsigned int> offsets)
-{
-	int toReturn = 0;
-	UINT_PTR addr = address;
-	for (unsigned int i = 0; i < offsets.size(); ++i)
-	{
-		ReadProcessMemory(ProcessHandle, (BYTE*)addr, &addr, 4, 0);
-		addr += offsets[i];
-	}
-	ReadProcessMemory(ProcessHandle, reinterpret_cast<void*>(addr), &toReturn, sizeof(int), nullptr);
-	return toReturn;
-}
-float GameManipulator::ReadFloat(UINT_PTR address, std::vector<unsigned int> offsets)
-{
-	float toReturn = 0;
-	UINT_PTR addr = address;
-	for (unsigned int i = 0; i < offsets.size(); ++i)
-	{
-		ReadProcessMemory(ProcessHandle, (float*)addr, &addr, 4, 0);
-		addr += offsets[i];
-	}
-	ReadProcessMemory(ProcessHandle, reinterpret_cast<void*>(addr), &toReturn, sizeof(float), nullptr);
-	return toReturn;
+	char hex_string[20];
+	sprintf(hex_string, "%X", value);
+	std::string returnString(hex_string);
+	return returnString;
 }
 
 void GameManipulator::AddToLog(std::string textToAdd)
@@ -928,45 +850,5 @@ std::string GameManipulator::getPathName(const std::string& s) {
 	return("");
 }
 
-void GameManipulator::WriteByte(UINT_PTR address, byte value)
-{
-	std::vector<unsigned int> offsets;
-	WriteByte(address, offsets, value);
-}
-void GameManipulator::WriteFloat(UINT_PTR address, float value)
-{
-	std::vector<unsigned int> offsets;
-	WriteFloat(address, offsets, value);
-}
-void GameManipulator::WriteInt(UINT_PTR address, int value)
-{
-	std::vector<unsigned int> offsets;
-	WriteInt(address, offsets, value);
-}
-void GameManipulator::WriteShort(UINT_PTR address, short value)
-{
-	std::vector<unsigned int> offsets;
-	WriteShort(address, offsets, value);
-}
-void GameManipulator::WriteString(UINT_PTR address, std::string value)
-{
-	std::vector<unsigned int> offsets;
-	WriteString(address, offsets, value);
-}
 
-byte GameManipulator::ReadByte(UINT_PTR address)
-{
-	std::vector<unsigned int> offsets;
-	return ReadByte(address, offsets);
-}
-int GameManipulator::ReadInt(UINT_PTR address)
-{
-	std::vector<unsigned int> offsets;
-	return ReadInt(address, offsets);
-}
-float GameManipulator::ReadFloat(UINT_PTR address)
-{
-	std::vector<unsigned int> offsets;
-	return ReadFloat(address, offsets);
-}
 

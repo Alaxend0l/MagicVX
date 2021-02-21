@@ -151,12 +151,13 @@
     <ClCompile Include="FunctionCaller.cpp" />
     <ClCompile Include="GameBoard.cpp" />
     <ClCompile Include="GameManipulator.cpp" />
-    <ClCompile Include="GamePlayer.cpp" />
     <ClCompile Include="GameThreading.cpp" />
     <ClCompile Include="GearHuntManager.cpp" />
     <ClCompile Include="GearHuntObject.cpp" />
     <ClCompile Include="Global.cpp" />
-    <ClCompile Include="HelloWorld.cpp" />
+    <ClCompile Include="HWVX_Generic.cpp" />
+    <ClCompile Include="HWVX_Player.cpp" />
+    <ClCompile Include="HWVX_Vehicle.cpp" />
     <ClCompile Include="imgui.cpp" />
     <ClCompile Include="imgui_demo.cpp" />
     <ClCompile Include="imgui_draw.cpp" />
@@ -167,6 +168,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="PipeFunction.cpp" />
     <ClCompile Include="UserSettings.cpp" />
+    <ClCompile Include="XPC_Handle.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CLSettings.h" />
@@ -174,11 +176,13 @@
     <ClInclude Include="FunctionCaller.h" />
     <ClInclude Include="GameBoard.h" />
     <ClInclude Include="GameManipulator.h" />
-    <ClInclude Include="GamePlayer.h" />
     <ClInclude Include="GameThreading.h" />
     <ClInclude Include="GearHuntManager.h" />
     <ClInclude Include="GearHuntObject.h" />
     <ClInclude Include="Global.h" />
+    <ClInclude Include="HWVX_Generic.h" />
+    <ClInclude Include="HWVX_Player.h" />
+    <ClInclude Include="HWVX_Vehicle.h" />
     <ClInclude Include="imconfig.h" />
     <ClInclude Include="imgui.h" />
     <ClInclude Include="imgui_impl_dx9.h" />
@@ -190,6 +194,7 @@
     <ClInclude Include="PipeFunction.h" />
     <ClInclude Include="SimpleIni.h" />
     <ClInclude Include="UserSettings.h" />
+    <ClInclude Include="XPC_Handle.h" />
     <ClInclude Include="XPC_Layout.h" />
   </ItemGroup>
   <ItemGroup>

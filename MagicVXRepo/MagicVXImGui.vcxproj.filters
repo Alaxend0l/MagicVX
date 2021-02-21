@@ -32,9 +32,6 @@
     <ClCompile Include="GameManipulator.cpp">
       <Filter>MagicVX\CPPs</Filter>
     </ClCompile>
-    <ClCompile Include="GamePlayer.cpp">
-      <Filter>MagicVX\CPPs</Filter>
-    </ClCompile>
     <ClCompile Include="GameThreading.cpp">
       <Filter>MagicVX\CPPs</Filter>
     </ClCompile>
@@ -47,13 +44,22 @@
     <ClCompile Include="Global.cpp">
       <Filter>MagicVX\CPPs</Filter>
     </ClCompile>
-    <ClCompile Include="HelloWorld.cpp">
-      <Filter>MagicVX\CPPs</Filter>
-    </ClCompile>
     <ClCompile Include="PipeFunction.cpp">
       <Filter>MagicVX\CPPs</Filter>
     </ClCompile>
     <ClCompile Include="UserSettings.cpp">
+      <Filter>MagicVX\CPPs</Filter>
+    </ClCompile>
+    <ClCompile Include="HWVX_Player.cpp">
+      <Filter>MagicVX\HWVX_Classes</Filter>
+    </ClCompile>
+    <ClCompile Include="HWVX_Generic.cpp">
+      <Filter>MagicVX\HWVX_Classes</Filter>
+    </ClCompile>
+    <ClCompile Include="HWVX_Vehicle.cpp">
+      <Filter>MagicVX\HWVX_Classes</Filter>
+    </ClCompile>
+    <ClCompile Include="XPC_Handle.cpp">
       <Filter>MagicVX\CPPs</Filter>
     </ClCompile>
   </ItemGroup>
@@ -94,9 +100,6 @@
     <ClInclude Include="GameManipulator.h">
       <Filter>MagicVX\Headers</Filter>
     </ClInclude>
-    <ClInclude Include="GamePlayer.h">
-      <Filter>MagicVX\Headers</Filter>
-    </ClInclude>
     <ClInclude Include="GameThreading.h">
       <Filter>MagicVX\Headers</Filter>
     </ClInclude>
@@ -112,16 +115,28 @@
     <ClInclude Include="PipeFunction.h">
       <Filter>MagicVX\Headers</Filter>
     </ClInclude>
-    <ClInclude Include="SimpleIni.h">
-      <Filter>MagicVX\Headers</Filter>
-    </ClInclude>
     <ClInclude Include="UserSettings.h">
       <Filter>MagicVX\Headers</Filter>
     </ClInclude>
+    <ClInclude Include="imconfig.h">
+      <Filter>ImGuiDependencies</Filter>
+    </ClInclude>
+    <ClInclude Include="HWVX_Vehicle.h">
+      <Filter>MagicVX\HWVX_Classes</Filter>
+    </ClInclude>
     <ClInclude Include="XPC_Layout.h">
+      <Filter>MagicVX\HWVX_Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="HWVX_Generic.h">
+      <Filter>MagicVX\HWVX_Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="HWVX_Player.h">
+      <Filter>MagicVX\HWVX_Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="XPC_Handle.h">
       <Filter>MagicVX\Headers</Filter>
     </ClInclude>
-    <ClInclude Include="imconfig.h">
+    <ClInclude Include="SimpleIni.h">
       <Filter>ImGuiDependencies</Filter>
     </ClInclude>
   </ItemGroup>
@@ -137,6 +152,9 @@
     </Filter>
     <Filter Include="MagicVX\CPPs">
       <UniqueIdentifier>{aab464ef-4d65-4e47-b460-cf6f812adf98}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MagicVX\HWVX_Classes">
+      <UniqueIdentifier>{42d674db-4f25-4967-a1f5-828b60d7cde0}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

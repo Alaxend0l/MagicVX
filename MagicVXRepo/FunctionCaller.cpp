@@ -529,3 +529,139 @@ bool FunctionCaller::InjectDll(LPCSTR DllPath, HANDLE hProcess) {
 
     return true;
 }
+
+void FunctionCaller::WriteByte(UINT_PTR address, std::vector<unsigned int> offsets, byte value)
+{
+    UINT_PTR addr = address;
+    for (unsigned int i = 0; i < offsets.size(); ++i)
+    {
+        ReadProcessMemory(ProcessHandle, (BYTE*)addr, &addr, 4, 0);
+        addr += offsets[i];
+    }
+    WriteProcessMemory(ProcessHandle, (void*)addr, &value, sizeof(byte), NULL);
+}
+void FunctionCaller::WriteInt(UINT_PTR address, std::vector<unsigned int> offsets, int value)
+{
+    UINT_PTR addr = address;
+    for (unsigned int i = 0; i < offsets.size(); ++i)
+    {
+        ReadProcessMemory(ProcessHandle, (LPCVOID)(addr), &addr, 4, 0);
+        addr += offsets[i];
+    }
+    WriteProcessMemory(ProcessHandle, (void*)addr, &value, sizeof(int), NULL);
+}
+void FunctionCaller::WriteFloat(UINT_PTR address, std::vector<unsigned int> offsets, float value)
+{
+    UINT_PTR addr = address;
+    for (unsigned int i = 0; i < offsets.size(); ++i)
+    {
+        ReadProcessMemory(ProcessHandle, (BYTE*)addr, &addr, 4, 0);
+        addr += offsets[i];
+    }
+    WriteProcessMemory(ProcessHandle, (void*)addr, &value, sizeof(float), NULL);
+}
+void FunctionCaller::WriteShort(UINT_PTR address, std::vector<unsigned int> offsets, short value)
+{
+    UINT_PTR addr = address;
+    for (unsigned int i = 0; i < offsets.size(); ++i)
+    {
+        ReadProcessMemory(ProcessHandle, (BYTE*)addr, &addr, 4, 0);
+        addr += offsets[i];
+    }
+    WriteProcessMemory(ProcessHandle, (void*)addr, &value, sizeof(short), NULL);
+}
+void FunctionCaller::WriteString(UINT_PTR address, std::vector<unsigned int> offsets, std::string value)
+{
+    UINT_PTR addr = address;
+    for (unsigned int i = 0; i < offsets.size(); ++i)
+    {
+        ReadProcessMemory(ProcessHandle, (BYTE*)addr, &addr, 4, 0);
+        addr += offsets[i];
+    }
+    for (int i = 0; i < value.length(); i++)
+    {
+        char character = value.at(i);
+        WriteProcessMemory(ProcessHandle, (void*)(addr + i), &character, 1, NULL);
+    }
+    WriteByte((addr + value.length()), {}, 0x0);
+
+}
+
+byte FunctionCaller::ReadByte(UINT_PTR address, std::vector<unsigned int> offsets)
+{
+    byte toReturn = 0x0;
+    UINT_PTR addr = address;
+    for (unsigned int i = 0; i < offsets.size(); ++i)
+    {
+        ReadProcessMemory(ProcessHandle, (BYTE*)addr, &addr, 4, 0);
+        addr += offsets[i];
+    }
+    ReadProcessMemory(ProcessHandle, reinterpret_cast<void*>(addr), &toReturn, sizeof(byte), nullptr);
+    return toReturn;
+}
+int FunctionCaller::ReadInt(UINT_PTR address, std::vector<unsigned int> offsets)
+{
+    int toReturn = 0;
+    UINT_PTR addr = address;
+    for (unsigned int i = 0; i < offsets.size(); ++i)
+    {
+        ReadProcessMemory(ProcessHandle, (BYTE*)addr, &addr, 4, 0);
+        addr += offsets[i];
+    }
+    ReadProcessMemory(ProcessHandle, reinterpret_cast<void*>(addr), &toReturn, sizeof(int), nullptr);
+    return toReturn;
+}
+float FunctionCaller::ReadFloat(UINT_PTR address, std::vector<unsigned int> offsets)
+{
+    float toReturn = 0;
+    UINT_PTR addr = address;
+    for (unsigned int i = 0; i < offsets.size(); ++i)
+    {
+        ReadProcessMemory(ProcessHandle, (float*)addr, &addr, 4, 0);
+        addr += offsets[i];
+    }
+    ReadProcessMemory(ProcessHandle, reinterpret_cast<void*>(addr), &toReturn, sizeof(float), nullptr);
+    return toReturn;
+}
+
+void FunctionCaller::WriteByte(UINT_PTR address, byte value)
+{
+    std::vector<unsigned int> offsets;
+    WriteByte(address, offsets, value);
+}
+void FunctionCaller::WriteFloat(UINT_PTR address, float value)
+{
+    std::vector<unsigned int> offsets;
+    WriteFloat(address, offsets, value);
+}
+void FunctionCaller::WriteInt(UINT_PTR address, int value)
+{
+    std::vector<unsigned int> offsets;
+    WriteInt(address, offsets, value);
+}
+void FunctionCaller::WriteShort(UINT_PTR address, short value)
+{
+    std::vector<unsigned int> offsets;
+    WriteShort(address, offsets, value);
+}
+void FunctionCaller::WriteString(UINT_PTR address, std::string value)
+{
+    std::vector<unsigned int> offsets;
+    WriteString(address, offsets, value);
+}
+
+byte FunctionCaller::ReadByte(UINT_PTR address)
+{
+    std::vector<unsigned int> offsets;
+    return ReadByte(address, offsets);
+}
+int FunctionCaller::ReadInt(UINT_PTR address)
+{
+    std::vector<unsigned int> offsets;
+    return ReadInt(address, offsets);
+}
+float FunctionCaller::ReadFloat(UINT_PTR address)
+{
+    std::vector<unsigned int> offsets;
+    return ReadFloat(address, offsets);
+}

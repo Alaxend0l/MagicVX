@@ -228,16 +228,20 @@ int main(int, char**)
 
     const char* gearHuntItems[256];
 
-    char GHC_Title[128];
-    char GHC_Filename[128];
-    char GHC_Author[128];
-    char GHC_Description[5192];
+    char GHC_Title[128] = "";
+    char GHC_Filename[128] = "";
+    char GHC_Author[128] = "";
+    char GHC_Description[5192] = "";
 
     bool mvx_window_main = true;
     bool mvx_window_settings = false;
     bool mvx_window_customLaunch = false;
     bool mvx_window_globalWatch = false;
     bool mvx_window_gearHuntSave = false;
+
+    bool mvx_window_players = false;
+
+    bool mvx_window_xpc_main = false;
 
     int gearHuntSelected = 0;
     int gearHuntLastSelected = 0;
@@ -288,8 +292,15 @@ int main(int, char**)
                 if (ImGui::BeginMenu("Tools"))
                 {
                     ImGui::MenuItem("Global Watch", NULL, &mvx_window_globalWatch);
+                    ImGui::MenuItem("Player Monitor", NULL, &mvx_window_players);
                     //ImGui::MenuItem("Style Editor", NULL, &show_app_style_editor);
                     //ImGui::MenuItem("About Dear ImGui", NULL, &show_app_about);
+                    ImGui::EndMenu();
+                }
+
+                if (ImGui::BeginMenu("XPC"))
+                {
+                    ImGui::MenuItem("View XPC", NULL, &mvx_window_xpc_main);
                     ImGui::EndMenu();
                 }
                 ImGui::EndMenuBar();
@@ -581,7 +592,7 @@ int main(int, char**)
 
         if (mvx_window_gearHuntSave)
         {
-            ImGui::Begin("Global Watch", &mvx_window_gearHuntSave);
+            ImGui::Begin("Gear Hunt Save", &mvx_window_gearHuntSave);
 
             ImGui::InputText("Title", GHC_Title, 256);
             ImGui::InputText("Filename", GHC_Filename, 256);
@@ -603,6 +614,87 @@ int main(int, char**)
                 GH_Manager.Description = GHC_Description;
                 GH_Manager.FileName = GHC_Filename;
                 gearHuntSave = true;
+            }
+            
+            ImGui::End();
+        }
+
+        if (mvx_window_players)
+        {
+            ImGui::Begin("Player Monitor", &mvx_window_players);
+
+            for (int i = 0; i < 8; i++)
+            {
+                std::string headerText = "Monitor Player " + std::to_string(i);
+                if (player[i].Active)
+                {
+                    if (ImGui::CollapsingHeader(headerText.c_str()))
+                    {
+                        std::stringstream ss1;
+                        std::stringstream ss2;
+
+                        ss1 << "Player Address: " << std::hex << player[i].GetBaseAddress();
+                        ImGui::Text(ss1.str().c_str());
+                        ss2 << "Vehicle Address: " << std::hex << player[i].playerVehicle.GetBaseAddress();
+                        ImGui::Text(ss2.str().c_str());
+                    }
+                }
+                
+            }
+            ImGui::End();
+        }
+
+        if (mvx_window_xpc_main)
+        {
+            ImGui::Begin("XPC Loader", &mvx_window_players);
+
+            if (ImGui::Button("Load File"))
+            {
+                OPENFILENAME ofn;
+                char szFile[100];
+                ZeroMemory(&ofn, sizeof(ofn));
+                ofn.lStructSize = sizeof(ofn);
+                ofn.hwndOwner = NULL;
+                ofn.lpstrFile = szFile;
+                ofn.lpstrFile[0] = '\0';
+                ofn.nMaxFile = sizeof(szFile);
+                ofn.lpstrFilter = "All\0*.*\0Text\0*.TXT\0";
+                ofn.nFilterIndex = 1;
+                ofn.lpstrFileTitle = NULL;
+                ofn.nMaxFileTitle = 0;
+                ofn.lpstrInitialDir = NULL;
+                ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST;
+                GetOpenFileName(&ofn);
+
+                xpcHandle.FileContents = xpcHandle.ReadFile(ofn.lpstrFile);
+                xpcHandle.SetUpDatabase();
+            }
+
+            if (xpcHandle.loaded)
+            {
+                ImGui::Text(xpcHandle.filePath.c_str());
+                ImGui::Text((std::to_string(xpcHandle.size) + " Bytes").c_str());
+                ImGui::Text((std::to_string(xpcHandle.entries) + " Entries").c_str());
+
+                for (int i = 0; i < xpcHandle.entries; i++)
+                {
+                    if (ImGui::CollapsingHeader(("Sector " + std::to_string(i)).c_str()))
+                    {
+                        std::stringstream ss1;
+                        ss1 << " Address: " << std::hex << xpcHandle.Headers[i].Address_File;
+                        ImGui::Text(ss1.str().c_str());
+                        ImGui::Text((" Add0: " + std::to_string(xpcHandle.Headers[i].Add0)).c_str());
+                        ImGui::Text((" Add1: " + std::to_string(xpcHandle.Headers[i].Add1)).c_str());
+                        ImGui::Text((" Add2: " + std::to_string(xpcHandle.Headers[i].Add2)).c_str());
+                        ImGui::Text((" Add3: " + std::to_string(xpcHandle.Headers[i].Add3)).c_str());
+                        ImGui::Text((" Add4: " + std::to_string(xpcHandle.Headers[i].Add4)).c_str());
+                        ImGui::Text((" Add5: " + std::to_string(xpcHandle.Headers[i].Add5)).c_str());
+                        ImGui::Text((" Add6: " + std::to_string(xpcHandle.Headers[i].Add6)).c_str());
+                        ImGui::Text((" Add7: " + std::to_string(xpcHandle.Headers[i].Add7)).c_str());
+                        ImGui::Text((" Add8: " + std::to_string(xpcHandle.Headers[i].Add8)).c_str());
+                        ImGui::Text((" Add9: " + std::to_string(xpcHandle.Headers[i].Add9)).c_str());
+                    }
+                }
             }
             
             ImGui::End();
