@@ -646,7 +646,7 @@ int main(int, char**)
 
         if (mvx_window_xpc_main)
         {
-            ImGui::Begin("XPC Loader", &mvx_window_players);
+            ImGui::Begin("XPC Loader", &mvx_window_xpc_main);
 
             if (ImGui::Button("Load File"))
             {
@@ -683,16 +683,13 @@ int main(int, char**)
                         std::stringstream ss1;
                         ss1 << " Address: " << std::hex << xpcHandle.Headers[i].Address_File;
                         ImGui::Text(ss1.str().c_str());
-                        ImGui::Text((" Add0: " + std::to_string(xpcHandle.Headers[i].Add0)).c_str());
-                        ImGui::Text((" Add1: " + std::to_string(xpcHandle.Headers[i].Add1)).c_str());
-                        ImGui::Text((" Add2: " + std::to_string(xpcHandle.Headers[i].Add2)).c_str());
-                        ImGui::Text((" Add3: " + std::to_string(xpcHandle.Headers[i].Add3)).c_str());
-                        ImGui::Text((" Add4: " + std::to_string(xpcHandle.Headers[i].Add4)).c_str());
-                        ImGui::Text((" Add5: " + std::to_string(xpcHandle.Headers[i].Add5)).c_str());
-                        ImGui::Text((" Add6: " + std::to_string(xpcHandle.Headers[i].Add6)).c_str());
-                        ImGui::Text((" Add7: " + std::to_string(xpcHandle.Headers[i].Add7)).c_str());
-                        ImGui::Text((" Add8: " + std::to_string(xpcHandle.Headers[i].Add8)).c_str());
-                        ImGui::Text((" Add9: " + std::to_string(xpcHandle.Headers[i].Add9)).c_str());
+                        ImGui::Text((" Object Type: " + std::to_string(xpcHandle.Headers[i].xpcTableEntry.objectType)).c_str());
+                        ImGui::Text((" Object Index: " + std::to_string(xpcHandle.Headers[i].xpcTableEntry.objectIndex)).c_str());
+                        ImGui::Text((" Unknown 2[0]: " + std::to_string(xpcHandle.Headers[i].xpcTableEntry.unknown2[0])).c_str());
+                        ImGui::Text((" Unknown 2[1]: " + std::to_string(xpcHandle.Headers[i].xpcTableEntry.unknown2[1])).c_str());
+                        ImGui::Text((" Stream Size: " + std::to_string(xpcHandle.Headers[i].xpcTableEntry.streamSize)).c_str());
+                        ImGui::Text((" Offset: " + std::to_string(xpcHandle.Headers[i].xpcTableEntry.offset)).c_str());
+                        
                     }
                 }
             }

@@ -34,6 +34,7 @@ std::vector<unsigned char> XPC_Handle::ReadFile(std::string filename)
 void XPC_Handle::SetUpDatabase()
 {
     address_tmp = 0xC;
+    entryID = ReadInt(0x8);
     entries = ReadInt(address_tmp);
     address_body = address_tmp + (entries * 0x18);
     address_tmp = 0x10;
@@ -50,29 +51,35 @@ void XPC_Handle::SetUpDatabase()
 
         newHeader.Address_File = address_body + newHeader.Offset;
 
-        newHeader.Add0 = ReadInt(newHeader.Address_File + 0x00);
-        newHeader.Add1 = ReadInt(newHeader.Address_File + 0x04);
-        newHeader.Add2 = ReadInt(newHeader.Address_File + 0x08);
-        newHeader.Add3 = ReadInt(newHeader.Address_File + 0x0C);
-        newHeader.Add4 = ReadInt(newHeader.Address_File + 0x10);
-        newHeader.Add5 = ReadInt(newHeader.Address_File + 0x14);
-        newHeader.Add6 = ReadInt(newHeader.Address_File + 0x18);
-        newHeader.Add7 = ReadInt(newHeader.Address_File + 0x1C);
-        newHeader.Add8 = ReadInt(newHeader.Address_File + 0x20);
-        newHeader.Add9 = ReadInt(newHeader.Address_File + 0x24);
-        SetUpHeaderMain(newHeader);
+        newHeader.xpcTableEntry.entryId = ReadUnsignedInt(newHeader.Address_Header + 0x0);
+        newHeader.xpcTableEntry.objectType = ReadUnsignedInt(newHeader.Address_Header + 0x4);
+        newHeader.xpcTableEntry.objectIndex = ReadUnsignedInt(newHeader.Address_Header + 0x8);
+        newHeader.xpcTableEntry.unknown2[0] = ReadShort(newHeader.Address_Header + 0xC);
+        newHeader.xpcTableEntry.unknown2[1] = ReadShort(newHeader.Address_Header + 0xE);
+        newHeader.xpcTableEntry.streamSize = ReadUnsignedInt(newHeader.Address_Header + 0x10);
+        newHeader.xpcTableEntry.offset = ReadUnsignedInt(newHeader.Address_Header + 0x14);
+        
         Headers.push_back(newHeader);
     }
-}
-
-void XPC_Handle::SetUpHeaderMain(XPC_Header_Main headerMain)
-{
-
 }
 
 int XPC_Handle::ReadInt(int address)
 {
     int returnValue = 0;
-    memcpy(&returnValue, &FileContents[address], sizeof(int));
+    memcpy(&returnValue, &FileContents[address], sizeof(returnValue));
+    return returnValue;
+}
+
+unsigned int XPC_Handle::ReadUnsignedInt(int address)
+{
+    unsigned int returnValue = 0;
+    memcpy(&returnValue, &FileContents[address], sizeof(returnValue));
+    return returnValue;
+}
+
+short XPC_Handle::ReadShort(int address)
+{
+    short returnValue = 0;
+    memcpy(&returnValue, &FileContents[address], sizeof(returnValue));
     return returnValue;
 }
