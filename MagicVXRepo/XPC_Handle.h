@@ -3,18 +3,36 @@
 #include <fstream>
 #include "XPC_Layout.h"
 
+class XPC_Variable
+{
+
+};
+
+
 class XPC_Header_Main
 {
 public:
 	//Personal Values
 	int Address_Header;
 	int Address_File;
+	int Address_Unknown0;
+	int Address_Unknown1;
+	int Address_Unknown2;
+	int Address_Texture;
 	int ID;
 	int Size;
 	int Offset;
+	int Type;
 
 	//Inner Values
+	
 	XpcTableEntry xpcTableEntry;
+
+	XpcCarHeader xpcCarHeader;
+	XpcWorldHeader xpcWorldHeader;
+	std::vector<XpcCarEntry> carEntries;
+	std::vector<int> entryAddresses;
+	XpcItemHeader xpcItemHeader;
 };
 
 

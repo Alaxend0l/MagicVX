@@ -286,7 +286,7 @@ int main(int, char**)
             {
                 if (ImGui::BeginMenu("Menu"))
                 {
-                    //ImGui::MenuItem("Test", NULL, &show_demo_window);
+                    ImGui::MenuItem("Test", NULL, &show_demo_window);
                     ImGui::EndMenu();
                 }
                 if (ImGui::BeginMenu("Tools"))
@@ -678,18 +678,108 @@ int main(int, char**)
 
                 for (int i = 0; i < xpcHandle.entries; i++)
                 {
-                    if (ImGui::CollapsingHeader(("Sector " + std::to_string(i)).c_str()))
+                    std::string sectorTitle = ("Sector " + std::to_string(i));
+                    if (ImGui::TreeNode(sectorTitle.c_str()))
                     {
+
                         std::stringstream ss1;
-                        ss1 << " Address: " << std::hex << xpcHandle.Headers[i].Address_File;
+                        ss1 << "Address: 0x" << std::hex << xpcHandle.Headers[i].Address_File;
                         ImGui::Text(ss1.str().c_str());
-                        ImGui::Text((" Object Type: " + std::to_string(xpcHandle.Headers[i].xpcTableEntry.objectType)).c_str());
-                        ImGui::Text((" Object Index: " + std::to_string(xpcHandle.Headers[i].xpcTableEntry.objectIndex)).c_str());
-                        ImGui::Text((" Unknown 2[0]: " + std::to_string(xpcHandle.Headers[i].xpcTableEntry.unknown2[0])).c_str());
-                        ImGui::Text((" Unknown 2[1]: " + std::to_string(xpcHandle.Headers[i].xpcTableEntry.unknown2[1])).c_str());
-                        ImGui::Text((" Stream Size: " + std::to_string(xpcHandle.Headers[i].xpcTableEntry.streamSize)).c_str());
-                        ImGui::Text((" Offset: " + std::to_string(xpcHandle.Headers[i].xpcTableEntry.offset)).c_str());
+                        ImGui::Text(("Object Type: " + std::to_string(xpcHandle.Headers[i].xpcTableEntry.objectType)).c_str());
+                        ImGui::Text(("Object Index: " + std::to_string(xpcHandle.Headers[i].xpcTableEntry.objectIndex)).c_str());
+                        ImGui::Text(("Unknown 2[0]: " + std::to_string(xpcHandle.Headers[i].xpcTableEntry.unknown2[0])).c_str());
+                        ImGui::Text(("Unknown 2[1]: " + std::to_string(xpcHandle.Headers[i].xpcTableEntry.unknown2[1])).c_str());
+                        ImGui::Text(("Stream Size: " + std::to_string(xpcHandle.Headers[i].xpcTableEntry.streamSize)).c_str());
+                        ImGui::Text(("Offset: " + std::to_string(xpcHandle.Headers[i].xpcTableEntry.offset)).c_str());
+                        std::stringstream ss3;
+                        std::stringstream ss4;
+                        std::stringstream ss5;
+                        std::stringstream ss6;
+                        switch (xpcHandle.Headers[i].Type)
+                        {
+                        case 0:
+                            
+                            ss3 << "Mesh Pointer: " << std::hex << xpcHandle.Headers[i].Address_Unknown0;
+                            ss4 << "Data Pointer 1: " << std::hex << xpcHandle.Headers[i].Address_Unknown1;
+                            ss5 << "Data Pointer 2: " << std::hex << xpcHandle.Headers[i].Address_Unknown2;
+                            ss6 << "Texture Pointer: " << std::hex << xpcHandle.Headers[i].Address_Texture;
+                            ImGui::Text(ss3.str().c_str());
+                            ImGui::Text(ss4.str().c_str());
+                            ImGui::Text(ss5.str().c_str());
+                            ImGui::Text(ss6.str().c_str());
+                            if (ImGui::TreeNode((sectorTitle + " Contents").c_str()))
+                            {
+                                ImGui::Text(("DataPointer00: " + std::to_string(xpcHandle.Headers[i].xpcCarHeader.AddressPtr0)).c_str());
+                                ImGui::Text(("DataPointer01: " + std::to_string(xpcHandle.Headers[i].xpcCarHeader.AddressPtr1)).c_str());
+                                ImGui::Text(("DataPointer02: " + std::to_string(xpcHandle.Headers[i].xpcCarHeader.AddressPtr2)).c_str());
+                                ImGui::Text(("Count: " + std::to_string(xpcHandle.Headers[i].xpcCarHeader.entryCnt)).c_str());
+                                ImGui::Text(("UNKNOWN_INT_03: " + std::to_string(xpcHandle.Headers[i].xpcCarHeader.unknownInt3)).c_str());
+                                ImGui::Text(("UNKNOWN_INT_04: " + std::to_string(xpcHandle.Headers[i].xpcCarHeader.unknownInt4)).c_str());
+                                ImGui::Text(("UNKNOWN_INT_05: " + std::to_string(xpcHandle.Headers[i].xpcCarHeader.unknownInt5)).c_str());
+                                ImGui::Text(("TexturePtr: " + std::to_string(xpcHandle.Headers[i].xpcCarHeader.AddressPtr6)).c_str());
+                                ImGui::Text(("TextureCnt: " + std::to_string(xpcHandle.Headers[i].xpcCarHeader.textureCnt)).c_str());
+                                ImGui::Text(("Count2: " + std::to_string(xpcHandle.Headers[i].xpcCarHeader.entryCnt2)).c_str());
+                                ImGui::Text(("UNKNOWN_INT_08: " + std::to_string(xpcHandle.Headers[i].xpcCarHeader.unknownInt8)).c_str());
+                                ImGui::Text(("UNKNOWN_INT_09: " + std::to_string(xpcHandle.Headers[i].xpcCarHeader.unknownInt9)).c_str());
+                                ImGui::Text(("UNKNOWN_INT_10: " + std::to_string(xpcHandle.Headers[i].xpcCarHeader.unknownInt10)).c_str());
+                                ImGui::Text(("UNKNOWN_INT_11: " + std::to_string(xpcHandle.Headers[i].xpcCarHeader.unknownInt11)).c_str());
+                                ImGui::Text(("UNKNOWN_INT_12: " + std::to_string(xpcHandle.Headers[i].xpcCarHeader.unknownInt12)).c_str());
+                                ImGui::Text(("UNKNOWN_INT_13: " + std::to_string(xpcHandle.Headers[i].xpcCarHeader.unknownInt13)).c_str());
+                                ImGui::Text(("UNKNOWN_INT_14: " + std::to_string(xpcHandle.Headers[i].xpcCarHeader.unknownInt14)).c_str());
+                                ImGui::Text(("UNKNOWN_INT_15: " + std::to_string(xpcHandle.Headers[i].xpcCarHeader.unknownInt15)).c_str());
+                                ImGui::Text(("UNKNOWN_INT_16: " + std::to_string(xpcHandle.Headers[i].xpcCarHeader.unknownInt16)).c_str());
+                                ImGui::Text(("UNKNOWN_INT_17: " + std::to_string(xpcHandle.Headers[i].xpcCarHeader.unknownInt17)).c_str());
+                                ImGui::Text(("UNKNOWN_INT_18: " + std::to_string(xpcHandle.Headers[i].xpcCarHeader.unknownInt18)).c_str());
+                                for (int j = 0; j < xpcHandle.Headers[i].xpcCarHeader.entryCnt; j++)
+                                {
+                                    std::stringstream ss2;
+                                    ss2 << "Entry " << std::to_string(j) << ": " << std::hex << xpcHandle.Headers[i].carEntries[j].offset << " Size: " << std::hex << xpcHandle.Headers[i].carEntries[j].size;
+                                    ImGui::Text(ss2.str().c_str());
+                                }
+                                ImGui::TreePop();
+                            }
+                            break;
+                        case 4: //World
+                            ss3 << "Collectable Pointer: " << std::hex << xpcHandle.Headers[i].Address_Unknown2;
+                            ss4 << "2nd Set Pointer: " << std::hex << xpcHandle.Headers[i].Address_Unknown0;
+                            ImGui::Text(ss3.str().c_str());
+                            ImGui::Text(ss4.str().c_str());
+                            if (ImGui::TreeNode((sectorTitle + " Contents").c_str()))
+                            {
+                                ImGui::Text(("DataPointer00: " + std::to_string(xpcHandle.Headers[i].xpcWorldHeader.AddressPtr0)).c_str());
+                                ImGui::Text(("DataPointer01: " + std::to_string(xpcHandle.Headers[i].xpcWorldHeader.AddressPtr1)).c_str());
+                                ImGui::Text(("DataPointer02: " + std::to_string(xpcHandle.Headers[i].xpcWorldHeader.AddressPtr2)).c_str());
+                                ImGui::Text(("Count: " + std::to_string(xpcHandle.Headers[i].xpcWorldHeader.entryCnt)).c_str());
+                                ImGui::Text(("UNKNOWN_INT_03: " + std::to_string(xpcHandle.Headers[i].xpcWorldHeader.unknownInt3)).c_str());
+                                ImGui::Text(("UNKNOWN_INT_04: " + std::to_string(xpcHandle.Headers[i].xpcWorldHeader.unknownInt4)).c_str());
+                                ImGui::Text(("UNKNOWN_INT_05: " + std::to_string(xpcHandle.Headers[i].xpcWorldHeader.unknownInt5)).c_str());
+                                ImGui::Text(("TexturePtr: " + std::to_string(xpcHandle.Headers[i].xpcWorldHeader.AddressPtr6)).c_str());
+                                ImGui::Text(("TextureCnt: " + std::to_string(xpcHandle.Headers[i].xpcWorldHeader.textureCnt)).c_str());
+                                ImGui::Text(("Count2: " + std::to_string(xpcHandle.Headers[i].xpcWorldHeader.entryCnt2)).c_str());
+                                ImGui::Text(("UNKNOWN_INT_08: " + std::to_string(xpcHandle.Headers[i].xpcWorldHeader.unknownInt8)).c_str());
+                                ImGui::Text(("UNKNOWN_INT_09: " + std::to_string(xpcHandle.Headers[i].xpcWorldHeader.unknownInt9)).c_str());
+                                ImGui::Text(("UNKNOWN_INT_10: " + std::to_string(xpcHandle.Headers[i].xpcWorldHeader.unknownInt10)).c_str());
+                                ImGui::Text(("UNKNOWN_INT_11: " + std::to_string(xpcHandle.Headers[i].xpcWorldHeader.unknownInt11)).c_str());
+                                ImGui::Text(("UNKNOWN_INT_12: " + std::to_string(xpcHandle.Headers[i].xpcWorldHeader.unknownInt12)).c_str());
+                                ImGui::Text(("UNKNOWN_INT_13: " + std::to_string(xpcHandle.Headers[i].xpcWorldHeader.unknownInt13)).c_str());
+                                ImGui::Text(("UNKNOWN_INT_14: " + std::to_string(xpcHandle.Headers[i].xpcWorldHeader.unknownInt14)).c_str());
+                                ImGui::Text(("UNKNOWN_INT_15: " + std::to_string(xpcHandle.Headers[i].xpcWorldHeader.unknownInt15)).c_str());
+                                ImGui::Text(("UNKNOWN_INT_16: " + std::to_string(xpcHandle.Headers[i].xpcWorldHeader.unknownInt16)).c_str());
+                                ImGui::Text(("End Of Entries: " + std::to_string(xpcHandle.Headers[i].xpcWorldHeader.unknownInt17)).c_str());
+                                ImGui::Text(("UNKNOWN_INT_18: " + std::to_string(xpcHandle.Headers[i].xpcWorldHeader.unknownInt18)).c_str());
+                                for (int j = 0; j < xpcHandle.Headers[i].xpcWorldHeader.entryCnt; j++)
+                                {
+                                    std::stringstream ss2;
+                                    ss2 << "Entry " << std::to_string(j) << ": " << std::hex << xpcHandle.Headers[i].carEntries[j].offset << " Size: " << std::hex << xpcHandle.Headers[i].carEntries[j].size;
+                                    ImGui::Text(ss2.str().c_str());
+                                }
+                                ImGui::TreePop();
+                            }
+                            break;
+                        }
+
                         
+                        ImGui::TreePop();
                     }
                 }
             }
