@@ -65,105 +65,110 @@ void XPC_Handle::SetUpDatabase()
         int tableOffset = 0;
         int offset = 0;
         int finalAddress = 0;
+
+        baseAddress = newHeader.Address_File + 0x7C;
+
+        ReadTopHeader(newHeader.xpcTopHeader, newHeader.Address_File);
+
+        tableOffset = GetTableLength(newHeader.xpcTopHeader.entryCnt);
+        newHeader.Address_SFX = baseAddress;
+
+        newHeader.carEntries.clear();
+        newHeader.entryAddresses.clear();
+        for (int j = 0; j < newHeader.xpcTopHeader.entryCnt; j++)
+        {
+            //Base Header
+            offset = ReadInt(baseAddress + j * 4);
+            XpcCarEntry xpcCarEntry;
+            xpcCarEntry.offset = ReadInt(baseAddress + offset + tableOffset + 0x0);
+            xpcCarEntry.size = ReadInt(baseAddress + offset + tableOffset + 0x4);
+            finalAddress = baseAddress + tableOffset + xpcCarEntry.offset;
+            newHeader.carEntries.push_back(xpcCarEntry);
+            newHeader.entryAddresses.push_back(finalAddress);
+        }
+
         switch (newHeader.Type)
         {
         case 0: //Car
-            baseAddress = newHeader.Address_File + 0x7C;
-            tableOffset = 0x20;
-
-            newHeader.xpcCarHeader.AddressPtr0 = ReadInt(newHeader.Address_File + 0x0);
-            newHeader.xpcCarHeader.AddressPtr1 = ReadInt(newHeader.Address_File + 0x4);
-            newHeader.xpcCarHeader.AddressPtr2 = ReadInt(newHeader.Address_File + 0x8);
-            newHeader.xpcCarHeader.entryCnt = ReadUnsignedInt(newHeader.Address_File + 0xC);
-            newHeader.xpcCarHeader.unknownInt3 = ReadInt(newHeader.Address_File + 0x10);
-            newHeader.xpcCarHeader.unknownInt4 = ReadInt(newHeader.Address_File + 0x14);
-            newHeader.xpcCarHeader.unknownInt5 = ReadInt(newHeader.Address_File + 0x18);
-            newHeader.xpcCarHeader.AddressPtr6 = ReadInt(newHeader.Address_File + 0x1C);
-            newHeader.xpcCarHeader.textureCnt = ReadInt(newHeader.Address_File + 0x20); 
-            newHeader.xpcCarHeader.entryCnt2 = ReadUnsignedInt(newHeader.Address_File + 0x24);
-            newHeader.xpcCarHeader.unknownInt8 = ReadInt(newHeader.Address_File + 0x28);
-            newHeader.xpcCarHeader.unknownInt9 = ReadInt(newHeader.Address_File + 0x2C);
-            newHeader.xpcCarHeader.unknownInt10 = ReadInt(newHeader.Address_File + 0x30);
-            newHeader.xpcCarHeader.unknownInt11 = ReadInt(newHeader.Address_File + 0x34);
-            newHeader.xpcCarHeader.unknownInt12 = ReadInt(newHeader.Address_File + 0x38);
-            newHeader.xpcCarHeader.unknownInt13 = ReadInt(newHeader.Address_File + 0x3C);
-            newHeader.xpcCarHeader.unknownInt14 = ReadInt(newHeader.Address_File + 0x40);
-            newHeader.xpcCarHeader.unknownInt15 = ReadInt(newHeader.Address_File + 0x44);
-            newHeader.xpcCarHeader.unknownInt16 = ReadInt(newHeader.Address_File + 0x48);
-            newHeader.xpcCarHeader.unknownInt17 = ReadInt(newHeader.Address_File + 0x4C);
-            newHeader.xpcCarHeader.unknownInt18 = ReadInt(newHeader.Address_File + 0x50);
-
             
-            newHeader.carEntries.clear();
-            newHeader.entryAddresses.clear();
-            for (int j = 0; j < newHeader.xpcCarHeader.entryCnt; j++)
-            {
-                //Base Header
-                offset = ReadInt(baseAddress + j * 4);
-                XpcCarEntry xpcCarEntry;
-                xpcCarEntry.offset = ReadInt(baseAddress + offset + tableOffset + 0x0);
-                xpcCarEntry.size = ReadInt(baseAddress + offset + tableOffset + 0x4);
-                finalAddress = baseAddress + 0x20 + xpcCarEntry.offset;
-                newHeader.carEntries.push_back(xpcCarEntry);
-                newHeader.entryAddresses.push_back(finalAddress);
-            }
             
-            newHeader.Address_Unknown0 = (baseAddress + tableOffset) + newHeader.xpcCarHeader.AddressPtr0;
-            newHeader.Address_Unknown1 = (baseAddress + tableOffset) + newHeader.xpcCarHeader.AddressPtr1;
-            newHeader.Address_Unknown2 = (baseAddress + tableOffset) + newHeader.xpcCarHeader.AddressPtr2;
-            newHeader.Address_Texture = (baseAddress + tableOffset) + newHeader.xpcCarHeader.AddressPtr6;
+            newHeader.Address_Unknown0 = (baseAddress + tableOffset) + newHeader.xpcTopHeader.AddressPtr0;
+            newHeader.Address_Unknown1 = (baseAddress + tableOffset) + newHeader.xpcTopHeader.AddressPtr1;
+            newHeader.Address_Texture = (baseAddress + tableOffset) + newHeader.xpcTopHeader.AddressPtr6;
             break;
         case 4: //World
-            baseAddress = newHeader.Address_File + 0x7C;
-            tableOffset = 0x120;
+            
 
-            newHeader.xpcWorldHeader.AddressPtr0 = ReadInt(newHeader.Address_File + 0x0);
-            newHeader.xpcWorldHeader.AddressPtr1 = ReadInt(newHeader.Address_File + 0x4);
-            newHeader.xpcWorldHeader.AddressPtr2 = ReadInt(newHeader.Address_File + 0x8);
-            newHeader.xpcWorldHeader.entryCnt = ReadUnsignedInt(newHeader.Address_File + 0xC);
-            newHeader.xpcWorldHeader.unknownInt3 = ReadInt(newHeader.Address_File + 0x10);
-            newHeader.xpcWorldHeader.unknownInt4 = ReadInt(newHeader.Address_File + 0x14);
-            newHeader.xpcWorldHeader.unknownInt5 = ReadInt(newHeader.Address_File + 0x18);
-            newHeader.xpcWorldHeader.AddressPtr6 = ReadInt(newHeader.Address_File + 0x1C);
-            newHeader.xpcWorldHeader.textureCnt = ReadInt(newHeader.Address_File + 0x20);
-            newHeader.xpcWorldHeader.entryCnt2 = ReadUnsignedInt(newHeader.Address_File + 0x24);
-            newHeader.xpcWorldHeader.unknownInt8 = ReadInt(newHeader.Address_File + 0x28);
-            newHeader.xpcWorldHeader.unknownInt9 = ReadInt(newHeader.Address_File + 0x2C);
-            newHeader.xpcWorldHeader.unknownInt10 = ReadInt(newHeader.Address_File + 0x30);
-            newHeader.xpcWorldHeader.unknownInt11 = ReadInt(newHeader.Address_File + 0x34);
-            newHeader.xpcWorldHeader.unknownInt12 = ReadInt(newHeader.Address_File + 0x38);
-            newHeader.xpcWorldHeader.unknownInt13 = ReadInt(newHeader.Address_File + 0x3C);
-            newHeader.xpcWorldHeader.unknownInt14 = ReadInt(newHeader.Address_File + 0x40);
-            newHeader.xpcWorldHeader.unknownInt15 = ReadInt(newHeader.Address_File + 0x44);
-            newHeader.xpcWorldHeader.unknownInt16 = ReadInt(newHeader.Address_File + 0x48);
-            newHeader.xpcWorldHeader.unknownInt17 = ReadInt(newHeader.Address_File + 0x4C);
-            newHeader.xpcWorldHeader.unknownInt18 = ReadInt(newHeader.Address_File + 0x50);
+            newHeader.Address_Music = (baseAddress + tableOffset) + newHeader.xpcTopHeader.musicAddress;
+            newHeader.Address_Unknown0 = (baseAddress + tableOffset) + newHeader.xpcTopHeader.AddressPtr0;
+            newHeader.Address_Unknown1 = (baseAddress + tableOffset) + newHeader.xpcTopHeader.AddressPtr1;
+            newHeader.Address_Unknown2 = (baseAddress + tableOffset) + newHeader.xpcTopHeader.AddressPtr2;
+            newHeader.Address_Texture = (baseAddress + tableOffset) + newHeader.xpcTopHeader.AddressPtr6;
 
-            newHeader.carEntries.clear();
-            newHeader.entryAddresses.clear();
-            for (int j = 0; j < newHeader.xpcWorldHeader.entryCnt; j++)
+            //Address_Unknown0 points to something
+            newHeader.riffEntries.clear();
+            newHeader.entryAddressesRiff.clear();
+
+            newHeader.xpcRiffHeader.unknown_size = ReadInt(newHeader.Address_Music + 0x4);
+            newHeader.xpcRiffHeader.count = ReadInt(newHeader.Address_Music + 0x10);
+
+            int dataStart = newHeader.Address_Music + 0x20 + newHeader.xpcRiffHeader.count * 0x20;
+
+            for (int j = 0; j < newHeader.xpcRiffHeader.count; j++)
             {
-                //Base Header
-                offset = ReadInt(baseAddress + j * 4);
+                //Riff Header
+                int entryStart = newHeader.Address_Music + 0x20 + j * 0x20;
                 XpcCarEntry xpcCarEntry;
-                xpcCarEntry.offset = ReadInt(baseAddress + offset + tableOffset + 0x0);
-                xpcCarEntry.size = ReadInt(baseAddress + offset + tableOffset + 0x4);
-                finalAddress = baseAddress + 0x20 + xpcCarEntry.offset;
-                newHeader.carEntries.push_back(xpcCarEntry);
-                newHeader.entryAddresses.push_back(finalAddress);
+                xpcCarEntry.offset = ReadInt(entryStart + 0x0);
+                xpcCarEntry.size = ReadInt(entryStart + 0x4);
+                finalAddress = dataStart + xpcCarEntry.offset;
+                newHeader.riffEntries.push_back(xpcCarEntry);
+                newHeader.entryAddressesRiff.push_back(finalAddress);
             }
 
-            newHeader.Address_Unknown0 = (baseAddress + tableOffset) + newHeader.xpcWorldHeader.unknownInt18;
-            newHeader.Address_Unknown1 = (baseAddress + tableOffset) + newHeader.xpcWorldHeader.AddressPtr1;
-            newHeader.Address_Unknown2 = (baseAddress + tableOffset) + newHeader.xpcWorldHeader.AddressPtr2;
-            newHeader.Address_Texture = (baseAddress + tableOffset) + newHeader.xpcWorldHeader.AddressPtr6;
-
-
+            dataStart = newHeader.Address_Unknown2;
+            for (int j = 0; j < newHeader.xpcTopHeader.unknownInt4; j++)
+            {
+                //CollectableHeader
+                int entryStart = dataStart + j * 0x8;
+                XpcThingHeader xpcThingHeader;
+                xpcThingHeader.offset = ReadInt(entryStart + 0x0);
+                xpcThingHeader.textureID = ReadShort(entryStart + 0x4);
+                xpcThingHeader.flag = ReadShort(entryStart + 0x6);
+                finalAddress = dataStart + xpcThingHeader.offset;
+                newHeader.thingHeaders.push_back(xpcThingHeader);
+                newHeader.entryAddressesThings.push_back(finalAddress);
+            }
             break;
         }
         
         Headers.push_back(newHeader);
     }
+}
+
+void XPC_Handle::ReadTopHeader(XpcTopHeader& header, int fileOffset)
+{
+    header.AddressPtr0 = ReadInt(fileOffset + 0x0);
+    header.AddressPtr1 = ReadInt(fileOffset + 0x4);
+    header.AddressPtr2 = ReadInt(fileOffset + 0x8);
+    header.entryCnt = ReadUnsignedInt(fileOffset + 0xC);
+    header.unknownInt3 = ReadInt(fileOffset + 0x10);
+    header.unknownInt4 = ReadInt(fileOffset + 0x14);
+    header.unknownInt5 = ReadInt(fileOffset + 0x18);
+    header.AddressPtr6 = ReadInt(fileOffset + 0x1C);
+    header.textureCnt = ReadInt(fileOffset + 0x20);
+    header.entryCnt2 = ReadUnsignedInt(fileOffset + 0x24);
+    header.unknownInt8 = ReadInt(fileOffset + 0x28);
+    header.unknownInt9 = ReadInt(fileOffset + 0x2C);
+    header.unknownInt10 = ReadInt(fileOffset + 0x30);
+    header.unknownInt11 = ReadInt(fileOffset + 0x34);
+    header.unknownInt12 = ReadInt(fileOffset + 0x38);
+    header.unknownInt13 = ReadInt(fileOffset + 0x3C);
+    header.unknownInt14 = ReadInt(fileOffset + 0x40);
+    header.unknownInt15 = ReadInt(fileOffset + 0x44);
+    header.unknownInt16 = ReadInt(fileOffset + 0x48);
+    header.unknownInt17 = ReadInt(fileOffset + 0x4C);
+    header.musicAddress = ReadInt(fileOffset + 0x50);
 }
 
 int XPC_Handle::ReadInt(int address)
@@ -192,4 +197,19 @@ char XPC_Handle::ReadChar(int address)
     char returnValue = 0;
     memcpy(&returnValue, &FileContents[address], sizeof(returnValue));
     return returnValue;
+}
+
+int XPC_Handle::GetTableLength(int count)
+{
+    /*
+    * Memory for the tables in HWVX seem to be allocated in chunks of 0x20 bytes.
+    * If not filled, it's filled with zeros.
+    * If filled but short, it shifts the offsets up
+    */
+
+    const int chunkSize = 0x20;
+    int countSize = count * 0x4;
+    int returnSize = 0;
+    for (; returnSize < countSize; returnSize += chunkSize) {}
+    return returnSize;
 }

@@ -19,6 +19,9 @@ struct XpcTableEntry {
 	* 2 = item
 	* 3 = texture
 	* 4 = world
+	* 5 = colliders
+	* 7 = geometry
+	* 8 = share
 	*/
 	unsigned int objectIndex;
 	short unknown2[2]; // pretty sure it's signed.
@@ -49,13 +52,30 @@ struct XpcCarEntry {
 	char unknown[12]; // 12 bytes, can't tell if float32 or long int.
 };
 
+struct XpcRiffHeader {
+	char riffBytes[4]; //Spells RIFF
+	unsigned int unknown_size; //Possibly size?
+	char sndbBytes[4]; //Spells sndb
+	unsigned int unknown1;
+	unsigned int count;
+	unsigned int unknown2;
+	char UninitializedData[8]; //Full of Cs
+};
+
+struct XpcThingHeader {
+	int offset;
+	short textureID;
+	short flag;
+	
+};
+
 struct XpcItemHeader {
 	//54 Bytes between start and XpcImportThingie
 	char unknown[54];
 	XpcImportThingie importLink[2];
 };
 
-struct XpcWorldHeader {
+struct XpcTopHeader {
 	unsigned int AddressPtr0;
 	unsigned int AddressPtr1;
 	unsigned int AddressPtr2;
@@ -76,36 +96,8 @@ struct XpcWorldHeader {
 	unsigned int unknownInt15;
 	unsigned int unknownInt16;
 	unsigned int unknownInt17;
-	unsigned int unknownInt18;
+	unsigned int musicAddress;
 	struct XpcImportThingie importLink[2]; // may also be possible it's empty..
 	//unsigned long int OffsetsToEntries[entryCnt];
 	//files stary here
 };
-
-struct XpcCarHeader {
-	unsigned int AddressPtr0;
-	unsigned int AddressPtr1;
-	unsigned int AddressPtr2;
-	unsigned int entryCnt;
-	unsigned int unknownInt3;
-	unsigned int unknownInt4;
-	unsigned int unknownInt5;
-	unsigned int AddressPtr6;
-	unsigned int textureCnt;
-	unsigned int entryCnt2; //same as entryCnt, this might be x2 different structs.
-	unsigned int unknownInt8;
-	unsigned int unknownInt9;
-	unsigned int unknownInt10;
-	unsigned int unknownInt11;
-	unsigned int unknownInt12;
-	unsigned int unknownInt13;
-	unsigned int unknownInt14;
-	unsigned int unknownInt15;
-	unsigned int unknownInt16;
-	unsigned int unknownInt17;
-	unsigned int unknownInt18;
-	struct XpcImportThingie importLink[2]; // may also be possible it's empty..
-	//unsigned long int OffsetsToEntries[entryCnt];
-	//files stary here
-};
-

@@ -15,6 +15,8 @@ public:
 	//Personal Values
 	int Address_Header;
 	int Address_File;
+	int Address_SFX;
+	int Address_Music;
 	int Address_Unknown0;
 	int Address_Unknown1;
 	int Address_Unknown2;
@@ -28,10 +30,14 @@ public:
 	
 	XpcTableEntry xpcTableEntry;
 
-	XpcCarHeader xpcCarHeader;
-	XpcWorldHeader xpcWorldHeader;
+	XpcTopHeader xpcTopHeader;
+	XpcRiffHeader xpcRiffHeader;
 	std::vector<XpcCarEntry> carEntries;
+	std::vector<XpcCarEntry> riffEntries;
+	std::vector<XpcThingHeader> thingHeaders;
 	std::vector<int> entryAddresses;
+	std::vector<int> entryAddressesRiff;
+	std::vector<int> entryAddressesThings;
 	XpcItemHeader xpcItemHeader;
 };
 
@@ -54,7 +60,9 @@ public:
 	//Functions
 	std::vector<unsigned char> ReadFile(std::string);
 
+	void ReadTopHeader(XpcTopHeader&, int);
 	void SetUpDatabase();
+	int GetTableLength(int);
 	int ReadInt(int);
 	unsigned int ReadUnsignedInt(int);
 	short ReadShort(int);
