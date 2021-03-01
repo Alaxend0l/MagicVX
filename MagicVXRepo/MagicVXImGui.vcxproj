@@ -192,6 +192,7 @@
     <ClInclude Include="imstb_textedit.h" />
     <ClInclude Include="imstb_truetype.h" />
     <ClInclude Include="PipeFunction.h" />
+    <ClInclude Include="Proxy.h" />
     <ClInclude Include="SimpleIni.h" />
     <ClInclude Include="UserSettings.h" />
     <ClInclude Include="XPC_Handle.h" />

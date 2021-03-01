@@ -17,9 +17,10 @@ struct XpcTableEntry {
 	* 0 = car
 	* 1 = brief
 	* 2 = item
-	* 3 = texture
+	* 3 = ???+
 	* 4 = world
 	* 5 = colliders
+	* 6 = world texture
 	* 7 = geometry
 	* 8 = share
 	*/

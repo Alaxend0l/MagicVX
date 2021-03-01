@@ -130,7 +130,7 @@ void GameManipulator::GameLaunch()
 
     ProcessHandle = pi.hProcess;
     ProcessID = GetProcessId(ProcessHandle);
-    FC = FunctionCaller(ProcessHandle, mainSettings.GetDLLPath());
+    FC = FunctionCaller(ProcessHandle, ProcessID, mainSettings.GetDLLPath());
     GB.Init(ProcessHandle, 0x68DF20);
     
 }
@@ -735,13 +735,13 @@ void GameManipulator::GetAllPlayers()
 	{
 		if (i == 0)
 		{
-			player[i] = HWVX_Player(0x0053BAC8);
-			player[i].playerVehicle = HWVX_Vehicle(FC.ReadInt(player[i].GetBaseAddress() + 0x2C));
+			player[i] = HWVX_Player(&FC, 0x0053BAC8);
+			player[i].playerVehicle = HWVX_Vehicle(&FC, FC.ReadInt(player[i].GetBaseAddress() + 0x2C));
 		}
 		else
 		{
-			player[i] = HWVX_Player(FC.ReadInt(0x005423A8) + (i - 1) * 0x654);
-			player[i].playerVehicle = HWVX_Vehicle(FC.ReadInt(player[i].GetBaseAddress() + 0x2C));
+			player[i] = HWVX_Player(&FC, FC.ReadInt(0x005423A8) + (i - 1) * 0x654);
+			player[i].playerVehicle = HWVX_Vehicle(&FC, FC.ReadInt(player[i].GetBaseAddress() + 0x2C));
 		}
 		if (DevMode) AddToLog("Added Player " + std::to_string(i) + " at " + IntToHexString(player[i].GetBaseAddress()));
 	}
@@ -753,6 +753,9 @@ void GameManipulator::UpdatePlayers()
 		if (player[i].Active)
 		{
 			//First, get all the information that matters in all modes.
+			player[i].Update();
+			player[i].playerVehicle.Update();
+
 
 			//Then, get all information that only matters in specific modes.
 			switch (customLaunchSettings.Mode)

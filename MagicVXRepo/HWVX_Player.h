@@ -18,7 +18,7 @@ public:
 	HWVX_Vehicle playerVehicle;
 
 	HWVX_Player();
-	HWVX_Player(int);
+	HWVX_Player(FunctionCaller*, int);
 
 };
 

@@ -23,6 +23,11 @@ void CleanupDeviceD3D();
 void ResetDevice();
 LRESULT WINAPI WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
+void DisplayIntValue(Proxy<int>&, std::string, bool);
+void DisplayIntValue(Proxy<int>&, std::string);
+void DisplayFloatValue(Proxy<float>&, std::string, bool);
+void DisplayFloatValue(Proxy<float>&, std::string);
+
 // Main code
 int main(int, char**)
 {
@@ -632,11 +637,24 @@ int main(int, char**)
                     {
                         std::stringstream ss1;
                         std::stringstream ss2;
+                        std::stringstream ss3;
 
                         ss1 << "Player Address: " << std::hex << player[i].GetBaseAddress();
                         ImGui::Text(ss1.str().c_str());
                         ss2 << "Vehicle Address: " << std::hex << player[i].playerVehicle.GetBaseAddress();
                         ImGui::Text(ss2.str().c_str());
+
+                        DisplayFloatValue(player[i].playerVehicle.currentX, "Position X ##" + std::to_string(i));
+                        DisplayFloatValue(player[i].playerVehicle.currentY, "Position Y ##" + std::to_string(i));
+                        DisplayFloatValue(player[i].playerVehicle.currentZ, "Position Z ##" + std::to_string(i));
+
+                        DisplayFloatValue(player[i].playerVehicle.rotationX, "Rotation X ##" + std::to_string(i));
+                        DisplayFloatValue(player[i].playerVehicle.rotationY, "Rotation Y ##" + std::to_string(i));
+                        DisplayFloatValue(player[i].playerVehicle.rotationZ, "Rotation Z ##" + std::to_string(i));
+                        DisplayFloatValue(player[i].playerVehicle.rotationW, "Rotation W ##" + std::to_string(i));
+
+                        DisplayIntValue(player[i].playerVehicle.currentHealth, "Current Health ##" + std::to_string(i));
+                        DisplayIntValue(player[i].playerVehicle.currentBoost, "Current Boost ##" + std::to_string(i));
                     }
                 }
                 
@@ -867,6 +885,38 @@ void ResetDevice()
     if (hr == D3DERR_INVALIDCALL)
         IM_ASSERT(0);
     ImGui_ImplDX9_CreateDeviceObjects();
+}
+
+void DisplayIntValue(Proxy<int>& value, std::string label, bool lock = true)
+{
+    if (lock)
+    {
+        string lockLabel = "##lock" + label;
+        ImGui::Checkbox(lockLabel.c_str(), &value.lock);
+        ImGui::SameLine();
+    }
+    ImGui::InputInt(label.c_str(), &value.guiValue);
+}
+
+void DisplayIntValue(Proxy<int>& value, std::string label)
+{
+    DisplayIntValue(value, label, true);
+}
+
+void DisplayFloatValue(Proxy<float>& value, std::string label, bool lock = true)
+{
+    if (lock)
+    {
+        string lockLabel = "##lock" + label;
+        ImGui::Checkbox(lockLabel.c_str(), &value.lock);
+        ImGui::SameLine();
+    }
+    ImGui::InputFloat(label.c_str(), &value.guiValue);
+}
+
+void DisplayFloatValue(Proxy<float>& value, std::string label)
+{
+    DisplayFloatValue(value, label, true);
 }
 
 // Forward declare message handler from imgui_impl_win32.cpp

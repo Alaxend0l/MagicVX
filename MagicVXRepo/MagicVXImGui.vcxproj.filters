@@ -139,6 +139,9 @@
     <ClInclude Include="SimpleIni.h">
       <Filter>ImGuiDependencies</Filter>
     </ClInclude>
+    <ClInclude Include="Proxy.h">
+      <Filter>MagicVX\Headers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="ImGuiDependencies">

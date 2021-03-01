@@ -7,22 +7,23 @@ public:
 
     bool isLoaded;
     int vehicleID;
-    float currentX;
-    float currentY;
-    float currentZ;
-    float rotationX;
-    float rotationY;
-    float rotationZ;
-    float rotationW;
+    Proxy<float> currentX;
+    Proxy<float> currentY;
+    Proxy<float> currentZ;
+    Proxy<float> rotationX;
+    Proxy<float> rotationY;
+    Proxy<float> rotationZ;
+    Proxy<float> rotationW;
     float velocityX;
     float velocityY;
     float velocityZ;
     float spawnX;
     float spawnY;
     float spawnZ;
-    int currentHealth;
+
+    Proxy<int> currentHealth;
+    Proxy<int> currentBoost;
     int maxHealth;
-    int currentBoost;
     float vehicleMass;
     float vehicleGravity;
 
@@ -31,13 +32,6 @@ public:
     int address_velocityX;
     int address_velocityY;
     int address_velocityZ;
-    int address_currentX;
-    int address_currentY;
-    int address_currentZ;
-    int address_rotationX;
-    int address_rotationY;
-    int address_rotationZ;
-    int address_rotationW;
     
     //int address_spawnX;
     //int address_spawnY;
@@ -49,9 +43,9 @@ public:
     int address_vehicleGravity;
 
     HWVX_Vehicle();
-    HWVX_Vehicle(int);
+    HWVX_Vehicle(FunctionCaller*, int);
     
-    void Update(int) override;
+    void Update() override;
 };
 
 

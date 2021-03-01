@@ -16,9 +16,10 @@ FunctionCaller::FunctionCaller()
     ProcessHandle = NULL;
 }
 
-FunctionCaller::FunctionCaller(HANDLE ph, std::string path)
+FunctionCaller::FunctionCaller(HANDLE ph, DWORD pid, std::string path)
 {
     ProcessHandle = ph;
+    ProID = pid;
     privileges = GetPrivileges() + 1;
     InjectDll(path.c_str(), ProcessHandle);
 }
@@ -664,4 +665,15 @@ float FunctionCaller::ReadFloat(UINT_PTR address)
 {
     std::vector<unsigned int> offsets;
     return ReadFloat(address, offsets);
+}
+
+bool FunctionCaller::IsForegroundProcess()
+{
+    HWND hwnd = GetForegroundWindow();
+    if (hwnd == NULL) return false;
+
+    DWORD foregroundPid;
+    if (GetWindowThreadProcessId(hwnd, &foregroundPid) == 0) return false;
+
+    return (foregroundPid == ProID);
 }

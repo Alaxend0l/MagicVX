@@ -10,10 +10,11 @@ class FunctionCaller
 private:
 	HANDLE ProcessHandle;
     HANDLE Pipe;
+	DWORD ProID;
     int privileges = 0;
 public:
     FunctionCaller();
-	FunctionCaller(HANDLE ph, std::string);
+	FunctionCaller(HANDLE ph, DWORD pid, std::string);
 
     void  InitPipe();
     int   GetPrivileges();
@@ -78,6 +79,8 @@ public:
 	byte ReadByte(UINT_PTR address);
 	int ReadInt(UINT_PTR address);
 	float ReadFloat(UINT_PTR address);
+
+	bool IsForegroundProcess();
 };
 
 typedef int(__cdecl* _DataPack_GetScript)(int, int);
