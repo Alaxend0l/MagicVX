@@ -8,6 +8,7 @@
 #include "HWVX_Player.h"
 #include "FunctionCaller.h"
 #include "XPC_Handle.h"
+#include "TypeCollector.h"
 
 #include <string>
 #include <vector>
@@ -31,7 +32,7 @@ extern GameBoard GB;
 extern FunctionCaller FC;
 extern XPC_Handle xpcHandle;
 
-extern HWVX_Player player[8];
+extern TypeCollector TC;
 
 extern int gearHuntMakeDelete;
 extern int gearHuntMakeWarp;

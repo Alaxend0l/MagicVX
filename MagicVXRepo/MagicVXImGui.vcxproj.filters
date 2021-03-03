@@ -62,6 +62,9 @@
     <ClCompile Include="XPC_Handle.cpp">
       <Filter>MagicVX\CPPs</Filter>
     </ClCompile>
+    <ClCompile Include="TypeCollector.cpp">
+      <Filter>MagicVX\CPPs</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="imgui.h">
@@ -140,6 +143,9 @@
       <Filter>ImGuiDependencies</Filter>
     </ClInclude>
     <ClInclude Include="Proxy.h">
+      <Filter>MagicVX\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="TypeCollector.h">
       <Filter>MagicVX\Headers</Filter>
     </ClInclude>
   </ItemGroup>

@@ -11,4 +11,4 @@ void pipe_handler();
 // Routes network messages
 void handle_message(const char* msg, char* returnData, DWORD* bytesWritten);
 
-typedef int (__cdecl* _CallFunction)(long double, long double, long double, long double);
+typedef int (__cdecl* _CallFunction)(int, int, int, int);

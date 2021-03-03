@@ -13,7 +13,7 @@ public:
 	// Gives an item to the local car
 	static void GiveItem(Car* car, int weaponIndex);
 
-	static int LoadCar(int carIndex, int loc);
+	static int LoadCar(int carIndex);
 
 	static int LoadItem(int itemIndex);
 

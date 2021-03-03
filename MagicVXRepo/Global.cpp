@@ -13,7 +13,7 @@ CLSettings customLaunchSettings;
 GearHuntManager GH_Manager;
 DWORD ProcessID;
 GameBoard GB;
-HWVX_Player player[8];
+TypeCollector TC;
 FunctionCaller FC;
 XPC_Handle xpcHandle;
 bool pipeConnect = false;

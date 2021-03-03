@@ -6,9 +6,12 @@ enum Funcs
 	CarA_PreMove = 0x40E8D0,
 	CarA_Move = 0x40F270,
 	CarA_ComputeSuspensionForces_Aux1 = 0x4160C0,
+	DataPack_RefreshTextures = 0x421320,
 	DataPack_GetScript = 0x4216C0,
 	FileStreaming_LoadDataPack = 0x4287E0,
+	FileStreaming_GetPackID = 0x4289E0,
 	FileStreaming_InitializeDataPack = 0x428C10,
+	GameSettings_GetMCP = 0x429EC0,
 	GameSettings_SetCodeVariable = 0x429FA0,
 	GameSettings_GetCodeVariable = 0x42A680,
 	GameSettings_IsCheatEnabled = 0x42AFB0,
@@ -17,6 +20,7 @@ enum Funcs
 	PlayerManager_PlayerCount = 0x440160,
 	PlayerManager_GetPlayerByIndex = 0x440180,
 	PlayerManager_GetHumanPlayerByIndex = 0x4401B0,
+	ArmageddonDropShip = 0x4453E0,
 	StateManager_GotoState = 0x447FC0,
 	ActionVehicleTeleport = 0x4498B0,
 	ThingManager_DARYL_CreateThing = 0x44D0B0,
@@ -27,13 +31,16 @@ enum Funcs
 	CreateConfigWindow = 0x455F70,
 	SetSFXVol = 0x4596C0,
 	MagicVX_PatchMouse = 0xFFFF0001,
-    MagicVX_EnableCheats = 0xFFFF0002
+    MagicVX_EnableCheats = 0xFFFF0002,
+	MagicVX_GiveItem = 0xFFFF0003,
+	MagicVX_LoadCar = 0xFFFF0004,
+	MagicVX_LoadItem = 0xFFFF0005,
 };
 
 enum LoadDataPackNames
 {
     LDP_HW_Items = 0x48A49C,
-    LPD_HW_Cars = 0x489A9C,
+    LDP_HW_Cars = 0x489A9C,
 };
 
 //case DataPack_GetScript: return ((_DataPack_GetScript)(p->func))(p->argInt0, p->argInt1); break;

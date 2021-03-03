@@ -23,6 +23,9 @@ void CleanupDeviceD3D();
 void ResetDevice();
 LRESULT WINAPI WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
+void DisplayPlayer(HWVX_Player*, std::string);
+void DisplayVehicle(HWVX_Vehicle*, std::string);
+
 void DisplayIntValue(Proxy<int>&, std::string, bool);
 void DisplayIntValue(Proxy<int>&, std::string);
 void DisplayFloatValue(Proxy<float>&, std::string, bool);
@@ -245,12 +248,15 @@ int main(int, char**)
     bool mvx_window_gearHuntSave = false;
 
     bool mvx_window_players = false;
+    bool mvx_window_spawn = false;
 
     bool mvx_window_xpc_main = false;
 
     int gearHuntSelected = 0;
     int gearHuntLastSelected = 0;
     int gearHuntAmount = 0;
+    int spawnCarType = 0;
+    int spawnWeaponType = 0;
     
     std::string carText;
     std::string carText2;
@@ -298,6 +304,7 @@ int main(int, char**)
                 {
                     ImGui::MenuItem("Global Watch", NULL, &mvx_window_globalWatch);
                     ImGui::MenuItem("Player Monitor", NULL, &mvx_window_players);
+                    ImGui::MenuItem("Spawn Things", NULL, &mvx_window_spawn);
                     //ImGui::MenuItem("Style Editor", NULL, &show_app_style_editor);
                     //ImGui::MenuItem("About Dear ImGui", NULL, &show_app_about);
                     ImGui::EndMenu();
@@ -628,37 +635,36 @@ int main(int, char**)
         {
             ImGui::Begin("Player Monitor", &mvx_window_players);
 
-            for (int i = 0; i < 8; i++)
+            for (int i = 0; i < TC.GetPlayerCount(); i++)
             {
+                HWVX_Player* thisPlayer = TC.GetPlayer(i);
                 std::string headerText = "Monitor Player " + std::to_string(i);
-                if (player[i].Active)
+                if (thisPlayer->Active)
                 {
-                    if (ImGui::CollapsingHeader(headerText.c_str()))
-                    {
-                        std::stringstream ss1;
-                        std::stringstream ss2;
-                        std::stringstream ss3;
-
-                        ss1 << "Player Address: " << std::hex << player[i].GetBaseAddress();
-                        ImGui::Text(ss1.str().c_str());
-                        ss2 << "Vehicle Address: " << std::hex << player[i].playerVehicle.GetBaseAddress();
-                        ImGui::Text(ss2.str().c_str());
-
-                        DisplayFloatValue(player[i].playerVehicle.currentX, "Position X ##" + std::to_string(i));
-                        DisplayFloatValue(player[i].playerVehicle.currentY, "Position Y ##" + std::to_string(i));
-                        DisplayFloatValue(player[i].playerVehicle.currentZ, "Position Z ##" + std::to_string(i));
-
-                        DisplayFloatValue(player[i].playerVehicle.rotationX, "Rotation X ##" + std::to_string(i));
-                        DisplayFloatValue(player[i].playerVehicle.rotationY, "Rotation Y ##" + std::to_string(i));
-                        DisplayFloatValue(player[i].playerVehicle.rotationZ, "Rotation Z ##" + std::to_string(i));
-                        DisplayFloatValue(player[i].playerVehicle.rotationW, "Rotation W ##" + std::to_string(i));
-
-                        DisplayIntValue(player[i].playerVehicle.currentHealth, "Current Health ##" + std::to_string(i));
-                        DisplayIntValue(player[i].playerVehicle.currentBoost, "Current Boost ##" + std::to_string(i));
-                    }
+                    DisplayPlayer(thisPlayer, headerText);
                 }
                 
             }
+            ImGui::End();
+        }
+
+        if (mvx_window_spawn)
+        {
+            ImGui::Begin("Spawn Things", &mvx_window_spawn);
+
+            if (ImGui::Button("Create Car"))
+            {
+                FC.CU_SpawnCar(spawnCarType, -3660.622803f, 55.92387772f, -1649.802979f);
+            }
+            ImGui::SameLine();
+            ImGui::Combo("Car", &spawnCarType, carItems, IM_ARRAYSIZE(carItems));
+            
+
+            if (ImGui::Button("Create Item"))
+            {
+                FC.CU_SpawnItem(65, -3660.622803f, 55.92387772f, -1649.802979f);
+            }
+
             ImGui::End();
         }
 
@@ -887,7 +893,52 @@ void ResetDevice()
     ImGui_ImplDX9_CreateDeviceObjects();
 }
 
-void DisplayIntValue(Proxy<int>& value, std::string label, bool lock = true)
+void DisplayPlayer(HWVX_Player* player, std::string headerString)
+{
+    if (ImGui::CollapsingHeader(headerString.c_str()))
+    {
+        std::stringstream ss1;
+
+        ss1 << "Player Address: " << std::hex << player->GetBaseAddress();
+        ImGui::Text(ss1.str().c_str());
+
+        if (player->playerVehicle != 0)
+        {
+            DisplayVehicle(player->playerVehicle, "Loaded Vehicle ##" + std::to_string(player->GetBaseAddress()));
+        }
+
+    }
+    
+}
+
+void DisplayVehicle(HWVX_Vehicle* vehicle, std::string headerString)
+{
+    if (ImGui::CollapsingHeader(headerString.c_str()))
+    {
+        std::stringstream ss2;
+
+        ss2 << "Vehicle Address: " << std::hex << vehicle->GetBaseAddress();
+        ImGui::Text(ss2.str().c_str());
+
+        DisplayFloatValue(vehicle->velocityX, "Velocity X ##" + std::to_string(vehicle->GetBaseAddress()));
+        DisplayFloatValue(vehicle->velocityY, "Velocity Y ##" + std::to_string(vehicle->GetBaseAddress()));
+        DisplayFloatValue(vehicle->velocityZ, "Velocity Z ##" + std::to_string(vehicle->GetBaseAddress()));
+
+        DisplayFloatValue(vehicle->currentX, "Position X ##" + std::to_string(vehicle->GetBaseAddress()));
+        DisplayFloatValue(vehicle->currentY, "Position Y ##" + std::to_string(vehicle->GetBaseAddress()));
+        DisplayFloatValue(vehicle->currentZ, "Position Z ##" + std::to_string(vehicle->GetBaseAddress()));
+
+        DisplayFloatValue(vehicle->rotationX, "Rotation X ##" + std::to_string(vehicle->GetBaseAddress()));
+        DisplayFloatValue(vehicle->rotationY, "Rotation Y ##" + std::to_string(vehicle->GetBaseAddress()));
+        DisplayFloatValue(vehicle->rotationZ, "Rotation Z ##" + std::to_string(vehicle->GetBaseAddress()));
+        DisplayFloatValue(vehicle->rotationW, "Rotation W ##" + std::to_string(vehicle->GetBaseAddress()));
+
+        DisplayIntValue(vehicle->currentHealth, "Current Health ##" + std::to_string(vehicle->GetBaseAddress()));
+        DisplayIntValue(vehicle->currentBoost, "Current Boost ##" + std::to_string(vehicle->GetBaseAddress()));
+    }
+}
+
+void DisplayIntValue(Proxy<int>& value, std::string label, bool lock)
 {
     if (lock)
     {
@@ -895,7 +946,7 @@ void DisplayIntValue(Proxy<int>& value, std::string label, bool lock = true)
         ImGui::Checkbox(lockLabel.c_str(), &value.lock);
         ImGui::SameLine();
     }
-    ImGui::InputInt(label.c_str(), &value.guiValue);
+    ImGui::InputInt(label.c_str(), &value.guiValue, NULL, NULL);
 }
 
 void DisplayIntValue(Proxy<int>& value, std::string label)
@@ -903,7 +954,7 @@ void DisplayIntValue(Proxy<int>& value, std::string label)
     DisplayIntValue(value, label, true);
 }
 
-void DisplayFloatValue(Proxy<float>& value, std::string label, bool lock = true)
+void DisplayFloatValue(Proxy<float>& value, std::string label, bool lock)
 {
     if (lock)
     {

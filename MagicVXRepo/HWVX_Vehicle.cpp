@@ -12,6 +12,10 @@ HWVX_Vehicle::HWVX_Vehicle(FunctionCaller* fcReference, int address)
 
     address_stats = address + 0x24;
 
+    InitFloat(velocityX, address + 0x00);
+    InitFloat(velocityY, address + 0x04);
+    InitFloat(velocityZ, address + 0x08);
+
     InitFloat(currentX, address + 0x40);
     InitFloat(currentY, address + 0x44);
     InitFloat(currentZ, address + 0x48);
@@ -28,6 +32,9 @@ HWVX_Vehicle::HWVX_Vehicle(FunctionCaller* fcReference, int address)
 
 void HWVX_Vehicle::Update()
 {
+    UpdateFloat(velocityX);
+    UpdateFloat(velocityY);
+    UpdateFloat(velocityZ);
     UpdateFloat(currentX);
     UpdateFloat(currentY);
     UpdateFloat(currentZ);

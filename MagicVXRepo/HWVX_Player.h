@@ -15,7 +15,7 @@ public:
 	int StuntPoints = 0;
 	int Kills = 0;
 
-	HWVX_Vehicle playerVehicle;
+	HWVX_Vehicle* playerVehicle;
 
 	HWVX_Player();
 	HWVX_Player(FunctionCaller*, int);

@@ -8,6 +8,7 @@ PipeFunction::PipeFunction()
 
 PipeFunction::PipeFunction(int function)
 {
+    memset(buffer, 0, sizeof(buffer));
     offset = 0;
     Add(function);
     offset += 8;
@@ -41,20 +42,11 @@ bool PipeFunction::Add(int value, bool reverse)
     return true;
 }
 
-bool PipeFunction::Add(char value, bool reverse)
+bool PipeFunction::Add(byte value, bool reverse)
 {
-    unsigned char byteArray[sizeof(value)];
-    memcpy(byteArray, (const char*)&value, sizeof(value));
+    
 
-    if (offset + sizeof(value) > 1024) return false;
-
-    int position = offset;
-
-    for (int i = 0; i < sizeof(byteArray); i++)
-    {
-        if (reverse) buffer[offset + (sizeof(byteArray) - 1) - i] = byteArray[i];
-        else buffer[offset + i] = byteArray[i];
-    }
+    buffer[offset] = value;
 
     offset += sizeof(value);
 
@@ -106,7 +98,7 @@ bool PipeFunction::Add(int value)
     return Add(value, false);
 }
 
-bool PipeFunction::Add(char value)
+bool PipeFunction::Add(byte value)
 {
     return Add(value, false);
 }

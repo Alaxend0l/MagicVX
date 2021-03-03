@@ -55,10 +55,8 @@ ROUTE_FUNC_IMPL(Routes::MagicVX_GiveItem) {
 ROUTE_FUNC_IMPL(Routes::MagicVX_LoadCar)
 {
 	int index;
-	int loc;
 	memcpy(&index, msg + 4, 4);
-	memcpy(&loc, msg + 8, 4);
-	int address = MagicVX::LoadCar(index, loc);
+	int address = MagicVX::LoadCar(index);
 	memcpy(returnData, &address, 4);
 	*bytesWritten = 4;
 }

@@ -47,8 +47,6 @@ public:
 
 	void PatchFOV();
 
-	void ClearPlayers();
-	void GetAllPlayers();
 	void UpdatePlayers();
     void EnableCheats();
 

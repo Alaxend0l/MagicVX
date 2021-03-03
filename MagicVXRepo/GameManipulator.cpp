@@ -132,7 +132,7 @@ void GameManipulator::GameLaunch()
     ProcessID = GetProcessId(ProcessHandle);
     FC = FunctionCaller(ProcessHandle, ProcessID, mainSettings.GetDLLPath());
     GB.Init(ProcessHandle, 0x68DF20);
-    
+	TC = TypeCollector(&FC);
 }
 
 void GameManipulator::Heartbeat()
@@ -301,7 +301,7 @@ void GameManipulator::CustomLaunch_LoadStart()
 	if (FC.ReadInt(0x0048D970, { 0xD0 }) != 12)
 	{
 		FC.WriteByte(0x0065E332, {}, 0x0);
-		ClearPlayers();
+		TC.ResetValues();
 		CL_LoadStart = true;
 		if (DevMode) AddToLog("Found Start of Load!");
 		if (Sandbox) Sandbox_Init();
@@ -320,6 +320,7 @@ void GameManipulator::CustomLaunch_LoadObjectData()
 	if (FC.ReadInt(0x0048D92C, {}) == 5 && FC.ReadInt(0x0048D900, {}) > 1)
 	{
 		CL_LoadObjectData = true;
+		TC.SetUpVehicles();
 		if (gearHuntMakeWorking) MakeGearHunt_PrepareObjectTypes();
 		else if (GearHuntLaunch) GearHuntLaunch_PrepareObjectTypes();
 		if (DevMode) AddToLog("Found Object Load Data!");
@@ -329,7 +330,7 @@ void GameManipulator::CustomLaunch_GamePlayStart()
 {
 	if (FC.ReadInt(0x0048D970, { 0xD0 }) == 5)
 	{
-		GetAllPlayers();
+		TC.SetUpPlayers();
 		switch (customLaunchSettings.Mode)
 		{
 		case 5:
@@ -721,59 +722,35 @@ void GameManipulator::EnableCheats()
     FC.WriteByte(0x0065E358, 0x01);
 }
 
-void GameManipulator::ClearPlayers()
-{
-	for (int i = 0; i < 8; i++)
-	{
-		player[i] = HWVX_Player();
-	}
-}
-void GameManipulator::GetAllPlayers()
-{
-	int Players = FC.ReadInt(0x0065E328, {}) + 1;
-	for (int i = 0; i < Players; i++)
-	{
-		if (i == 0)
-		{
-			player[i] = HWVX_Player(&FC, 0x0053BAC8);
-			player[i].playerVehicle = HWVX_Vehicle(&FC, FC.ReadInt(player[i].GetBaseAddress() + 0x2C));
-		}
-		else
-		{
-			player[i] = HWVX_Player(&FC, FC.ReadInt(0x005423A8) + (i - 1) * 0x654);
-			player[i].playerVehicle = HWVX_Vehicle(&FC, FC.ReadInt(player[i].GetBaseAddress() + 0x2C));
-		}
-		if (DevMode) AddToLog("Added Player " + std::to_string(i) + " at " + IntToHexString(player[i].GetBaseAddress()));
-	}
-}
 void GameManipulator::UpdatePlayers()
 {
-	for (int i = 0; i < 8; i++)
+	for (int i = 0; i < TC.GetPlayerCount(); i++)
 	{
-		if (player[i].Active)
+		HWVX_Player* thisPlayer = TC.GetPlayer(i);
+		if (thisPlayer->Active)
 		{
 			//First, get all the information that matters in all modes.
-			player[i].Update();
-			player[i].playerVehicle.Update();
+			thisPlayer->Update();
+			thisPlayer->playerVehicle->Update();
 
 
 			//Then, get all information that only matters in specific modes.
 			switch (customLaunchSettings.Mode)
 			{
 			case 5:
-				int CurrentKills = player[i].Kills;
-				player[i].Kills = FC.ReadInt(player[i].GetBaseAddress() + 0x78);
-				player[i].StuntPoints = FC.ReadInt(player[i].GetBaseAddress() + 0x7C);
-				if (CurrentKills < player[i].Kills)
+				int CurrentKills = thisPlayer->Kills;
+				thisPlayer->Kills = FC.ReadInt(thisPlayer->GetBaseAddress() + 0x78);
+				thisPlayer->StuntPoints = FC.ReadInt(thisPlayer->GetBaseAddress() + 0x7C);
+				if (CurrentKills < thisPlayer->Kills)
 				{
 					if (i == 0)
 					{
-						IDEA_ScoreCountUp += customLaunchSettings.Score_PointsPerKill * (player[i].Kills - CurrentKills);
+						IDEA_ScoreCountUp += customLaunchSettings.Score_PointsPerKill * (thisPlayer->Kills - CurrentKills);
 					}
 					else
 					{
-						player[i].StuntPoints += customLaunchSettings.Score_PointsPerKill * (player[i].Kills - CurrentKills);
-						FC.WriteInt(player[i].GetBaseAddress() + 0x7C, player[i].StuntPoints);
+						thisPlayer->StuntPoints += customLaunchSettings.Score_PointsPerKill * (thisPlayer->Kills - CurrentKills);
+						FC.WriteInt(thisPlayer->GetBaseAddress() + 0x7C, thisPlayer->StuntPoints);
 					}
 				}
 				break;
@@ -788,10 +765,10 @@ void GameManipulator::UpdatePlayers()
 			if (IDEA_ScoreCountUp > 0)
 			{
 				int countFraction = IDEA_ScoreCountUp / 5 + 1;
-				player[i].StuntPoints += countFraction;
-				FC.WriteInt(player[i].GetBaseAddress() + 0x7C, player[i].StuntPoints);
-				FC.WriteString(0x005EE118, std::to_string(player[i].StuntPoints));
-				FC.WriteString(0x005FE068, std::to_string(player[i].StuntPoints));
+				thisPlayer->StuntPoints += countFraction;
+				FC.WriteInt(thisPlayer->GetBaseAddress() + 0x7C, thisPlayer->StuntPoints);
+				FC.WriteString(0x005EE118, std::to_string(thisPlayer->StuntPoints));
+				FC.WriteString(0x005FE068, std::to_string(thisPlayer->StuntPoints));
 				IDEA_ScoreCountUp -= countFraction;
 
 				//Debugging something and seeing if it works!

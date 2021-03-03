@@ -50,7 +50,7 @@ void MagicVX::GiveItem(Car* car, int weaponIndex) {
 	WildCardRack::Add(carThing, (int)script, sp2);
 }
 
-int MagicVX::LoadCar(int carIndex, int loc)
+int MagicVX::LoadCar(int carIndex)
 {
 	DataPackStream* loadStream = FileStreaming::LoadDataPack("HW_Cars", 0, carIndex, 0);
 

@@ -33,16 +33,21 @@ public:
 	void  FunctionReturnZero(int);
 
     void  PatchMouse();
+	int   Pipe_LoadCar(int);
 
 	int   CU_SpawnGear(float, float, float, int);
 	int   CU_SpawnItem(int, float, float, float);
+	int   CU_SpawnCar(int, float, float, float);
 	void  CU_EnableCheats();
 	void  CU_DisableCheats();
 	void  CU_TeleportCorrection(int);
 
+	int   FC_DataPack_RefreshTextures(int);
 	int   FC_DataPack_GetScript(int, int);
-	int   FC_FileStreaming_LoadDataPack(int, int, int, char);
-	int   FC_FileStreaming_InitializeDataPack(int, int, char);
+	int   FC_FileStreaming_LoadDataPack(int, int, int, byte);
+	int   FC_FileStreaming_GetPackID(int, int, int);
+	int   FC_FileStreaming_InitializeDataPack(int, int, byte);
+	int   FC_GameSettings_GetMCP();
 	void  FC_GameSettings_SetCodeVariable(int, int, int);
 	int   FC_GameSettings_GetCodeVariable(int, int);
 	int   FC_GameSettings_IsCheatEnabled(int);
@@ -59,6 +64,8 @@ public:
 	int   FC_GetTileCar(int);
 	void  FC_SubMatrixToQuaternion(int, int);
 	void  FC_SetSFXVol(int);
+
+	void  FC_ArmageddonDropShip();
 
 	void WriteByte(UINT_PTR address, std::vector<unsigned int> offsets, byte value);
 	void WriteFloat(UINT_PTR address, std::vector<unsigned int> offsets, float value);

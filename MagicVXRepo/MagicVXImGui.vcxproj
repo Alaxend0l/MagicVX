@@ -167,6 +167,7 @@
     <ClCompile Include="imgui_widgets.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="PipeFunction.cpp" />
+    <ClCompile Include="TypeCollector.cpp" />
     <ClCompile Include="UserSettings.cpp" />
     <ClCompile Include="XPC_Handle.cpp" />
   </ItemGroup>
@@ -194,6 +195,7 @@
     <ClInclude Include="PipeFunction.h" />
     <ClInclude Include="Proxy.h" />
     <ClInclude Include="SimpleIni.h" />
+    <ClInclude Include="TypeCollector.h" />
     <ClInclude Include="UserSettings.h" />
     <ClInclude Include="XPC_Handle.h" />
     <ClInclude Include="XPC_Layout.h" />

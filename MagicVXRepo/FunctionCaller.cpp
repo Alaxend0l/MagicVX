@@ -170,6 +170,13 @@ void  FunctionCaller::FunctionReturnZero(int address)
     WriteProcessMemory(ProcessHandle, (void*)(address + 2), &value, sizeof(byte), NULL);
 }
 
+int   FunctionCaller::Pipe_LoadCar(int index)
+{
+    PipeFunction FunctionCall = PipeFunction(MagicVX_LoadCar);
+    FunctionCall.Add(index);
+    return CallPipeInt(FunctionCall);
+}
+
 int   FunctionCaller::CU_SpawnGear(float x, float y, float z, int address)
 {
     //Start by allocating memory for item information.
@@ -218,13 +225,14 @@ int   FunctionCaller::CU_SpawnItem(int type, float x, float y, float z)
     int memoryAddress = static_cast<int>(reinterpret_cast<std::uintptr_t>(memoryAllocated));
 
     //Then, let's load in the collectable.
-    int loadStream = 0;// FC_FileStreaming_LoadDataPack(LDP_HW_Items, 2, type, 0);
-    if (loadStream == 0) { std::cout << "Error Loading Data Pack.\n"; return 0; }
+    int loadStream = FC_FileStreaming_LoadDataPack(LDP_HW_Items, 2, type, 0);
+    WriteByte(0x65f468, { (unsigned int)0xA8 * loadStream + 2 }, 1);
+    //if (loadStream == 0) { std::cout << "Error Loading Data Pack.\n"; return 0; }
 
-    int pack = 0;// FC_FileStreaming_InitializeDataPack(loadStream, 2, 1);
+    int pack = FC_FileStreaming_InitializeDataPack(loadStream, 2, 1);
     if (pack == 0) { std::cout << "Error Initializing Data Pack.\n"; return 0; }
 
-    int script = 0;// FC_DataPack_GetScript(pack, type);
+    int script = FC_DataPack_GetScript(pack, type);
     if (script == 0) { std::cout << "Error Getting Script.\n"; return 0; }
 
     std::cout << "Script has been initialized.\n";
@@ -261,6 +269,81 @@ int   FunctionCaller::CU_SpawnItem(int type, float x, float y, float z)
 
     return result;
 }
+void  FunctionCaller::FC_ArmageddonDropShip()
+{
+    PipeFunction FunctionCall = PipeFunction(ArmageddonDropShip);
+    CallPipeVoid(FunctionCall);
+}
+int   FunctionCaller::CU_SpawnCar(int index, float x, float y, float z)
+{
+    //Start by allocating memory for car information.
+    void* memoryAllocated;
+    memoryAllocated = AllocateMemory(60);
+    int memoryAddress = static_cast<int>(reinterpret_cast<std::uintptr_t>(memoryAllocated));
+
+    //First, get MCP.
+
+    int mcp = FC_GameSettings_GetMCP();
+    if (mcp == 0) { std::cout << "Error Loading MCP.\n"; return 0; }
+
+    std::cout << "MCP: " << std::hex << mcp << "\n";
+
+    //Then, get MCP's pack ID.
+    int mcpPack = FC_FileStreaming_GetPackID(mcp + 8, 8, 2);
+
+    std::cout << "MCP Pack ID: " << std::hex << mcpPack << "\n";
+
+    //Then initialize MCP's pack.
+    FC_FileStreaming_InitializeDataPack(mcpPack, 8, 1);
+    if (mcpPack == 0) { std::cout << "Error Initializing MCP.\n"; return 0; }
+
+    //Then, let's load in the car.
+    int loadStream = FC_FileStreaming_LoadDataPack(LDP_HW_Cars, 0, index, 0);
+    //if (loadStream == 0) { std::cout << "Error Loading Data Pack.\n"; return 0; }
+
+    std::cout << "LoadStream: " << std::hex << loadStream << "\n";
+
+    //Pointers don't get refreshed! Let's fix that!
+    WriteByte(0x65f460, { (unsigned int)0xA8 * loadStream + 2 }, 1);
+
+    int pack = FC_FileStreaming_InitializeDataPack(loadStream, 0, 1);
+    if (pack == 0) { std::cout << "Error Initializing Data Pack.\n"; return 0; }
+
+    //FC_DataPack_RefreshTextures(pack);
+
+    std::cout << "Pack: " << std::hex << pack << "\n";
+
+    int script = FC_DataPack_GetScript(pack, index);
+
+    if (script == 0) { std::cout << "Error Getting Script.\n"; return 0; }
+
+    std::cout << "Script: " << std::hex << script << "\n";
+
+    WriteByte(0x47a658, 1);
+
+    std::cout << "Script has been initialized.\n";
+
+    //Then input all the data necessary.
+
+    WriteFloat (memoryAddress + 0x00, x);
+    WriteFloat (memoryAddress + 0x04, y);
+    WriteFloat (memoryAddress + 0x08, z);
+    WriteInt   (memoryAddress + 0x0C, 0xCDCDCDCD);
+    WriteFloat (memoryAddress + 0x10, 0);
+    WriteFloat (memoryAddress + 0x14, 0);
+    WriteFloat (memoryAddress + 0x18, 0);
+    WriteInt   (memoryAddress + 0x1C, 0x3F800000);
+    WriteInt   (memoryAddress + 0x30, script);
+
+    //Then, spawn the car.
+    int result = FC_ThingManager_DARYL_CreateThing(9, memoryAddress);
+
+    //End it off by deallocating the used memory.
+    DeAllocateMemory(memoryAllocated);
+
+    return result;
+}
+
 void  FunctionCaller::CU_EnableCheats()
 {
     /*
@@ -306,6 +389,14 @@ void  FunctionCaller::PatchMouse()
     return CallPipeVoid(FunctionCall);
 }
 
+int   FunctionCaller::FC_DataPack_RefreshTextures(int address)
+{
+    PipeFunction FunctionCall = PipeFunction(DataPack_RefreshTextures);
+    FunctionCall.Add(address);
+
+    return CallPipeInt(FunctionCall);
+}
+
 
 int   FunctionCaller::FC_DataPack_GetScript(int datapack, int index)
 {
@@ -316,7 +407,7 @@ int   FunctionCaller::FC_DataPack_GetScript(int datapack, int index)
     return CallPipeInt(FunctionCall);
 }
 
-int   FunctionCaller::FC_FileStreaming_LoadDataPack(int filename, int type, int index, char variant)
+int   FunctionCaller::FC_FileStreaming_LoadDataPack(int filename, int type, int index, byte variant)
 {
     PipeFunction FunctionCall = PipeFunction(FileStreaming_LoadDataPack);
     FunctionCall.Add(filename);
@@ -327,7 +418,17 @@ int   FunctionCaller::FC_FileStreaming_LoadDataPack(int filename, int type, int 
     return CallPipeInt(FunctionCall);
 }
 
-int   FunctionCaller::FC_FileStreaming_InitializeDataPack(int datapackstream, int type, char notsure)
+int   FunctionCaller::FC_FileStreaming_GetPackID(int filename, int type, int index)
+{
+    PipeFunction FunctionCall = PipeFunction(FileStreaming_GetPackID);
+    FunctionCall.Add(filename);
+    FunctionCall.Add(type);
+    FunctionCall.Add(index);
+
+    return CallPipeInt(FunctionCall);
+}
+
+int   FunctionCaller::FC_FileStreaming_InitializeDataPack(int datapackstream, int type, byte notsure)
 {
     PipeFunction FunctionCall = PipeFunction(FileStreaming_InitializeDataPack);
     FunctionCall.Add(datapackstream);
@@ -336,6 +437,14 @@ int   FunctionCaller::FC_FileStreaming_InitializeDataPack(int datapackstream, in
 
     return CallPipeInt(FunctionCall);
 }
+
+int   FunctionCaller::FC_GameSettings_GetMCP()
+{
+    PipeFunction FunctionCall = PipeFunction(GameSettings_GetMCP);
+
+    return CallPipeInt(FunctionCall);
+}
+
 void  FunctionCaller::FC_GameSettings_SetCodeVariable(int variable, int offset, int value)
 {
     PipeFunction FunctionCall = PipeFunction(GameSettings_SetCodeVariable);
@@ -437,6 +546,8 @@ int   FunctionCaller::FC_GetTileCar(int index)
 
     return CallPipeInt(FunctionCall);
 }
+
+
 void  FunctionCaller::FC_SubMatrixToQuaternion(int add1, int add2)
 {
     PipeFunction FunctionCall = PipeFunction(SubMatrixToQuaternion);

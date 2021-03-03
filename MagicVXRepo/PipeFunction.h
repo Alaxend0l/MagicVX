@@ -4,18 +4,19 @@
 #include <type_traits>
 #include <iostream>
 #include <iomanip>
+#include <Windows.h>
 
 
 class PipeFunction
 {
 public:
-    unsigned char buffer[1024];
+    unsigned char buffer[1024] = "";
     unsigned int offset;
 
     bool Add(int, bool);
     bool Add(int);
-    bool Add(char, bool);
-    bool Add(char);
+    bool Add(byte, bool);
+    bool Add(byte);
     bool Add(float, bool);
     bool Add(float);
     bool Add(double, bool);

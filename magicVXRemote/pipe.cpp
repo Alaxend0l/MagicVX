@@ -53,32 +53,41 @@ void handle_message(const char* msg, char* returnData, DWORD* bytesWritten) {
 	unsigned int argSize = *(unsigned int*)(msg + 4);
 	unsigned int retSize = *(unsigned int*)(msg + 8);
 
-	if (route == 0xFFFF0001)
-	{
-		MagicVX::EnableMouse();
-		*bytesWritten = 0;
-	}
-	else
-	{
-		long double arg0 = 0;
-		long double arg1 = 0;
-		long double arg2 = 0;
-		long double arg3 = 0;
+	int arg0 = 0;
+	int arg1 = 0;
+	int arg2 = 0;
+	int arg3 = 0;
 
-		int returnValue = 0;
+	int returnValue = 0;
+
+	switch (route)
+	{
+	default:
+		
 
 		printf("[magicVX] Received remote call of function: Enum %d\n", route);
 
-		memcpy(&arg0, msg + 12, 12);
-		memcpy(&arg1, msg + 24, 12);
-		memcpy(&arg2, msg + 36, 12);
-		memcpy(&arg3, msg + 48, 12);
+		memcpy(&arg0, msg + 12, 4);
+		memcpy(&arg1, msg + 16, 4);
+		memcpy(&arg2, msg + 20, 4);
+		memcpy(&arg3, msg + 24, 4);
 
 		returnValue = ((_CallFunction)(route))(arg0, arg1, arg2, arg3);
 
 		printf("[magicVX] Function Called - Return Value: %d\n", returnValue);
 		memcpy(returnData, &returnValue, retSize);
 		*bytesWritten = retSize;
+		break;
+	case 0xFFFF0001:
+		MagicVX::EnableMouse();
+		*bytesWritten = 0;
+		break;
+	case 0xFFFF0004:
+		memcpy(&arg0, msg + 12, 4);
+		returnValue = MagicVX::LoadCar(arg0);
+		memcpy(returnData, &returnValue, retSize);
+		*bytesWritten = retSize;
+		break;
 	}
 
 	
