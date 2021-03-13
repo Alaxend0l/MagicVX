@@ -12,6 +12,7 @@ class PipeFunction
 public:
     unsigned char buffer[1024] = "";
     unsigned int offset;
+    unsigned int address;
 
     bool Add(int, bool);
     bool Add(int);

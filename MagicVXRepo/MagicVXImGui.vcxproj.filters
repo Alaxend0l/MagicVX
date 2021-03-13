@@ -1,7 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="main.cpp" />
     <ClCompile Include="imgui.cpp">
       <Filter>ImGuiDependencies</Filter>
     </ClCompile>
@@ -65,6 +64,21 @@
     <ClCompile Include="TypeCollector.cpp">
       <Filter>MagicVX\CPPs</Filter>
     </ClCompile>
+    <ClCompile Include="HWVX_TileCar.cpp">
+      <Filter>MagicVX\HWVX_Classes</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>MagicVX</Filter>
+    </ClCompile>
+    <ClCompile Include="XPC_Generic.cpp">
+      <Filter>MagicVX\XPC_Classes</Filter>
+    </ClCompile>
+    <ClCompile Include="XPC_Top.cpp">
+      <Filter>MagicVX\XPC_Classes</Filter>
+    </ClCompile>
+    <ClCompile Include="XPC_Car.cpp">
+      <Filter>MagicVX\XPC_Classes</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="imgui.h">
@@ -127,9 +141,6 @@
     <ClInclude Include="HWVX_Vehicle.h">
       <Filter>MagicVX\HWVX_Classes</Filter>
     </ClInclude>
-    <ClInclude Include="XPC_Layout.h">
-      <Filter>MagicVX\HWVX_Classes</Filter>
-    </ClInclude>
     <ClInclude Include="HWVX_Generic.h">
       <Filter>MagicVX\HWVX_Classes</Filter>
     </ClInclude>
@@ -148,6 +159,21 @@
     <ClInclude Include="TypeCollector.h">
       <Filter>MagicVX\Headers</Filter>
     </ClInclude>
+    <ClInclude Include="HWVX_TileCar.h">
+      <Filter>MagicVX\HWVX_Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="XPC_Layout.h">
+      <Filter>MagicVX\XPC_Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="XPC_Generic.h">
+      <Filter>MagicVX\XPC_Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="XPC_Top.h">
+      <Filter>MagicVX\XPC_Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="XPC_Car.h">
+      <Filter>MagicVX\XPC_Classes</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="ImGuiDependencies">
@@ -164,6 +190,9 @@
     </Filter>
     <Filter Include="MagicVX\HWVX_Classes">
       <UniqueIdentifier>{42d674db-4f25-4967-a1f5-828b60d7cde0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MagicVX\XPC_Classes">
+      <UniqueIdentifier>{cdb312d5-e2bd-4498-9d92-ed218912f120}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

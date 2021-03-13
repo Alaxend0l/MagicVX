@@ -33,16 +33,26 @@ std::vector<unsigned char> XPC_Handle::ReadFile(std::string filename)
 
 void XPC_Handle::SetUpDatabase()
 {
-    address_tmp = 0xC;
+    char endianTest = ReadChar(0);
+    xgcFlip = (endianTest == 2);
+
     entryID = ReadInt(0x8);
-    entries = ReadInt(address_tmp);
-    address_body = address_tmp + (entries * 0x18);
-    address_tmp = 0x10;
+    entries = ReadInt(0xC);
+    address_body = 0x10 + (entries * 0x18);
+    
 
     Headers.clear();
+    TopEntries.clear();
+
+    /*
+    */
     
     for (int i = 0; i < entries; i++)
     {
+        XPC_Top newTop = XPC_Top(FileContents, xgcFlip, 0x10 + (i * 0x18));
+        newTop.XPC_AddNextTable(address_body + newTop.offset.currentValue);
+        TopEntries.push_back(newTop);
+        /*
         XPC_Header_Main newHeader;
         newHeader.Address_Header = address_tmp + (i * 0x18);
         newHeader.Type = ReadInt(newHeader.Address_Header + 0x4);
@@ -53,6 +63,7 @@ void XPC_Handle::SetUpDatabase()
 
         newHeader.Address_File = address_body + newHeader.Offset;
 
+        
         newHeader.xpcTableEntry.entryId = ReadUnsignedInt(newHeader.Address_Header + 0x0);
         newHeader.xpcTableEntry.objectType = ReadUnsignedInt(newHeader.Address_Header + 0x4);
         newHeader.xpcTableEntry.objectIndex = ReadUnsignedInt(newHeader.Address_Header + 0x8);
@@ -143,6 +154,8 @@ void XPC_Handle::SetUpDatabase()
         }
         
         Headers.push_back(newHeader);
+        */
+
     }
 }
 
@@ -175,6 +188,7 @@ int XPC_Handle::ReadInt(int address)
 {
     int returnValue = 0;
     memcpy(&returnValue, &FileContents[address], sizeof(returnValue));
+    if (xgcFlip) SwapEndian(returnValue);
     return returnValue;
 }
 
@@ -182,6 +196,7 @@ unsigned int XPC_Handle::ReadUnsignedInt(int address)
 {
     unsigned int returnValue = 0;
     memcpy(&returnValue, &FileContents[address], sizeof(returnValue));
+    if (xgcFlip) SwapEndian(returnValue);
     return returnValue;
 }
 
@@ -189,6 +204,7 @@ short XPC_Handle::ReadShort(int address)
 {
     short returnValue = 0;
     memcpy(&returnValue, &FileContents[address], sizeof(returnValue));
+    if (xgcFlip) SwapEndian(returnValue);
     return returnValue;
 }
 
@@ -196,6 +212,7 @@ char XPC_Handle::ReadChar(int address)
 {
     char returnValue = 0;
     memcpy(&returnValue, &FileContents[address], sizeof(returnValue));
+    if (xgcFlip) SwapEndian(returnValue);
     return returnValue;
 }
 

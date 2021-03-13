@@ -3216,6 +3216,7 @@ static void ShowDemoWindowPopups()
         {
             ImGui::Text("Edit name:");
             ImGui::InputText("##edit", name, IM_ARRAYSIZE(name));
+            ImGui::InputText("##edit", name, IM_ARRAYSIZE(name));
             if (ImGui::Button("Close"))
                 ImGui::CloseCurrentPopup();
             ImGui::EndPopup();

@@ -49,6 +49,7 @@ public:
 
 	void UpdatePlayers();
     void EnableCheats();
+	void FixViewManager();
 
 	
 

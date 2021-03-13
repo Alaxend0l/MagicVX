@@ -57,6 +57,7 @@ void handle_message(const char* msg, char* returnData, DWORD* bytesWritten) {
 	int arg1 = 0;
 	int arg2 = 0;
 	int arg3 = 0;
+	int arg4 = 0;
 
 	int returnValue = 0;
 
@@ -71,8 +72,9 @@ void handle_message(const char* msg, char* returnData, DWORD* bytesWritten) {
 		memcpy(&arg1, msg + 16, 4);
 		memcpy(&arg2, msg + 20, 4);
 		memcpy(&arg3, msg + 24, 4);
+		memcpy(&arg4, msg + 28, 4);
 
-		returnValue = ((_CallFunction)(route))(arg0, arg1, arg2, arg3);
+		returnValue = ((_CallFunction)(route))(arg0, arg1, arg2, arg3, arg4);
 
 		printf("[magicVX] Function Called - Return Value: %d\n", returnValue);
 		memcpy(returnData, &returnValue, retSize);

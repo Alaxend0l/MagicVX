@@ -4,6 +4,8 @@
 #include <fstream>
 #include <string>
 #include <vector>
+#include "Proxy.h"
+
 
 // Typed up by N/A, not exactly up to C standards (since I should be doing local references in functions instead)
 
@@ -17,7 +19,7 @@ struct XpcTableEntry {
 	* 0 = car
 	* 1 = brief
 	* 2 = item
-	* 3 = ???+
+	* 3 = ???
 	* 4 = world
 	* 5 = colliders
 	* 6 = world texture

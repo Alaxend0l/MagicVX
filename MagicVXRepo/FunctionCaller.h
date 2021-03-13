@@ -41,7 +41,12 @@ public:
 	void  CU_EnableCheats();
 	void  CU_DisableCheats();
 	void  CU_TeleportCorrection(int);
+	void  CU_ChangeCameraView(int);
 
+	int   FC_CameraManager_GetActiveCameras();
+	int   FC_CameraManager_GetCameraByIndex(int);
+	int   FC_CameraManager_GetNewCamera();
+	void  FC_Camera_SetPlayer(int, int);
 	int   FC_DataPack_RefreshTextures(int);
 	int   FC_DataPack_GetScript(int, int);
 	int   FC_FileStreaming_LoadDataPack(int, int, int, byte);
@@ -53,12 +58,26 @@ public:
 	int   FC_GameSettings_IsCheatEnabled(int);
 	void  FC_Item_Release(int);
 	bool  FC_Player_IsHuman(int);
+	void  FC_Player_RefreshInterface(int);
+	void  FC_Player_SetThing(int, int);
+	int   FC_PlayerManager_NewHumanPlayer();
+	int   FC_PlayerManager_NewAIPlayer();
+	char  FC_PlayerManager_PlayerHumanCount();
 	char  FC_PlayerManager_PlayerCount();
 	int   FC_PlayerManager_GetPlayerByIndex(char);
 	int   FC_PlayerManager_GetHumanPlayerByIndex(char);
+	void  FC_PlayerManager_RemovePlayer(int);
+	void  FC_InterfaceInputAnimator_Initialize();
+	void  FC_StateProgressionManager_RestartCurrentLevel();
 	void  FC_StateManager_GotoState(int);
 	int   FC_ActionVehicleTeleport(int);
 	int   FC_ThingManager_DARYL_CreateThing(int, int);
+	void  FC_ViewManager_SetCamera(int, int);
+	void  FC_ViewManager_EnableView(int, int);
+	void  FC_Gfx_SetRenderWindowSize(int, int, int, int, int);
+	void  FC_ViewManager_SetSinglePlayer();
+	void  FC_ViewManager_SetTwoPlayerHorizontal();
+	void  FC_ViewManager_SetThreePlayer();
 	void  FC_ViewManager_SetFourPlayer();
 	int   FC_GetTotalTiles_Car();
 	int   FC_GetTileCar(int);
@@ -89,23 +108,3 @@ public:
 
 	bool IsForegroundProcess();
 };
-
-typedef int(__cdecl* _DataPack_GetScript)(int, int);
-typedef int(__cdecl* _FileStreaming_LoadDataPack)(int, signed int, int, char);
-typedef int(__cdecl* _FileStreaming_InitializeDataPack)(int, int, char);
-typedef void(__cdecl* _GameSettings_SetCodeVariable)(int, int, int);
-typedef int(__cdecl* _GameSettings_GetCodeVariable)(int, int);
-typedef bool(__cdecl* _GameSettings_IsCheatEnabled)(int);
-typedef void(__cdecl* _Item_Release)(int);
-typedef bool(__cdecl* _Player_IsHuman)(int);
-typedef char(__cdecl* _PlayerManager_PlayerCount)();
-typedef int(__cdecl* _PlayerManager_GetPlayerByIndex)(char);
-typedef int(__cdecl* _PlayerManager_GetHumanPlayerByIndex)(char);
-typedef void(__cdecl* _StateManager_GotoState)(int);
-typedef int(__cdecl* _ActionVehicleTeleport)(int);
-typedef int(__cdecl* _ThingManager_DARYL_CreateThing)(int, int);
-typedef void(__cdecl* _ViewManager_SetFourPlayer)();
-typedef int(__cdecl* _GetTotalTiles_Car)();
-typedef int(__cdecl* _GetTileCar)(int);
-typedef void(__cdecl* _SubMatrixToQuaternion)(int, int);
-typedef void(__cdecl* _SetSFXVol)(int);

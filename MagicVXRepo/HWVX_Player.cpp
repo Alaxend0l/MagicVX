@@ -12,5 +12,11 @@ HWVX_Player::HWVX_Player(FunctionCaller* fcReference, int startAddress)
 	Active = true;
 	SetBaseAddress(startAddress);
 	//playerVehicle = HWVX_Vehicle(fcReference, startAddress + 0x2C);
+	InitInt(PlayerType, startAddress + 0x20);
+}
+
+void HWVX_Player::Update()
+{
+	//UpdateInt(PlayerType);
 
 }

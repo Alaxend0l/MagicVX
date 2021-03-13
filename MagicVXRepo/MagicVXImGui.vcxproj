@@ -157,6 +157,7 @@
     <ClCompile Include="Global.cpp" />
     <ClCompile Include="HWVX_Generic.cpp" />
     <ClCompile Include="HWVX_Player.cpp" />
+    <ClCompile Include="HWVX_TileCar.cpp" />
     <ClCompile Include="HWVX_Vehicle.cpp" />
     <ClCompile Include="imgui.cpp" />
     <ClCompile Include="imgui_demo.cpp" />
@@ -169,7 +170,10 @@
     <ClCompile Include="PipeFunction.cpp" />
     <ClCompile Include="TypeCollector.cpp" />
     <ClCompile Include="UserSettings.cpp" />
+    <ClCompile Include="XPC_Car.cpp" />
+    <ClCompile Include="XPC_Generic.cpp" />
     <ClCompile Include="XPC_Handle.cpp" />
+    <ClCompile Include="XPC_Top.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CLSettings.h" />
@@ -183,6 +187,7 @@
     <ClInclude Include="Global.h" />
     <ClInclude Include="HWVX_Generic.h" />
     <ClInclude Include="HWVX_Player.h" />
+    <ClInclude Include="HWVX_TileCar.h" />
     <ClInclude Include="HWVX_Vehicle.h" />
     <ClInclude Include="imconfig.h" />
     <ClInclude Include="imgui.h" />
@@ -197,8 +202,11 @@
     <ClInclude Include="SimpleIni.h" />
     <ClInclude Include="TypeCollector.h" />
     <ClInclude Include="UserSettings.h" />
+    <ClInclude Include="XPC_Car.h" />
+    <ClInclude Include="XPC_Generic.h" />
     <ClInclude Include="XPC_Handle.h" />
     <ClInclude Include="XPC_Layout.h" />
+    <ClInclude Include="XPC_Top.h" />
   </ItemGroup>
   <ItemGroup>
     <Natvis Include="imgui.natvis" />

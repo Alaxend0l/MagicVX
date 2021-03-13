@@ -8,6 +8,7 @@ PipeFunction::PipeFunction()
 
 PipeFunction::PipeFunction(int function)
 {
+    address = function;
     memset(buffer, 0, sizeof(buffer));
     offset = 0;
     Add(function);

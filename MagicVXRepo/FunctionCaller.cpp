@@ -44,6 +44,8 @@ int FunctionCaller::CallPipeInt(PipeFunction pipeFunction)
     DWORD dataRead;
     int bytes = 0;
 
+    std::cout << "Calling Int Return Function At " << std::hex << pipeFunction.address << "\n";
+
     pipeFunction.SetArgSizeAndReturnSize(pipeFunction.offset - 12, sizeof(bytes));
 
     if (Pipe != INVALID_HANDLE_VALUE)
@@ -60,6 +62,8 @@ int FunctionCaller::CallPipeInt(PipeFunction pipeFunction)
         memcpy(&bytes, buf, sizeof(int));
     }
 
+    std::cout << "Function Returning! Value: " << std::to_string(bytes) << "\n";
+
     return bytes;
 }
 
@@ -69,6 +73,8 @@ bool FunctionCaller::CallPipeBool(PipeFunction pipeFunction)
     DWORD tempWord;
     DWORD dataRead;
     bool bytes = false;
+
+    std::cout << "Calling Bool Return Function At " << std::hex << pipeFunction.address << "\n";
 
     pipeFunction.SetArgSizeAndReturnSize(pipeFunction.offset - 12, sizeof(bytes));
 
@@ -85,6 +91,8 @@ bool FunctionCaller::CallPipeBool(PipeFunction pipeFunction)
         while (ReadFile(Pipe, &buf, sizeof(buf), &dataRead, NULL) == FALSE) {}
         memcpy(&bytes, buf, sizeof(bool));
     }
+    
+    std::cout << "Function Returning! Value: " << std::to_string(bytes) << "\n";
 
     return bytes;
 }
@@ -95,6 +103,8 @@ float FunctionCaller::CallPipeFloat(PipeFunction pipeFunction)
     DWORD tempWord;
     DWORD dataRead;
     float bytes = 0;
+
+    std::cout << "Calling Float Return Function At " << std::hex << pipeFunction.address << "\n";
 
     pipeFunction.SetArgSizeAndReturnSize(pipeFunction.offset - 12, sizeof(bytes));
 
@@ -112,6 +122,8 @@ float FunctionCaller::CallPipeFloat(PipeFunction pipeFunction)
         memcpy(&bytes, buf, sizeof(float));
     }
 
+    std::cout << "Function Returning! Value: " << std::to_string(bytes) << "\n";
+
     return bytes;
 }
 
@@ -121,6 +133,8 @@ char FunctionCaller::CallPipeChar(PipeFunction pipeFunction)
     DWORD tempWord;
     DWORD dataRead;
     char bytes = '0';
+
+    std::cout << "Calling Char Return Function At " << std::hex << pipeFunction.address << "\n";
 
     pipeFunction.SetArgSizeAndReturnSize(pipeFunction.offset - 12, sizeof(bytes));
 
@@ -138,6 +152,8 @@ char FunctionCaller::CallPipeChar(PipeFunction pipeFunction)
         memcpy(&bytes, buf, sizeof(char));
     }
 
+    std::cout << "Function Returning! Value: " << std::to_string(bytes) << "\n";
+
     return bytes;
 }
 
@@ -146,6 +162,8 @@ void  FunctionCaller::CallPipeVoid(PipeFunction pipeFunction)
 {
     
     DWORD tempWord;
+
+    std::cout << "Calling Void Return Function At " << std::hex << pipeFunction.address << "\n";
 
     pipeFunction.SetArgSizeAndReturnSize(pipeFunction.offset - 12, 0);
 
@@ -283,6 +301,8 @@ int   FunctionCaller::CU_SpawnCar(int index, float x, float y, float z)
 
     //First, get MCP.
 
+    /*
+
     int mcp = FC_GameSettings_GetMCP();
     if (mcp == 0) { std::cout << "Error Loading MCP.\n"; return 0; }
 
@@ -296,6 +316,8 @@ int   FunctionCaller::CU_SpawnCar(int index, float x, float y, float z)
     //Then initialize MCP's pack.
     FC_FileStreaming_InitializeDataPack(mcpPack, 8, 1);
     if (mcpPack == 0) { std::cout << "Error Initializing MCP.\n"; return 0; }
+
+    */
 
     //Then, let's load in the car.
     int loadStream = FC_FileStreaming_LoadDataPack(LDP_HW_Cars, 0, index, 0);
@@ -380,12 +402,132 @@ void  FunctionCaller::CU_TeleportCorrection(int address)
 {
     FC_SubMatrixToQuaternion(address + 0x10, address + 0x50);
 }
+void  FunctionCaller::CU_ChangeCameraView(int amount)
+{
+    int humanCount = FC_PlayerManager_PlayerHumanCount();
+    int currentCameras = FC_CameraManager_GetActiveCameras();
+    int currentPlayers = FC_PlayerManager_PlayerCount();
+    int screenAmount = amount;
+    if (screenAmount > 4) screenAmount = 1;
+
+    int screenX = ReadInt(0x0068DEE0);
+    int screenY = ReadInt(0x0068DEE4);
+
+    //Origin is bottom left of the screen!
+    switch (screenAmount)
+    {
+    case 1: 
+        FC_ViewManager_SetSinglePlayer();
+        break;
+    case 2:
+        FC_ViewManager_SetTwoPlayerHorizontal();
+        FC_Gfx_SetRenderWindowSize(1, 0, screenY / 2, screenX, screenY / 2);
+        FC_Gfx_SetRenderWindowSize(2, 0, 0, screenX, screenY / 2);
+        break;
+    case 3:
+        FC_ViewManager_SetThreePlayer();
+        FC_Gfx_SetRenderWindowSize(1, 0, screenY / 2, screenX / 2, screenY / 2);
+        FC_Gfx_SetRenderWindowSize(2, screenX / 2, screenY / 2, screenX / 2, screenY / 2);
+        FC_Gfx_SetRenderWindowSize(3, 0, 0, screenX / 2, screenY / 2);
+        break;
+    case 4:
+        FC_ViewManager_SetFourPlayer();
+        FC_Gfx_SetRenderWindowSize(1, 0, screenY / 2, screenX / 2, screenY / 2);
+        FC_Gfx_SetRenderWindowSize(2, screenX / 2, screenY / 2, screenX / 2, screenY / 2);
+        FC_Gfx_SetRenderWindowSize(3, 0, 0, screenX / 2, screenY / 2);
+        FC_Gfx_SetRenderWindowSize(4, screenX / 2, 0, screenX / 2, screenY / 2);
+        break;
+    }
+
+    std::vector<int> cars;
+
+    for (int i = 0; i < currentPlayers; i++)
+    {
+        int carAddress = FC_PlayerManager_GetPlayerByIndex(i) + 0x2C;
+        cars.push_back(ReadInt(carAddress));
+
+    }
+
+
+    for (int i = 0; i < FC_PlayerManager_PlayerCount(); i++)
+    {
+        int nextPlayerAddress = FC_PlayerManager_GetPlayerByIndex(i);
+        if (!FC_Player_IsHuman(nextPlayerAddress))
+        {
+            FC_PlayerManager_RemovePlayer(nextPlayerAddress);
+        }
+    }
+
+    //std::vector<int> cameras;
+    //std::vector<int> players;
+    for (int i = 0; i < screenAmount; i++)
+    {
+        int thisCamera = 0;
+        if (i < currentCameras)
+        {
+            thisCamera = FC_CameraManager_GetCameraByIndex(i);
+        }
+        else
+        {
+            thisCamera = FC_CameraManager_GetNewCamera();
+        }
+
+        int thisPlayer;
+
+        if (i < humanCount)
+        {
+            thisPlayer = FC_PlayerManager_GetHumanPlayerByIndex(i);
+            FC_Player_SetThing(thisPlayer, cars[i]);
+        }
+        else
+        {
+            thisPlayer = FC_PlayerManager_NewHumanPlayer();
+            FC_Player_SetThing(thisPlayer, cars[i]);
+        }
+
+        FC_Camera_SetPlayer(thisCamera, thisPlayer);
+        FC_ViewManager_SetCamera(thisCamera, i + 1);
+        FC_ViewManager_EnableView(i + 1, 1);
+        FC_Player_RefreshInterface(thisPlayer);
+    }
+
+
+
+    
+}
 
 /*---------------------------------------------------------------------------------*/
 
 void  FunctionCaller::PatchMouse()
 {
     PipeFunction FunctionCall = PipeFunction(MagicVX_PatchMouse);
+    return CallPipeVoid(FunctionCall);
+}
+
+int FunctionCaller::FC_CameraManager_GetActiveCameras()
+{
+    PipeFunction FunctionCall = PipeFunction(CameraManager_GetActiveCameras);
+    return CallPipeInt(FunctionCall);
+}
+
+int FunctionCaller::FC_CameraManager_GetCameraByIndex(int index)
+{
+    PipeFunction FunctionCall = PipeFunction(CameraManager_GetCameraByIndex);
+    FunctionCall.Add(index);
+    return CallPipeInt(FunctionCall);
+}
+
+int FunctionCaller::FC_CameraManager_GetNewCamera()
+{
+    PipeFunction FunctionCall = PipeFunction(CameraManager_GetNewCamera);
+    return CallPipeInt(FunctionCall);
+}
+
+void FunctionCaller::FC_Camera_SetPlayer(int cameraAddress, int playerAddress)
+{
+    PipeFunction FunctionCall = PipeFunction(Camera_SetPlayer);
+    FunctionCall.Add(cameraAddress);
+    FunctionCall.Add(playerAddress);
     return CallPipeVoid(FunctionCall);
 }
 
@@ -483,6 +625,38 @@ bool  FunctionCaller::FC_Player_IsHuman(int address)
 
     return CallPipeBool(FunctionCall);
 }
+
+void FunctionCaller::FC_Player_RefreshInterface(int playerAddress)
+{
+    PipeFunction FunctionCall = PipeFunction(Player_RefreshInterface);
+    FunctionCall.Add(playerAddress);
+    CallPipeVoid(FunctionCall);
+}
+
+void FunctionCaller::FC_Player_SetThing(int playerAddress, int thingAddress)
+{
+    PipeFunction FunctionCall = PipeFunction(Player_SetThing);
+    FunctionCall.Add(playerAddress);
+    FunctionCall.Add(thingAddress);
+    CallPipeVoid(FunctionCall);
+}
+
+int   FunctionCaller::FC_PlayerManager_NewHumanPlayer()
+{
+    PipeFunction FunctionCall = PipeFunction(PlayerManager_NewHumanPlayer);
+    return CallPipeInt(FunctionCall);
+}
+int   FunctionCaller::FC_PlayerManager_NewAIPlayer()
+{
+    PipeFunction FunctionCall = PipeFunction(PlayerManager_NewAIPlayer);
+    return CallPipeInt(FunctionCall);
+}
+char  FunctionCaller::FC_PlayerManager_PlayerHumanCount()
+{
+    PipeFunction FunctionCall = PipeFunction(PlayerManager_PlayerHumanCount);
+
+    return CallPipeChar(FunctionCall);
+}
 char  FunctionCaller::FC_PlayerManager_PlayerCount()
 {
     PipeFunction FunctionCall = PipeFunction(PlayerManager_PlayerCount);
@@ -502,6 +676,24 @@ int   FunctionCaller::FC_PlayerManager_GetHumanPlayerByIndex(char index)
     FunctionCall.Add(index);
 
     return CallPipeInt(FunctionCall);
+}
+void FunctionCaller::FC_PlayerManager_RemovePlayer(int playerAddress)
+{
+    PipeFunction FunctionCall = PipeFunction(PlayerManager_RemovePlayer);
+    FunctionCall.Add(playerAddress);
+
+    return CallPipeVoid(FunctionCall);
+}
+void FunctionCaller::FC_InterfaceInputAnimator_Initialize()
+{
+    PipeFunction FunctionCall = PipeFunction(InterfaceInputAnimator_Initialize);
+    return CallPipeVoid(FunctionCall);
+}
+
+void FunctionCaller::FC_StateProgressionManager_RestartCurrentLevel()
+{
+    PipeFunction FunctionCall = PipeFunction(StateProgressionManager_RestartCurrentLevel);
+    return CallPipeVoid(FunctionCall);
 }
 void  FunctionCaller::FC_StateManager_GotoState(int index)
 {
@@ -527,10 +719,48 @@ int   FunctionCaller::FC_ThingManager_DARYL_CreateThing(int type, int address)
 
     return CallPipeInt(FunctionCall);
 }
+void FunctionCaller::FC_ViewManager_SetCamera(int cameraAddress, int playerIndex)
+{
+    PipeFunction FunctionCall = PipeFunction(ViewManager_SetCamera);
+    FunctionCall.Add(cameraAddress);
+    FunctionCall.Add(playerIndex);
+    return CallPipeVoid(FunctionCall);
+}
+void FunctionCaller::FC_ViewManager_EnableView(int screenIndex, int enabled)
+{
+    PipeFunction FunctionCall = PipeFunction(ViewManager_EnableView);
+    FunctionCall.Add(screenIndex);
+    FunctionCall.Add(enabled);
+    return CallPipeVoid(FunctionCall);
+}
+void FunctionCaller::FC_Gfx_SetRenderWindowSize(int screenIndex, int positionX, int positionY, int sizeX, int sizeY)
+{
+    PipeFunction FunctionCall = PipeFunction(Gfx_SetRenderWindowSize);
+    FunctionCall.Add(screenIndex);
+    FunctionCall.Add(positionX);
+    FunctionCall.Add(positionY);
+    FunctionCall.Add(sizeX);
+    FunctionCall.Add(sizeY);
+    return CallPipeVoid(FunctionCall);
+}
+void  FunctionCaller::FC_ViewManager_SetSinglePlayer()
+{
+    PipeFunction FunctionCall = PipeFunction(ViewManager_SetSinglePlayer);
+    return CallPipeVoid(FunctionCall);
+}
+void  FunctionCaller::FC_ViewManager_SetTwoPlayerHorizontal()
+{
+    PipeFunction FunctionCall = PipeFunction(ViewManager_SetTwoPlayerHorizontal);
+    return CallPipeVoid(FunctionCall);
+}
+void  FunctionCaller::FC_ViewManager_SetThreePlayer()
+{
+    PipeFunction FunctionCall = PipeFunction(ViewManager_SetThreePlayer);
+    return CallPipeVoid(FunctionCall);
+}
 void  FunctionCaller::FC_ViewManager_SetFourPlayer()
 {
     PipeFunction FunctionCall = PipeFunction(ViewManager_SetFourPlayer);
-
     return CallPipeVoid(FunctionCall);
 }
 int   FunctionCaller::FC_GetTotalTiles_Car()

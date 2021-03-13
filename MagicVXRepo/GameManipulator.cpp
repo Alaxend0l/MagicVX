@@ -162,6 +162,8 @@ void GameManipulator::Heartbeat()
 	FC.WriteByte(0x0068DF06, (mainSettings.DisableMovies));
 	FC.WriteByte(0x0068DF04, (!mainSettings.ScreenMode));
 
+	FixViewManager();
+
 	for (;;)
 	{
 		if (WaitForSingleObject(ProcessHandle, 0) != WAIT_TIMEOUT)
@@ -171,6 +173,7 @@ void GameManipulator::Heartbeat()
 		else
 		{
 			GB.UpdateAll();
+			TC.Update();
 			if (CustomLaunch)
 			{
 				if (!CL_Disclaimer) CustomLaunch_Disclaimer();
@@ -217,11 +220,15 @@ void GameManipulator::CustomLaunch_Disclaimer()
 		case 5: FC.WriteInt(0x0048D7C0, { 0x24, 0x8 }, FC.ReadInt(0x0048D7C0, { 0x38, 0xC })); break; //Changes Demo Prog Script to Battle
 		case 6: FC.WriteInt(0x0048D7C0, { 0x24, 0x8 }, FC.ReadInt(0x0048D7C0, { 0x38, 0x10 })); break; //Changes Demo Prog Script to Joyride
 		case 7: FC.WriteInt(0x0048D7C0, { 0x24, 0x8 }, FC.ReadInt(0x0048D7C0, { 0x38, 0x10 })); break; //Changes Demo Prog Script to Joyride
+		case 8: FC.WriteInt(0x0048D7C0, { 0x24, 0x8 }, FC.ReadInt(0x0048D970, { 0x68 })); break; //Changes Demo Prog Script to Joyride
 		}
 		FC.WriteInt(0x0048D920, customLaunchSettings.Act);
 		FC.WriteInt(0x0064D3EC, customLaunchSettings.Car);
 		FC.WriteInt(0x0065E2B0, customLaunchSettings.Weapon);
 		FC.WriteInt(0x0064D160, customLaunchSettings.Difficulty);
+
+		//Patch the game to allow splitscreen multiplayer
+		FC.WriteByte(0x004441E9, 4);
 
 		//Below is more specific setup for each game mode.
 		switch (customLaunchSettings.Mode)
@@ -321,6 +328,7 @@ void GameManipulator::CustomLaunch_LoadObjectData()
 	{
 		CL_LoadObjectData = true;
 		TC.SetUpVehicles();
+		TC.SetUpTileCars();
 		if (gearHuntMakeWorking) MakeGearHunt_PrepareObjectTypes();
 		else if (GearHuntLaunch) GearHuntLaunch_PrepareObjectTypes();
 		if (DevMode) AddToLog("Found Object Load Data!");
@@ -720,6 +728,75 @@ void GameManipulator::EnableCheats()
     FC.WriteByte(0x0065E356, 0x01);
     FC.WriteByte(0x0065E357, 0x02);
     FC.WriteByte(0x0065E358, 0x01);
+}
+
+void GameManipulator::FixViewManager()
+{
+	int screenWidth = mainSettings.Resolution[0];
+	int screenHeight = mainSettings.Resolution[1];
+
+	int halfWidth = screenWidth / 2;
+	int halfHeight = screenHeight / 2;
+
+	//Two Player Horizontal - Player 1
+
+	FC.WriteInt(0x450ABA, halfHeight);
+	FC.WriteInt(0x450ABF, screenWidth);
+	FC.WriteInt(0x450AC4, halfHeight);
+
+	//Two Player Horizontal - Player 2
+
+	FC.WriteInt(0x450AD2, halfHeight);
+	FC.WriteInt(0x450AD7, screenWidth);
+
+	//Three Player - Player 1
+
+	FC.WriteInt(0x450B1A, halfHeight);
+	FC.WriteInt(0x450B1F, halfWidth);
+	FC.WriteInt(0x450B24, halfHeight);
+	FC.WriteInt(0x450B29, halfWidth);
+
+	//Three Player - Player 2
+
+	FC.WriteInt(0x450B35, halfHeight);
+	FC.WriteInt(0x450B3A, halfWidth);
+	FC.WriteInt(0x450B3F, halfHeight);
+	//FC.WriteInt(0x450B44, halfWidth);
+
+	//Three Player - Player 3
+
+	FC.WriteInt(0x450B4D, halfHeight);
+	FC.WriteInt(0x450B52, halfWidth);
+	//FC.WriteInt(0x450B20, halfHeight);
+	//FC.WriteInt(0x450B20, halfWidth);
+
+	//Four Player - Player 1
+
+	FC.WriteInt(0x450B8A, halfHeight);
+	FC.WriteInt(0x450B8F, halfWidth);
+	FC.WriteInt(0x450B94, halfHeight);
+	//FC.WriteInt(0x450B99, halfWidth);
+
+	//Four Player - Player 2
+
+	FC.WriteInt(0x450BA2, halfHeight);
+	FC.WriteInt(0x450BA7, halfWidth);
+	FC.WriteInt(0x450BAC, halfHeight);
+	FC.WriteInt(0x450BB1, halfWidth);
+
+	//Four Player - Player 3
+
+	FC.WriteInt(0x450BBD, halfHeight);
+	FC.WriteInt(0x450BC2, halfWidth);
+	//FC.WriteInt(0x450B20, halfHeight);
+	//FC.WriteInt(0x450B20, halfWidth);
+
+	//Four Player - Player 4
+
+	FC.WriteInt(0x450BD5, halfHeight);
+	FC.WriteInt(0x450BDA, halfWidth);
+	//FC.WriteInt(0x450B20, halfHeight);
+	FC.WriteInt(0x450BE1, halfWidth);
 }
 
 void GameManipulator::UpdatePlayers()

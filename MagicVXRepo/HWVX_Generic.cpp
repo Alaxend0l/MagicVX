@@ -54,6 +54,26 @@ void HWVX_Generic::UpdateFloat(Proxy<float>& value)
     }
 }
 
+void HWVX_Generic::UpdateByte(Proxy<byte>& value)
+{
+    if (FC->IsForegroundProcess())
+    {
+        if (value.lock)
+        {
+            FC->WriteByte(value.address, value.currentValue);
+        }
+        else
+        {
+            value.SetValue(FC->ReadByte(value.address));
+        }
+
+    }
+    else
+    {
+        if (value.CheckUpdate())  FC->WriteByte(value.address, value.currentValue);
+    }
+}
+
 void HWVX_Generic::InitInt(Proxy<int>& value, int address)
 {
     value.address = address;
@@ -64,4 +84,10 @@ void HWVX_Generic::InitFloat(Proxy<float>& value, int address)
 {
     value.address = address;
     value.SetValue(FC->ReadFloat(address));
+}
+
+void HWVX_Generic::InitByte(Proxy<byte>& value, int address)
+{
+    value.address = address;
+    value.SetValue(FC->ReadByte(address));
 }

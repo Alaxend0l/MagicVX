@@ -1,24 +1,22 @@
 #pragma once
 
+#include <string>
+
 template <typename T>
 class Proxy
 {
 public:
+	std::string title = "";
 	bool lock = false;
 	int address;
 	T currentValue;
 	T gameValue;
 	T guiValue;
 	void SetValue(T);
+	void InitValue(T);
 	T GetValue();
 	bool CheckUpdate();
 };
-
-template <typename T>
-T Proxy<T>::GetValue()
-{
-	return currentValue;
-}
 
 template <typename T>
 void Proxy<T>::SetValue(T value)
@@ -29,8 +27,25 @@ void Proxy<T>::SetValue(T value)
 		currentValue = value;
 		guiValue = value;
 	}
-	
+
 }
+
+
+template <typename T>
+void Proxy<T>::InitValue(T value)
+{
+	gameValue = value;
+	currentValue = value;
+	guiValue = value;
+}
+
+template <typename T>
+T Proxy<T>::GetValue()
+{
+	return currentValue;
+}
+
+
 
 template <typename T>
 bool Proxy<T>::CheckUpdate()

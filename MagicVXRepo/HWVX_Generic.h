@@ -16,7 +16,9 @@ public:
 
 	void UpdateInt(Proxy<int>&);
 	void UpdateFloat(Proxy<float>&);
+	void UpdateByte(Proxy<byte>&);
 
 	void InitInt(Proxy<int>&, int);
 	void InitFloat(Proxy<float>&, int);
+	void InitByte(Proxy<byte>&, int);
 };

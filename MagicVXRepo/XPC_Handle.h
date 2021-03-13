@@ -2,6 +2,7 @@
 #include <vector>
 #include <fstream>
 #include "XPC_Layout.h"
+#include "XPC_Top.h"
 
 class XPC_Variable
 {
@@ -52,10 +53,12 @@ public:
 	int address_body = 0;
 	int address_tmp = 0;
 	int entryID;
+	bool xgcFlip = true;
 	bool loaded = false;
 	std::string filePath = "";
 	std::vector<unsigned char> FileContents;
 	std::vector<XPC_Header_Main> Headers;
+	std::vector<XPC_Top> TopEntries;
 
 	//Functions
 	std::vector<unsigned char> ReadFile(std::string);
@@ -67,4 +70,22 @@ public:
 	unsigned int ReadUnsignedInt(int);
 	short ReadShort(int);
 	char ReadChar(int);
+
+	template <typename T>
+	void SwapEndian(T&);
 };
+
+
+template <typename T>
+void XPC_Handle::SwapEndian(T& val) {
+	unsigned char byteArray[sizeof(val)];
+	unsigned char finishedByteArray[sizeof(val)];
+	memcpy(byteArray, (const char*)&val, sizeof(val));
+
+	for (int i = 0; i < sizeof(byteArray); i++)
+	{
+		finishedByteArray[(sizeof(byteArray) - 1) - i] = byteArray[i];
+	}
+
+	memcpy(&val, finishedByteArray, sizeof(val));
+}

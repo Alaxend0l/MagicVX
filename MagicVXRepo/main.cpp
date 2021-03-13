@@ -25,11 +25,186 @@ LRESULT WINAPI WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
 void DisplayPlayer(HWVX_Player*, std::string);
 void DisplayVehicle(HWVX_Vehicle*, std::string);
+void DisplayTileCar(HWVX_TileCar*, std::string);
 
 void DisplayIntValue(Proxy<int>&, std::string, bool);
 void DisplayIntValue(Proxy<int>&, std::string);
+void DisplayIntValue(Proxy<unsigned int>&, std::string, bool);
+void DisplayIntValue(Proxy<unsigned int>&, std::string);
 void DisplayFloatValue(Proxy<float>&, std::string, bool);
 void DisplayFloatValue(Proxy<float>&, std::string);
+void DisplayByteValue(Proxy<byte>&, std::string, bool);
+void DisplayByteValue(Proxy<byte>&, std::string);
+void DisplayIntCombo(Proxy<int>&, std::string, const char* const*, int);
+
+void DisplayXPCValue(Proxy<int>&, bool);
+void DisplayXPCValue(Proxy<unsigned int>&, bool);
+void DisplayXPCValue(Proxy<char>&, bool);
+
+void DisplayXPC_Top(XPC_Top*, std::string);
+void DisplayXPC_Car(XPC_Car*, std::string);
+
+std::string IntToHexString(int);
+
+const char* modeItems[] = {
+        "Mission",
+        "Challenge",
+        "Drag Race",
+        "Battle",
+        "Joyride",
+        "Score War",
+        "Play Gear Hunt",
+        "Make Gear Hunt",
+        "Sandbox"
+};
+
+const char* missionItems[] = {
+    "Mission 1",
+    "Mission 2",
+    "Mission 3",
+    "Mission 4",
+    "Mission 5",
+    "Mission 6",
+    "Mission 7",
+    "Mission 8",
+    "Mission 9",
+    "Mission 10",
+    "Mission 11",
+    "Mission 12",
+    "Mission 13",
+    "Mission 14",
+};
+
+const char* challengeItems[] = {
+    "Challenge 1",
+    "Challenge 2",
+    "Challenge 3",
+    "Challenge 4",
+    "Challenge 5",
+    "Challenge 6",
+    "Challenge 7",
+    "Challenge 8",
+    "Challenge 9",
+    "Challenge 10",
+    "Challenge 11",
+    "Challenge 12",
+    "Challenge 13",
+    "Challenge 14",
+    "Challenge 15",
+    "Challenge 16",
+    "Challenge 17",
+    "Challenge 18",
+};
+
+const char* raceItems[] = {
+    "Downtown Race",
+    "Desert Race",
+    "Ghost Town Race",
+    "Bay Street Race",
+    "Underworld Race",
+    "Glacier Race"
+};
+
+const char* battleItems[] = {
+    "Downtown",
+    "Turbine City",
+    "Warehouse District",
+    "Combustion Caldera",
+    "Sewer Pipe Arena",
+    "Crankshaft Docks",
+    "Treadwell Plaza",
+    "Underworld Arena"
+};
+
+const char* worldItems[] = {
+    "Monument City",
+    "Turbine Sands",
+    "Crankshaft Bay",
+    "Burnout Glacier",
+    "Underworld"
+};
+
+const char* carItems[] = {
+    "Twin Mill 2",
+    "At-A-Tude",
+    "Overbored 454",
+    "MS-T Suzuka",
+    "Super Tuned",
+    "Sooo Fast",
+    "Flashfire",
+    "Mega-Duty",
+    "Muscle Tone",
+    "Sho-Stopper",
+    "Hammered Coupe",
+    "Jaded",
+    "Way 2 Fast",
+    "Deora II",
+    "Hyper Mite",
+    "Power Pistons",
+    "Evil Twin",
+    "Surf Crate",
+    "Rigor Motor",
+    "Lakester",
+    "Splittin' Image 2",
+    "Greased Lightnin'",
+    "Hyperliner",
+    "Maelstrom",
+    "Sol-Aire CX4",
+    "Surfin' School Bus",
+    "Vulture",
+    "Arachnorod",
+    "Krazy 8s",
+    "Shadow Jet",
+    "HW Prototype 12",
+    "Power Rocket",
+    "Jet Threat 3.0"
+};
+
+const char* weaponItems[] = {
+    "Ripper Wheels",
+    "Armor Repair",
+    "Oil Drum",
+    "Laser Cannon",
+    "Sonic Boom",
+    "Atom Blaster",
+    "Freon Bomb",
+    "Energy Shield",
+    "Jet Boosters",
+    "Super Zapper",
+    "Magnet Mine",
+    "Doom Disks"
+};
+
+const char* difficultyItems[]{
+    "Easy",
+    "Normal",
+    "Hard",
+    "Very Hard"
+};
+
+const char* deadWeightItems[]{
+    "No Deadweight",
+    "Money Bag",
+    "Uranium",
+    "Time Bomb",
+    "Data Disk",
+    "Temporal Transmission",
+    "Volcanic Gas Collector"
+};
+
+const char* xpcTypeItems[] = {
+        "00 - Car",
+        "01 - Interface",
+        "02 - Item",
+        "03 - UNKNOWN",
+        "04 - World",
+        "05 - Colliders",
+        "06 - World Texture",
+        "07 - World Geometry",
+        "08 - Shared Data",
+        "09 - UNKNOWN",
+        "10 - Music"
+};
 
 // Main code
 int main(int, char**)
@@ -88,151 +263,7 @@ int main(int, char**)
 
     GameThreading gameThreading;
 
-    const char* modeItems[] = {
-        "Mission",
-        "Challenge",
-        "Drag Race",
-        "Battle",
-        "Joyride",
-        "Score War",
-        "Play Gear Hunt",
-        "Make Gear Hunt",
-        "Sandbox"
-    };
-
-    const char* missionItems[] = {
-        "Mission 1",
-        "Mission 2",
-        "Mission 3",
-        "Mission 4",
-        "Mission 5",
-        "Mission 6",
-        "Mission 7",
-        "Mission 8",
-        "Mission 9",
-        "Mission 10",
-        "Mission 11",
-        "Mission 12",
-        "Mission 13",
-        "Mission 14",
-    };
-
-    const char* challengeItems[] = {
-        "Challenge 1",
-        "Challenge 2",
-        "Challenge 3",
-        "Challenge 4",
-        "Challenge 5",
-        "Challenge 6",
-        "Challenge 7",
-        "Challenge 8",
-        "Challenge 9",
-        "Challenge 10",
-        "Challenge 11",
-        "Challenge 12",
-        "Challenge 13",
-        "Challenge 14",
-        "Challenge 15",
-        "Challenge 16",
-        "Challenge 17",
-        "Challenge 18",
-    };
-
-    const char* raceItems[] = {
-        "Downtown Race",
-        "Desert Race",
-        "Ghost Town Race",
-        "Bay Street Race",
-        "Underworld Race",
-        "Glacier Race"
-    };
-
-    const char* battleItems[] = {
-        "Downtown",
-        "Turbine City",
-        "Warehouse District",
-        "Combustion Caldera",
-        "Sewer Pipe Arena",
-        "Crankshaft Docks",
-        "Treadwell Plaza",
-        "Underworld Arena"
-    };
-
-    const char* worldItems[] = {
-        "Monument City",
-        "Turbine Sands",
-        "Crankshaft Bay",
-        "Burnout Glacier",
-        "Underworld"
-    };
-
-    const char* carItems[] = {
-        "Twin Mill 2",
-        "At-A-Tude",
-        "Overbored 454",
-        "MS-T Suzuka",
-        "Super Tuned",
-        "Sooo Fast",
-        "Flashfire",
-        "Mega-Duty",
-        "Muscle Tone",
-        "Sho-Stopper",
-        "Hammered Coupe",
-        "Jaded",
-        "Way 2 Fast",
-        "Deora II",
-        "Hyper Mite",
-        "Power Pistons",
-        "Evil Twin",
-        "Surf Crate",
-        "Rigor Motor",
-        "Lakester",
-        "Splittin' Image 2",
-        "Greased Lightnin'",
-        "Hyperliner",
-        "Maelstrom",
-        "Sol-Aire CX4",
-        "Surfin' School Bus",
-        "Vulture",
-        "Arachnorod",
-        "Krazy 8s",
-        "Shadow Jet",
-        "HW Prototype 12",
-        "Power Rocket",
-        "Jet Threat 3.0"
-    };
-
-    const char* weaponItems[] = {
-        "Ripper Wheels",
-        "Armor Repair",
-        "Oil Drum",
-        "Laser Cannon",
-        "Sonic Boom",
-        "Atom Blaster",
-        "Freon Bomb",
-        "Energy Shield",
-        "Jet Boosters",
-        "Super Zapper",
-        "Magnet Mine",
-        "Doom Disks"
-    };
-
-    const char* difficultyItems[]{
-        "Easy",
-        "Normal",
-        "Hard",
-        "Very Hard"
-    };
-
-    const char* deadWeightItems[]{
-        "No Deadweight",
-        "Money Bag",
-        "Uranium",
-        "Time Bomb",
-        "Data Disk",
-        "Temporal Transmission",
-        "Volcanic Gas Collector"
-    };
+    
 
     const char* gearHuntItems[256];
 
@@ -249,6 +280,8 @@ int main(int, char**)
 
     bool mvx_window_players = false;
     bool mvx_window_spawn = false;
+    bool mvx_window_tilecars = false;
+    bool mvx_window_multiplayerTest = false;
 
     bool mvx_window_xpc_main = false;
 
@@ -304,7 +337,10 @@ int main(int, char**)
                 {
                     ImGui::MenuItem("Global Watch", NULL, &mvx_window_globalWatch);
                     ImGui::MenuItem("Player Monitor", NULL, &mvx_window_players);
+                    ImGui::MenuItem("Tile Car Monitor", NULL, &mvx_window_tilecars);
                     ImGui::MenuItem("Spawn Things", NULL, &mvx_window_spawn);
+                    ImGui::MenuItem("Multiplayer Test", NULL, &mvx_window_multiplayerTest);
+                    
                     //ImGui::MenuItem("Style Editor", NULL, &show_app_style_editor);
                     //ImGui::MenuItem("About Dear ImGui", NULL, &show_app_about);
                     ImGui::EndMenu();
@@ -648,6 +684,21 @@ int main(int, char**)
             ImGui::End();
         }
 
+        if (mvx_window_tilecars)
+        {
+            ImGui::Begin("Tile Car Monitor", &mvx_window_tilecars);
+            
+
+            for (int i = 0; i < TC.GetTileCarCount(); i++)
+            {
+                HWVX_TileCar* thisCar = TC.GetTileCar(i);
+                std::string headerText = "TileCar " + std::to_string(i);
+                DisplayTileCar(thisCar, headerText);
+
+            }
+            ImGui::End();
+        }
+
         if (mvx_window_spawn)
         {
             ImGui::Begin("Spawn Things", &mvx_window_spawn);
@@ -664,6 +715,24 @@ int main(int, char**)
             {
                 FC.CU_SpawnItem(65, -3660.622803f, 55.92387772f, -1649.802979f);
             }
+
+            ImGui::End();
+        }
+
+        if (mvx_window_multiplayerTest)
+        {
+            ImGui::Begin("Multiplayer Test", &mvx_window_multiplayerTest);
+
+            if (ImGui::Button("Create Human Player"))
+            {
+                FC.FC_PlayerManager_NewHumanPlayer();
+            }
+
+            if (ImGui::Button("Set Single Player View")) FC.CU_ChangeCameraView(1);
+            if (ImGui::Button("Set Two Player View")) FC.CU_ChangeCameraView(2);
+            if (ImGui::Button("Set Three Player View")) FC.CU_ChangeCameraView(3);
+            if (ImGui::Button("Set Four Player View")) FC.CU_ChangeCameraView(4);
+            if (ImGui::Button("Restart Level")) FC.FC_StateProgressionManager_RestartCurrentLevel();
 
             ImGui::End();
         }
@@ -698,18 +767,28 @@ int main(int, char**)
                 
             }
 
+
+
             if (xpcHandle.loaded)
             {
+                if (ImGui::Button("Save File"))
+                {
+                    ofstream outfile(xpcHandle.filePath, ios::out | ios::binary);
+                    outfile.write(reinterpret_cast<const char*>(xpcHandle.FileContents.data()), xpcHandle.FileContents.size());
+                }
                 ImGui::Text(xpcHandle.filePath.c_str());
                 ImGui::Text((std::to_string(xpcHandle.size) + " Bytes").c_str());
                 ImGui::Text((std::to_string(xpcHandle.entries) + " Entries").c_str());
 
                 for (int i = 0; i < xpcHandle.entries; i++)
                 {
-                    std::string sectorTitle = ("Sector " + std::to_string(i));
-                    if (ImGui::TreeNode(sectorTitle.c_str()))
-                    {
-
+                    
+                    DisplayXPC_Top(&xpcHandle.TopEntries[i], ("Sector " + std::to_string(i)));
+                    
+                        //DisplayIntValue(xpcHandle.TopEntries[i].entryId, xpcHandle.TopEntries[i].entryId.title + " Address 0x" + gameThreading.manipulator.IntToHexString(xpcHandle.TopEntries[i].entryId.address), false);
+                        
+                        
+                        /*
                         std::stringstream ss1;
                         ss1 << "Address: 0x" << std::hex << xpcHandle.Headers[i].Address_File;
                         ImGui::Text(ss1.str().c_str());
@@ -808,10 +887,10 @@ int main(int, char**)
                             break;
                         }
 
-                        
-                        ImGui::TreePop();
-                    }
+                        */
+                    
                 }
+                
             }
             
             ImGui::End();
@@ -897,10 +976,13 @@ void DisplayPlayer(HWVX_Player* player, std::string headerString)
 {
     if (ImGui::CollapsingHeader(headerString.c_str()))
     {
+        int baseAddress = player->GetBaseAddress();
         std::stringstream ss1;
 
         ss1 << "Player Address: " << std::hex << player->GetBaseAddress();
         ImGui::Text(ss1.str().c_str());
+
+        DisplayIntValue(player->PlayerType, "PlayerType ##" + std::to_string(baseAddress));
 
         if (player->playerVehicle != 0)
         {
@@ -915,26 +997,49 @@ void DisplayVehicle(HWVX_Vehicle* vehicle, std::string headerString)
 {
     if (ImGui::CollapsingHeader(headerString.c_str()))
     {
+        
+        int baseAddress = vehicle->GetBaseAddress();
         std::stringstream ss2;
 
-        ss2 << "Vehicle Address: " << std::hex << vehicle->GetBaseAddress();
+        ss2 << "Vehicle Address: " << std::hex << baseAddress;
         ImGui::Text(ss2.str().c_str());
 
-        DisplayFloatValue(vehicle->velocityX, "Velocity X ##" + std::to_string(vehicle->GetBaseAddress()));
-        DisplayFloatValue(vehicle->velocityY, "Velocity Y ##" + std::to_string(vehicle->GetBaseAddress()));
-        DisplayFloatValue(vehicle->velocityZ, "Velocity Z ##" + std::to_string(vehicle->GetBaseAddress()));
+        DisplayFloatValue(vehicle->velocityX, "Velocity X ##" + std::to_string(baseAddress));
+        DisplayFloatValue(vehicle->velocityY, "Velocity Y ##" + std::to_string(baseAddress));
+        DisplayFloatValue(vehicle->velocityZ, "Velocity Z ##" + std::to_string(baseAddress));
 
-        DisplayFloatValue(vehicle->currentX, "Position X ##" + std::to_string(vehicle->GetBaseAddress()));
-        DisplayFloatValue(vehicle->currentY, "Position Y ##" + std::to_string(vehicle->GetBaseAddress()));
-        DisplayFloatValue(vehicle->currentZ, "Position Z ##" + std::to_string(vehicle->GetBaseAddress()));
+        DisplayFloatValue(vehicle->currentX, "Position X ##" + std::to_string(baseAddress));
+        DisplayFloatValue(vehicle->currentY, "Position Y ##" + std::to_string(baseAddress));
+        DisplayFloatValue(vehicle->currentZ, "Position Z ##" + std::to_string(baseAddress));
 
-        DisplayFloatValue(vehicle->rotationX, "Rotation X ##" + std::to_string(vehicle->GetBaseAddress()));
-        DisplayFloatValue(vehicle->rotationY, "Rotation Y ##" + std::to_string(vehicle->GetBaseAddress()));
-        DisplayFloatValue(vehicle->rotationZ, "Rotation Z ##" + std::to_string(vehicle->GetBaseAddress()));
-        DisplayFloatValue(vehicle->rotationW, "Rotation W ##" + std::to_string(vehicle->GetBaseAddress()));
+        DisplayFloatValue(vehicle->rotationX, "Rotation X ##" + std::to_string(baseAddress));
+        DisplayFloatValue(vehicle->rotationY, "Rotation Y ##" + std::to_string(baseAddress));
+        DisplayFloatValue(vehicle->rotationZ, "Rotation Z ##" + std::to_string(baseAddress));
+        DisplayFloatValue(vehicle->rotationW, "Rotation W ##" + std::to_string(baseAddress));
 
-        DisplayIntValue(vehicle->currentHealth, "Current Health ##" + std::to_string(vehicle->GetBaseAddress()));
-        DisplayIntValue(vehicle->currentBoost, "Current Boost ##" + std::to_string(vehicle->GetBaseAddress()));
+        DisplayIntValue(vehicle->currentHealth, "Current Health ##" + std::to_string(baseAddress));
+        DisplayIntValue(vehicle->currentBoost, "Current Boost ##" + std::to_string(baseAddress));
+    }
+}
+
+void DisplayTileCar(HWVX_TileCar* tileCar, std::string headerString)
+{
+    if (ImGui::CollapsingHeader(headerString.c_str()))
+    {
+        int baseAddress = tileCar->GetBaseAddress();
+        std::stringstream ss2;
+
+        ss2 << "Tile Car Address: " << std::hex << baseAddress;
+        ImGui::Text(ss2.str().c_str());
+
+        DisplayFloatValue(tileCar->spawnX, "Spawn X ##" + std::to_string(baseAddress));
+        DisplayFloatValue(tileCar->spawnY, "Spawn Y ##" + std::to_string(baseAddress));
+        DisplayFloatValue(tileCar->spawnZ, "Spawn Z ##" + std::to_string(baseAddress));
+
+        DisplayIntCombo(tileCar->carID, "Car ID ##" + std::to_string(baseAddress), carItems, IM_ARRAYSIZE(carItems));
+
+        DisplayByteValue(tileCar->playerType, "Player Type ##" + std::to_string(baseAddress));
+        DisplayByteValue(tileCar->unknownVal, "UnknownVal ##" + std::to_string(baseAddress));
     }
 }
 
@@ -954,6 +1059,22 @@ void DisplayIntValue(Proxy<int>& value, std::string label)
     DisplayIntValue(value, label, true);
 }
 
+void DisplayIntValue(Proxy<unsigned int>& value, std::string label, bool lock)
+{
+    if (lock)
+    {
+        string lockLabel = "##lock" + label;
+        ImGui::Checkbox(lockLabel.c_str(), &value.lock);
+        ImGui::SameLine();
+    }
+    ImGui::InputScalar(label.c_str(), ImGuiDataType_U32, &value.guiValue, NULL, NULL);
+}
+
+void DisplayIntValue(Proxy<unsigned int>& value, std::string label)
+{
+    DisplayIntValue(value, label, true);
+}
+
 void DisplayFloatValue(Proxy<float>& value, std::string label, bool lock)
 {
     if (lock)
@@ -965,9 +1086,133 @@ void DisplayFloatValue(Proxy<float>& value, std::string label, bool lock)
     ImGui::InputFloat(label.c_str(), &value.guiValue);
 }
 
+
+
 void DisplayFloatValue(Proxy<float>& value, std::string label)
 {
     DisplayFloatValue(value, label, true);
+}
+
+void DisplayByteValue(Proxy<byte>& value, std::string label, bool lock)
+{
+    if (lock)
+    {
+        string lockLabel = "##lock" + label;
+        ImGui::Checkbox(lockLabel.c_str(), &value.lock);
+        ImGui::SameLine();
+    }
+    ImGui::InputScalar(label.c_str(), ImGuiDataType_U8, &value.guiValue, NULL, NULL, "%u");
+}
+
+void DisplayByteValue(Proxy<byte>& value, std::string label)
+{
+    DisplayByteValue(value, label, true);
+}
+
+void DisplayIntCombo(Proxy<int>& value, std::string label, const char* const* items, int size)
+{
+    ImGui::Combo(label.c_str(), &value.guiValue, items, size);
+}
+
+void DisplayXPCValue(Proxy<int>& value, bool isHexadecimal)
+{
+    if (isHexadecimal)
+    {
+        ImGui::InputScalar((value.title + "## Address 0x" + IntToHexString(value.address)).c_str(), ImGuiDataType_S32, &value.guiValue, NULL, NULL, "%08X", ImGuiInputTextFlags_CharsHexadecimal);
+        
+    }
+    else
+    {
+        ImGui::InputScalar((value.title + "## Address 0x" + IntToHexString(value.address)).c_str(), ImGuiDataType_S32, &value.guiValue, NULL, NULL);
+    }
+    if (ImGui::IsItemHovered()) ImGui::SetTooltip(("Address: " + IntToHexString(value.address)).c_str());
+
+}
+
+void DisplayXPCValue(Proxy<unsigned int>& value, bool isHexadecimal)
+{
+    ImGui::SetNextItemWidth(100);
+    if (isHexadecimal)
+    {
+        ImGui::InputScalar((value.title + "## Address 0x" + IntToHexString(value.address)).c_str(), ImGuiDataType_U32, &value.guiValue, NULL, NULL, "%08X", ImGuiInputTextFlags_CharsHexadecimal);
+        
+    }
+    else
+    {
+        ImGui::InputScalar((value.title + "## Address 0x" + IntToHexString(value.address)).c_str(), ImGuiDataType_U32, &value.guiValue, NULL, NULL);
+    }
+    if (ImGui::IsItemHovered()) ImGui::SetTooltip(("Address: " + IntToHexString(value.address)).c_str());
+}
+
+void DisplayXPCValue(Proxy<char>& value, bool isHexadecimal)
+{
+    ImGui::SetNextItemWidth(100);
+    if (isHexadecimal)
+    {
+        ImGui::InputScalar((value.title + "## Address 0x" + IntToHexString(value.address)).c_str(), ImGuiDataType_S8, &value.guiValue, NULL, NULL, "%08X", ImGuiInputTextFlags_CharsHexadecimal);
+
+    }
+    else
+    {
+        ImGui::InputScalar((value.title + "## Address 0x" + IntToHexString(value.address)).c_str(), ImGuiDataType_S8, &value.guiValue, NULL, NULL);
+    }
+    if (ImGui::IsItemHovered()) ImGui::SetTooltip(("Address: " + IntToHexString(value.address)).c_str());
+}
+
+void DisplayXPC_Top(XPC_Top* top, std::string headerString)
+{
+    if (ImGui::TreeNode(headerString.c_str()))
+    {
+        top->Update();
+        //DisplayXPCValue(top.objectType, false);
+        DisplayIntCombo(top->objectType, "Sector Type ##" + std::to_string(top->objectType.address), xpcTypeItems, IM_ARRAYSIZE(xpcTypeItems));
+        DisplayXPCValue(top->objectIndex, false);
+        DisplayXPCValue(top->unknown0, false);
+        DisplayXPCValue(top->unknown1, false);
+        DisplayXPCValue(top->unknown2, false);
+        DisplayXPCValue(top->unknown3, false);
+        DisplayXPCValue(top->streamSize, true);
+        DisplayXPCValue(top->offset, true);
+        DisplayXPC_Car(&top->xpcCar, headerString + " Car");
+        ImGui::TreePop();
+    }
+}
+
+void DisplayXPC_Car(XPC_Car* car, std::string headerString)
+{
+    if (ImGui::TreeNode(headerString.c_str()))
+    {
+        car->Update();
+        DisplayXPCValue(car->AddressPtr0, true);
+        DisplayXPCValue(car->AddressPtr1, true);
+        DisplayXPCValue(car->entryCnt, false);
+        DisplayXPCValue(car->unknownInt3, false);
+        DisplayXPCValue(car->unknownInt4, false);
+        DisplayXPCValue(car->unknownInt5, false);
+        DisplayXPCValue(car->AddressPtr6, true);
+        DisplayXPCValue(car->textureCnt, false);
+        DisplayXPCValue(car->entryCnt2, false);
+        DisplayXPCValue(car->unknownInt8, true);
+        DisplayXPCValue(car->unknownInt9, true);
+        DisplayXPCValue(car->unknownInt10, true);
+        DisplayXPCValue(car->unknownInt11, true);
+        DisplayXPCValue(car->unknownInt12, true);
+        DisplayXPCValue(car->unknownInt13, true);
+        DisplayXPCValue(car->unknownInt14, true);
+        DisplayXPCValue(car->unknownInt15, true);
+        DisplayXPCValue(car->unknownInt16, true);
+        DisplayXPCValue(car->unknownInt17, true);
+        DisplayXPCValue(car->musicAddress, true);
+        ImGui::TreePop();
+    }
+}
+
+std::string IntToHexString(int value)
+{
+    char hex_string[20];
+    sprintf(hex_string, "%X", value);
+    std::string returnString(hex_string);
+    return returnString;
 }
 
 // Forward declare message handler from imgui_impl_win32.cpp

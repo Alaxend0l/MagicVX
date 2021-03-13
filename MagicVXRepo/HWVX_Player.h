@@ -15,10 +15,15 @@ public:
 	int StuntPoints = 0;
 	int Kills = 0;
 
+	Proxy<int> PlayerType;
+	
+	
+
 	HWVX_Vehicle* playerVehicle;
 
 	HWVX_Player();
 	HWVX_Player(FunctionCaller*, int);
 
+	void Update() override;
 };
 
